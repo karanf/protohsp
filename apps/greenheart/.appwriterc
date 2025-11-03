@@ -1,0 +1,13 @@
+{
+  "runtime": "node-18.0",
+  "path": ".",
+  "commands": {
+    "build": "pnpm build",
+    "start": "pnpm start"
+  },
+  "environment": {
+    "NEXT_PUBLIC_INSTANT_APP_ID": "$NEXT_PUBLIC_INSTANT_APP_ID",
+    "INSTANT_ADMIN_TOKEN": "$INSTANT_ADMIN_TOKEN"
+  }
+}
+

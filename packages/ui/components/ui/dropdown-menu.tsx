@@ -57,15 +57,22 @@ function DropdownMenuGroup({
   )
 }
 
+interface DropdownMenuItemProps {
+  className?: string
+  inset?: boolean
+  variant?: "default" | "destructive"
+  children?: React.ReactNode
+  onClick?: () => void
+  disabled?: boolean
+}
+
 function DropdownMenuItem({
   className,
   inset,
   variant = "default",
+  children,
   ...props
-}: React.ComponentProps<typeof DropdownMenuPrimitive.Item> & {
-  inset?: boolean
-  variant?: "default" | "destructive"
-}) {
+}: DropdownMenuItemProps) {
   return (
     <DropdownMenuPrimitive.Item
       data-slot="dropdown-menu-item"
@@ -76,7 +83,9 @@ function DropdownMenuItem({
         className
       )}
       {...props}
-    />
+    >
+      {children}
+    </DropdownMenuPrimitive.Item>
   )
 }
 

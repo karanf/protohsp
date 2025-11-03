@@ -1,0 +1,12 @@
+{
+  "projectId": "greenheart",
+  "projectName": "Greenheart SEVIS Portal",
+  "settings": {
+    "runtime": "node-18.0",
+    "buildCommand": "cd apps/greenheart && pnpm build",
+    "installCommand": "corepack enable && corepack prepare pnpm@latest --activate && pnpm install --frozen-lockfile",
+    "startCommand": "cd apps/greenheart && pnpm start",
+    "outputDirectory": "apps/greenheart/.next"
+  }
+}
+

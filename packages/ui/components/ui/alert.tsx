@@ -43,11 +43,10 @@ const alertIconVariants = cva("size-5", {
   },
 })
 
-interface AlertProps
-  extends React.ComponentProps<"div">,
-    VariantProps<typeof alertVariants> {
+interface AlertProps extends React.ComponentProps<"div"> {
   title?: string;
   description?: string;
+  variant?: "default" | "error" | "warning" | "info" | "success";
 }
 
 function Alert({
