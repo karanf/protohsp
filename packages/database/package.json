@@ -10,18 +10,7 @@
     "format": "prettier --write .",
     "type-check": "tsc --noEmit",
     "generate-types": "echo 'InstantDB types are automatically generated. Run: instant-cli init to configure your app.'",
-    "dev": "tsc --watch",
-    "setup": "tsx src/scripts/setup-instantdb.ts",
-    "migrate": "tsx src/scripts/migrate-to-instantdb.ts",
-    "migrate-bulk": "tsx src/scripts/run-bulk-migration.ts",
-    "migrate-change-queue": "tsx src/scripts/migrate-change-queue.ts",
-    "create-placements": "tsx src/scripts/create-placement-data.ts",
-    "create-additional-placements": "tsx src/scripts/create-additional-placements.ts",
-    "update-avatars": "tsx src/scripts/update-dicebear-avatars.ts",
-    "debug-avatars": "tsx src/scripts/debug-specific-avatars.ts",
-    "flag-change-queue": "tsx src/scripts/flag-students-for-change-queue.ts",
-    "clear-change-queue": "tsx src/scripts/flag-students-for-change-queue.ts clear",
-    "populate-current-changes": "tsx src/scripts/populate-current-changes.ts"
+    "dev": "tsc --watch"
   },
   "dependencies": {
     "@instantdb/admin": "^0.20.1",
