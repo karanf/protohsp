@@ -1,0 +1,470 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# EGAB Error Documentation
+
+This document tracks issues, their contexts, and resolutions to prevent recurring problems.
+
+## Known Issues and Resolutions
+# EGAB Error Documentation
+
+This document tracks issues, their contexts, and resolutions to prevent recurring problems.
+
+## Known Issues and Resolutions
+# EGAB Error Documentation
+
+This document tracks issues, their contexts, and resolutions to prevent recurring problems.
+
+## Known Issues and Resolutions
+
+### Dependency Management Issues
+
+#### Issue: Dependency Version Downgrades
+- **Description**: Accidental downgrade of dependencies causing compatibility issues
+- **Context**: When adding new dependencies or updating package.json files
+- **Resolution**: Always check the minimum version requirements in docs/technical.md before updating dependencies. Never downgrade below the specified minimum versions.
+
+#### Issue: Incompatible Internal Package Versions
+- **Description**: Version mismatches between workspace packages
+- **Context**: When referencing internal packages in apps
+- **Resolution**: Always use `workspace:*` syntax for internal package references in package.json
+
+### Import Path Issues
+
+#### Issue: Incorrect Import Paths for Workspace Packages
+- **Description**: Using `@/` prefix instead of `@repo/` for workspace package imports
+- **Context**: When importing components or utilities from shared packages
+- **Resolution**: Always use `@repo/` prefix for workspace package imports (e.g., `import { Button } from "@repo/ui/components/ui/button"`)
+
+#### Issue: Deep Relative Imports
+- **Description**: Using multiple levels of relative imports creating maintenance issues
+- **Context**: When referencing files across the project structure
+- **Resolution**: Use appropriate import prefixes (`@repo/` for workspace packages, `@/` for app-local imports) instead of deep relative paths
+
+### Monorepo Build Issues
+
+#### Issue: Package Resolution in Turborepo
+- **Description**: Dependencies in workspace packages not properly resolved during build
+- **Context**: When building applications that depend on internal packages
+- **Resolution**: Ensure proper workspace protocol syntax (`workspace:*`) in package.json and check that packages are properly referenced in the build scripts
+
+#### Issue: TypeScript Path Aliases
+- **Description**: Path aliases not resolving correctly across the monorepo
+- **Context**: When importing components from shared packages
+- **Resolution**: Configure `tsconfig.json` with consistent path aliases and ensure Next.js config also includes these paths
+
+### Component Issues
+
+#### Issue: Style Inconsistencies
+- **Description**: Components appear differently across applications
+- **Context**: When using the same component in different apps
+- **Resolution**: Ensure all applications import the same Tailwind configuration and design tokens
+
+#### Issue: Component Props Type Safety
+- **Description**: TypeScript errors when passing props to components
+- **Context**: When components have complex prop structures
+- **Resolution**: Use proper interface extension and conditional types, avoid any types, and ensure components have complete prop definitions
+
+### Next.js Configuration
+
+#### Issue: Server Component vs. Client Component Confusion
+- **Description**: Errors when using hooks in Server Components
+- **Context**: When building new components for Next.js applications
+- **Resolution**: Properly mark Client Components with "use client" directive and keep clear separation between server and client responsibilities
+
+#### Issue: Image Optimization
+- **Description**: Next.js Image component warnings or errors
+- **Context**: When using images in components
+- **Resolution**: Always specify width and height, use proper image formats, and configure domains in Next.js config
+
+### Styling Issues
+
+#### Issue: Tailwind Class Conflicts
+- **Description**: CSS specificity issues causing unexpected styling
+- **Context**: When combining utility classes or using component libraries
+- **Resolution**: Use consistent class ordering and consider using the clsx/cn utility for conditional class application
+
+#### Issue: Responsive Design Breakpoints
+- **Description**: Inconsistent responsive behavior across applications
+- **Context**: When implementing responsive layouts
+- **Resolution**: Standardize breakpoint usage from the design system and use consistent Tailwind breakpoints
+
+### Performance Issues
+
+#### Issue: Large Bundle Sizes
+- **Description**: Applications have unnecessarily large JavaScript bundles
+- **Context**: When importing many components or libraries
+- **Resolution**: Implement proper code splitting, lazy loading, and tree-shaking; analyze bundles with tools like `@next/bundle-analyzer`
+
+#### Issue: Slow Development Server
+- **Description**: Long reload times during development
+- **Context**: When working on applications with many components
+- **Resolution**: Use more granular imports, optimize Tailwind configuration, and leverage Turborepo caching
+
+### API Integration
+
+#### Issue: Type-Safe API Fetching
+- **Description**: Type errors or runtime errors in API data handling
+- **Context**: When fetching data from backend APIs
+- **Resolution**: Create proper TypeScript interfaces for API responses and use validation libraries like Zod 
+
+## InstantDB Migration Errors
+
+### Error: "instant.admin.model/lookup?" Validation Failed
+**Date**: 2025-06-25  
+**Context**: InstantDB data migration during Supabase → InstantDB transition
+
+**Error Details**:
+```json
+{
+  "type": "validation-failed",
+  "message": "Validation failed for steps",
+  "hint": {
+    "errors": [
+      {
+        "expected": "instant.admin.model/lookup?",
+        "in": [0, 2]
+      }
+    ]
+  }
+}
+```
+
+**Root Cause**: Using custom string IDs instead of UUID format that InstantDB requires.
+
+**Failed Approach**:
+```typescript
+// ❌ This fails
+await adminDb.transact([
+  adminDb.tx.users['custom-string-id'].update(userData)
+]);
+```
+
+**Working Solution**:
+```typescript
+// ✅ This works
+import { init, id } from '@instantdb/admin';
+
+const userId = id(); // Generate proper UUID
+await adminDb.transact([
+  adminDb.tx.users[userId].update(userData)
+]);
+```
+
+**Resolution Steps**:
+1. Import `id` function from `@instantdb/admin`
+2. Generate UUIDs using `id()` for all entity identifiers
+3. Store generated UUIDs for relationship references
+4. Test with minimal data first
+
+**Prevention**: Always use InstantDB's `id()` function for entity identifiers, never custom strings.
+
+---
+
+### Error: Environment Variables Not Loading in Node.js Scripts
+**Date**: 2025-06-25  
+**Context**: Running migration scripts via `tsx`
+
+**Symptoms**: 
+- `process.env.INSTANT_APP_ID` returning `undefined`
+- Scripts failing with authentication errors
+- Environment variables work in Next.js but not Node.js scripts
+
+**Root Cause**: Node.js doesn't auto-load `.env` files like Next.js does.
+
+**Solution**:
+```typescript
+import dotenv from 'dotenv';
+import path from 'path';
+
+// Load .env files manually
+dotenv.config({ path: path.resolve(__dirname, '../../.env.local') });
+dotenv.config({ path: path.resolve(__dirname, '../../../../.env.local') });
+```
+
+**Prevention**: Always configure `dotenv` at the top of Node.js migration scripts.
+
+---
+
+### TypeScript Error: 'adminDb.tx.users' is possibly 'undefined'
+**Date**: 2025-06-25  
+**Context**: TypeScript compilation of InstantDB admin scripts
+
+**Error**: 
+```
+'adminDb.tx.users' is possibly 'undefined'
+Object is possibly 'undefined'
+```
+
+**Root Cause**: TypeScript strict null checks on InstantDB admin transaction objects.
+
+**Temporary Workaround**: 
+- Skip strict type checking with `--skipLibCheck` for migration scripts
+- Add null checks if needed in production code
+
+**Long-term**: This appears to be a TypeScript definition issue in the InstantDB admin SDK.
+
+---
+
+### Error: Module Type Warnings in Next.js
+**Date**: 2025-06-25  
+**Context**: Next.js development server startup
+
+**Warning**:
+
+---
+
+### Error: Using npm/npx Instead of pnpm
+**Date**: 2025-01-27  
+**Context**: Package management commands in this project
+
+**Error Details**: Constantly using `npm` or `npx` commands instead of `pnpm` which is the package manager for this project.
+
+**Root Cause**: Default assumption about package manager without checking project configuration.
+
+**Evidence of pnpm Usage**:
+- `pnpm-lock.yaml` exists in project root
+- `pnpm-workspace.yaml` exists for monorepo configuration  
+- All package.json files are configured for pnpm workspace
+
+**Critical Rule**: 
+- ✅ **ALWAYS use `pnpm` instead of `npm`**
+- ✅ **ALWAYS use `pnpm dlx` instead of `npx`**  
+- ✅ **ALWAYS use `pnpm run` instead of `npm run`**
+- ✅ **ALWAYS use `pnpm install` instead of `npm install`**
+
+**Prevention**: Before suggesting ANY package management command, confirm this is a pnpm project by checking for pnpm-lock.yaml and pnpm-workspace.yaml files.
+
+**Warning**:
+```
+[MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///path/to/next.config.js is not specified
+```
+
+**Solution**: Add `"type": "module"` to package.json if using ES modules, or keep CommonJS format.
+
+**Impact**: Performance warning only, doesn't affect functionality.
+
+---
+
+## Database Migration Patterns
+
+### Successful Migration Pattern
+**Tested & Working Approach**:
+1. Test connection with minimal data
+2. Use proper UUID format (`id()` function)
+3. Create entities in dependency order
+4. Log progress for debugging
+5. Handle errors gracefully with detailed logging
+
+### Failed Patterns to Avoid
+- Custom string identifiers for entities
+- Parallel creation of dependent entities
+- Assuming Supabase patterns work with InstantDB
+- Skipping environment variable setup in Node.js scripts 
+
+## Lucide React Import Issues
+
+### Error: "lucide_react__WEBPACK_IMPORTED_MODULE_14__.default is not a function"
+**Date**: 2025-06-25  
+**Context**: Using Lucide React icons in Next.js components
+
+**Error Details**:
+- Webpack barrel optimization error with Lucide React icons
+- Icons not rendering with error about `.default is not a function`
+- Affected all view components using `import * as Lucide from "lucide-react"`
+
+**Root Cause**: 
+- Webpack's barrel optimization interfering with namespace imports
+- Functional call pattern `(Lucide.IconName as any)({...})` breaking due to optimization
+
+**Failed Approaches**:
+1. ❌ Direct imports: `import { ChevronDown } from "lucide-react"` - Type compatibility issues
+2. ❌ Path imports: `import ChevronDown from "lucide-react/dist/esm/icons/chevron-down"` - Module not found
+3. ❌ React.createElement: Requires React import and complex patterns
+
+**Working Solution**:
+
+**Step 1**: Configure Next.js webpack to handle lucide-react properly
+```javascript
+// next.config.js
+module.exports = {
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /lucide-react/,
+      sideEffects: false,
+    });
+    return config;
+  },
+  experimental: {
+    optimizePackageImports: ['lucide-react'],
+  }
+}
+```
+
+**Step 2**: Use namespace import with functional call pattern
+```typescript
+// ✅ This works
+import * as Lucide from "lucide-react"
+
+// In JSX
+{(Lucide.ChevronDown as any)({ className: "h-4 w-4" })}
+
+// For icon props
+icon: Lucide.Search as any
+```
+
+**Prevention**: 
+- Always use webpack configuration for lucide-react
+- Stick to namespace imports with functional call pattern
+- Avoid mixing import styles (namespace + named imports)
+
+**Final Solution**: 
+ESLint configuration has been updated to suppress React 19 + Lucide React compatibility warnings:
+- Created `packages/eslint-config/react-19-fixes.js` with comprehensive compatibility rules
+- Updated TypeScript configuration with `skipLibCheck: true`
+- All apps automatically inherit these fixes via `@repo/eslint-config/next-js`
+
+---
+
+### Error: Infinite Re-renders causing NextJS Helper Icon Animation
+**Date**: 2025-06-25  
+**Context**: NextJS dev server showing constant rebuilding indicator
+
+**Symptoms**:
+- NextJS helper icon constantly animating
+- Components re-rendering continuously 
+- High CPU usage from constant rebuilds
+- `ps aux` showing active next-server processes
+
+**Root Cause**: 
+`useSupabaseData` hook returning new object references on every render due to unstable memoization.
+
+**Problem Pattern**:
+```typescript
+// ❌ This caused infinite re-renders
+const transformedData = useMemo(() => {
+  return {
+    users: data?.users?.map(user => ({
+      // Creating new Date objects on every render
+      createdAt: new Date(user.createdAt)
+    }))
+  };
+}, [data?.users, data?.profiles]); // Dependencies changing every render
+```
+
+**Solution**:
+```typescript
+// ✅ Stable memoization with refs
+const prevDataRef = useRef<any>(null);
+const transformedDataRef = useRef<TransformedData | null>(null);
+
+const transformedData = useMemo(() => {
+  // Deep comparison to prevent unnecessary recalculation
+  if (prevDataRef.current && 
+      JSON.stringify(data) === JSON.stringify(prevDataRef.current) &&
+      transformedDataRef.current) {
+    return transformedDataRef.current;
+  }
+
+  // Helper for stable Date creation
+  const createDate = (dateValue: any): Date => {
+    if (!dateValue) return new Date();
+    if (dateValue instanceof Date) return dateValue;
+    return new Date(dateValue);
+  };
+
+  const newData = {
+    users: data?.users?.map(user => ({
+      ...user,
+      createdAt: createDate(user.createdAt)
+    }))
+  };
+
+  prevDataRef.current = data;
+  transformedDataRef.current = newData;
+  return newData;
+}, [data]); // Single dependency
+```
+
+**Additional Fix**: Convert `useEffect` to `useMemo` for data processing
+```typescript
+// ❌ useEffect causing unnecessary renders
+useEffect(() => {
+  processData();
+}, [users, profiles, relationships]);
+
+// ✅ useMemo prevents unnecessary processing
+const processedData = useMemo(() => {
+  return processData();
+}, [users, profiles, relationships]);
+```
+
+**Prevention**:
+- Use stable object references in hooks
+- Avoid creating new objects in render cycles
+- Use `useRef` for comparison values
+- Convert data processing from `useEffect` to `useMemo` when possible
+
+---
+
+### Error: Chrome DevTools 404 - /.well-known/appspecific/com.chrome.devtools.json
+**Date**: 2025-01-27  
+**Context**: Next.js development server startup
+
+**Error Details**:
+- Chrome DevTools requesting `/.well-known/appspecific/com.chrome.devtools.json` endpoint
+- Server responds with 404 error
+- Error appears in development server logs
+- Related to Chrome's "Automatic Workspace Folders" feature
+
+**Root Cause**: 
+Chrome DevTools automatically requests this endpoint to configure workspace mapping for debugging, but Next.js doesn't provide this endpoint by default.
+
+**Working Solution**:
+Create Next.js API route handler to respond to Chrome DevTools requests:
+
+```typescript
+// apps/[app-name]/app/api/.well-known/appspecific/com.chrome.devtools.json/route.ts
+import { NextResponse } from 'next/server';
+import path from 'path';
+
+export async function GET() {
+  const devToolsConfig = {
+    version: "1.0",
+    workspace: {
+      root: path.resolve(process.cwd()),
+      name: "App Name",
+      uuid: "unique-workspace-uuid-001"
+    },
+    mappings: [
+      {
+        url: "http://localhost:3000/",
+        path: path.resolve(process.cwd(), "app")
+      }
+    ]
+  };
+
+  return NextResponse.json(devToolsConfig, {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET',
+      'Access-Control-Allow-Headers': 'Content-Type'
+    }
+  });
+}
+```
+
+**Alternative Solutions**:
+1. **Disable Chrome DevTools feature**: Navigate to `chrome://flags/#devtools-project-settings` and disable
+2. **Add static file**: Create file in `public/.well-known/` directory with proper Next.js header configuration
+
+**Prevention**: 
+- Implement this route handler in all Next.js apps in monorepo
+- Adjust port numbers and app names per application
+- Include proper CORS headers for development environment
+
+**Impact**: Eliminates distracting 404 errors from development server logs, enables Chrome DevTools workspace mapping functionality. 

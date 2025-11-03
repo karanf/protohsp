@@ -1,0 +1,10 @@
+0000000000000000000000000000000000000000 5ac1ed9224ffe878a904297cc7368cc6fcc42ae5 karanf <karan.fadnavis@enroller.co.nz> 1750759634 +1200	branch: Created from HEAD
+5ac1ed9224ffe878a904297cc7368cc6fcc42ae5 3b3c43da5b0f0de671ac5faedabaab806b63bad5 karanf <karan.fadnavis@enroller.co.nz> 1750808211 +1200	commit: changed to InstantDB and fixed Lucide errors
+3b3c43da5b0f0de671ac5faedabaab806b63bad5 78c3e4fc62964dc6733deeff919929081d66fa92 karanf <karan.fadnavis@enroller.co.nz> 1750810949 +1200	commit: reverted lucide
+78c3e4fc62964dc6733deeff919929081d66fa92 a0115517371b35b9cb963a1c915467694ba5e43a karanf <karan.fadnavis@enroller.co.nz> 1750825968 +1200	commit: lucide reverted
+a0115517371b35b9cb963a1c915467694ba5e43a f85e055887a0665cd6d578f4d51706754f99d788 karanf <karan.fadnavis@enroller.co.nz> 1750907180 +1200	commit: almost all sussed. more placements
+f85e055887a0665cd6d578f4d51706754f99d788 dad45688d2cf681713355c3325df26e5572858d5 karanf <karan.fadnavis@enroller.co.nz> 1750908733 +1200	commit: fixed placements errors
+dad45688d2cf681713355c3325df26e5572858d5 f58310b3d36a803459a54f47ca94379bc987a096 karanf <karan.fadnavis@enroller.co.nz> 1750910124 +1200	commit: depth blah blah
+f58310b3d36a803459a54f47ca94379bc987a096 4c1b0b0b6748c49b988adf39c6bff5aa05193f47 karanf <karan.fadnavis@enroller.co.nz> 1750911108 +1200	commit: excessive stack depth solved hopefully
+4c1b0b0b6748c49b988adf39c6bff5aa05193f47 13ee6ab995b3a1c85caac7f0111f322d246d46eb karanf <karan.fadnavis@enroller.co.nz> 1750912009 +1200	commit: bar chart jsx error fixed
+13ee6ab995b3a1c85caac7f0111f322d246d46eb 4c56ae601f2f4658c2c53a8afa15be965ac6bd23 karanf <karan.fadnavis@enroller.co.nz> 1750912728 +1200	commit: bar chart stuff

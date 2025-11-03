@@ -1,0 +1,2320 @@
+'use client'
+
+import React, { useState, useEffect, useMemo, useCallback } from 'react'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@repo/ui/components/ui/card'
+import { Metrics } from '@repo/ui/components/ui/metrics'
+import { format, subDays, subMonths, subYears, eachDayOfInterval, startOfDay } from 'date-fns'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@repo/ui/components/ui/select'
+import { Slider } from '@repo/ui/components/ui/slider'
+import { cn } from '@repo/ui/lib/utils'
+import { Button } from '@repo/ui/components/ui/button'
+import { useInstantData } from '@/lib/useInstantData'
+import { useMounted } from '@/lib/useMounted'
+import { toast } from 'sonner'
+
+import { ColumnDef } from '@tanstack/react-table'
+import { Avatar, AvatarFallback } from '@repo/ui/components/ui/avatar'
+import { Checkbox } from '@repo/ui/components/ui/checkbox'
+import { Input } from '@repo/ui/components/ui/input'
+import { Tabs, TabsList, TabsTrigger } from '@repo/ui/components/ui/tabs'
+import type { User, Profile, Relationship } from "@/lib/useInstantData"
+import { Badge } from '@repo/ui/components/ui/badge'
+import dynamic from 'next/dynamic'
+
+// Import utility function normally (lightweight)
+import { createActionsColumn } from "@repo/ui/components/ui/advanced-pinned-table"
+
+// Dynamic import only for heavy components to reduce initial bundle size
+const AdvancedPinnedTable = dynamic(
+  () => import("@repo/ui/components/ui/advanced-pinned-table").then(mod => ({ default: mod.AdvancedPinnedTable })),
+  { 
+    loading: () => <div className="h-96 flex items-center justify-center text-gray-500">Loading table...</div>,
+    ssr: false 
+  }
+)
+
+// Dynamic imports for heavy chart components (biggest bundle size impact)
+const BarChart = dynamic(
+  () => import('recharts').then(mod => ({ default: mod.BarChart })),
+  { loading: () => <div className="h-[300px] flex items-center justify-center text-gray-500">Loading chart...</div> }
+)
+
+const Bar = dynamic(
+  () => import('recharts').then(mod => ({ default: mod.Bar })),
+  { ssr: false }
+)
+
+
+
+const CartesianGrid = dynamic(
+  () => import('recharts').then(mod => ({ default: mod.CartesianGrid })),
+  { ssr: false }
+)
+
+const XAxis = dynamic(
+  () => import('recharts').then(mod => ({ default: mod.XAxis })),
+  { ssr: false }
+)
+
+const YAxis = dynamic(
+  () => import('recharts').then(mod => ({ default: mod.YAxis })),
+  { ssr: false }
+)
+
+const ChartContainer = dynamic(
+  () => import('@repo/ui/components/ui/chart').then(mod => ({ default: mod.ChartContainer })),
+  { ssr: false }
+)
+
+const ChartTooltip = dynamic(
+  () => import('@repo/ui/components/ui/chart').then(mod => ({ default: mod.ChartTooltip })),
+  { ssr: false }
+)
+
+const ChartTooltipContent = dynamic(
+  () => import('@repo/ui/components/ui/chart').then(mod => ({ default: mod.ChartTooltipContent })),
+  { ssr: false }
+)
+
+const ChartLegend = dynamic(
+  () => import('@repo/ui/components/ui/chart').then(mod => ({ default: mod.ChartLegend })),
+  { ssr: false }
+)
+
+const ChartLegendContent = dynamic(
+  () => import('@repo/ui/components/ui/chart').then(mod => ({ default: mod.ChartLegendContent })),
+  { ssr: false }
+)
+
+// Using optimized manual donut chart with Recharts-style patterns
+
+// Optimized icon imports - only import what we need
+import { 
+  FileCheck, 
+  ListChecks, 
+  Clock, 
+  Upload, 
+  CheckCircle, 
+  XCircle, 
+  Database, 
+  Plus, 
+  Minus, 
+  Search, 
+  UserCircle, 
+  FileEdit, 
+  FileText, 
+  Send, 
+  School, 
+  Home, 
+  FileBarChart, 
+  Tag, 
+  Users, 
+  AlertTriangle,
+  RefreshCw
+} from 'lucide-react'
+
+// Change types for SEVIS processing drill-down data
+const CHANGE_TYPES = [
+  'New Student',
+  'Validation - Housing',
+  'Validation - Site of Activity', 
+  'Payment',
+  'Bio',
+  'Update - Housing',
+  'Update - Site of Activity',
+  'Program Date',
+  'Program Extension',
+  'Program Shorten',
+  'Reprint',
+  'Status End',
+  'Status Invalid',
+  'Status Terminate',
+  'Update - Edit Subject',
+  'Financial Info'
+]
+
+// Define chart data type
+interface ProgramData {
+  successful: number;
+  failed: number;
+}
+
+interface ChartDataPoint {
+  date: Date;
+  day: string;
+  successful: number;
+  failed: number;
+  programs: {
+    'High School Program': ProgramData;
+    'Training & Internships': ProgramData;
+    'Work And Travel': ProgramData;
+  };
+  // Flattened program data for chart bars
+  highSchoolSuccessful: number;
+  highSchoolFailed: number;
+  trainingSuccessful: number;
+  trainingFailed: number;
+  workTravelSuccessful: number;
+  workTravelFailed: number;
+}
+
+// Define tooltip formatter type that matches Recharts expectations
+type FormatterType = (
+  value: string | number | Array<string | number>, 
+  name: string, 
+  entry: any, 
+  index: number
+) => React.ReactNode;
+
+// Generate random data for the chart based on date range
+const generateChartData = (dateRange: string): ChartDataPoint[] => {
+  // Get yesterday as the most recent date
+  const yesterday = startOfDay(subDays(new Date(), 1));
+  
+  // Determine start date based on selected range
+  let startDate;
+  switch (dateRange) {
+    case 'week':
+      startDate = subDays(yesterday, 6); // 7 days including yesterday
+      break;
+    case 'last30':
+      startDate = subDays(yesterday, 29); // 30 days including yesterday
+      break;
+    case 'lastQuarter':
+      startDate = subMonths(yesterday, 3);
+      break;
+    default:
+      startDate = subDays(yesterday, 6);
+  }
+  
+  // Generate a date for each day in the interval
+  const dates = eachDayOfInterval({ start: startDate, end: yesterday });
+  
+  // Create data points for each date
+  return dates.map(date => {
+    // Generate submissions around 150 per day (140-160 range)
+    const totalSubmissions = Math.floor(Math.random() * 20) + 140;
+    
+    // Add more variance to failures
+    // Some days have very few failures (1-2%), others have significant failures (5-15%)
+    const failureRateType = Math.random();
+    let failureRate;
+    
+    if (failureRateType < 0.5) {
+      // Half of days have low-moderate failure rate (5-10%)
+      failureRate = 0.05 + (Math.random() * 0.05);
+    } else if (failureRateType < 0.8) {
+      // Some days have substantial failures (10-20%)
+      failureRate = 0.10 + (Math.random() * 0.10);
+    } else {
+      // A significant number of days have high failures (20-35%)
+      failureRate = 0.20 + (Math.random() * 0.15);
+    }
+    
+    // Calculate successful and failed submissions
+    const failed = Math.floor(totalSubmissions * failureRate);
+    const successful = totalSubmissions - failed;
+
+    // Generate program-specific data
+    const programs: ChartDataPoint['programs'] = {
+      'High School Program': {
+        successful: Math.floor(successful * 0.6) + Math.floor(Math.random() * 10),
+        failed: Math.floor(failed * 0.6) + Math.floor(Math.random() * 5)
+      },
+      'Training & Internships': {
+        successful: Math.floor(successful * 0.25) + Math.floor(Math.random() * 8),
+        failed: Math.floor(failed * 0.25) + Math.floor(Math.random() * 3)
+      },
+      'Work And Travel': {
+        successful: Math.floor(successful * 0.15) + Math.floor(Math.random() * 6),
+        failed: Math.floor(failed * 0.25) + Math.floor(Math.random() * 8)
+      }
+    };
+
+    return {
+      date,
+      day: format(date, 'MMM d'), // Format as "Jan 1"
+      successful,
+      failed,
+      programs,
+      // Flatten program data for easier chart access
+      highSchoolSuccessful: programs['High School Program'].successful,
+      highSchoolFailed: programs['High School Program'].failed,
+      trainingSuccessful: programs['Training & Internships'].successful,
+      trainingFailed: programs['Training & Internships'].failed,
+      workTravelSuccessful: programs['Work And Travel'].successful,
+      workTravelFailed: programs['Work And Travel'].failed
+    };
+  });
+};
+
+// Define Student type based on the students.tsx page
+type Student = {
+  id: string;
+  name: string;
+  country: string;
+  grade: string;
+  gender: string;
+  program: string;
+  programIntake: string;
+  type: string;
+  partner: string;
+  approvedOn: string;
+  approvedBy: string;
+  status: { text: string; color: string };
+  dob: string;
+  hostFamilyName: string;
+  school: string;
+  startDate: string;
+  endDate: string;
+  sevisId: string;
+  lastAction: string;
+  avatarUrl: string | undefined;
+  initials: string;
+  profile: Profile;
+  firstName: string;
+  lastName: string;
+  sevisQueueApprovedBy: string;
+  sevisMessage: string;
+};
+
+// Type for the enhanced student data used in the table
+type EnhancedStudent = Student & {
+  statusText: string;
+  statusDisplay: string;
+  changeQueue: string;
+};
+
+// SEVIS statuses for filtering
+const SEVIS_STATUSES = {
+  READY: 'Ready for SEVIS',
+  IN_QUEUE: 'In SEVIS Queue',
+  SUBMITTED: 'Submitted to SEVIS',
+  SUCCESSFUL: 'Processing Successful',
+  FAILED: 'Processing Failed'
+};
+
+interface SevisViewProps {
+  initialStatusFilter?: string;
+}
+
+// Add this countdown timer component
+const CountdownTimer = ({ startedMinutesAgo }: { startedMinutesAgo: number }) => {
+  const [remainingTime, setRemainingTime] = useState(() => {
+    const totalMinutes = 60 - startedMinutesAgo;
+    return {
+      minutes: Math.floor(totalMinutes),
+      seconds: Math.floor((totalMinutes % 1) * 60)
+    };
+  });
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setRemainingTime(prev => {
+        if (prev.minutes === 0 && prev.seconds === 0) {
+          clearInterval(timer);
+          return prev;
+        }
+        
+        if (prev.seconds === 0) {
+          return {
+            minutes: prev.minutes - 1,
+            seconds: 59
+          };
+        }
+        
+        return {
+          minutes: prev.minutes,
+          seconds: prev.seconds - 1
+        };
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <span className="text-blue-600 font-medium" suppressHydrationWarning>
+      Estimated result in {String(remainingTime.minutes).padStart(2, '0')}:
+      {String(remainingTime.seconds).padStart(2, '0')} minutes
+    </span>
+  );
+};
+
+// Add this component for program chips
+const ProgramChip = ({ program }: { program: string }) => {
+  const getChipStyles = (programName: string) => {
+    switch (programName) {
+      case 'High School Program':
+        return 'bg-[var(--greenheart-pine-25)] text-[var(--greenheart-pine-800)]'; // Pine -25/-800 combo
+      case 'Training & Internship Program':
+        return 'bg-[var(--greenheart-marigold-25)] text-[var(--greenheart-marigold-800)]'; // Marigold -25/-800 combo
+      case 'Work & Travel Program':
+        return 'bg-[var(--greenheart-azure-25)] text-[var(--greenheart-azure-800)]'; // Azure -25/-800 combo
+      default:
+        return 'bg-gray-25 text-gray-800';
+    }
+  };
+
+  return (
+    <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${getChipStyles(program)}`}>
+      {program}
+    </span>
+  );
+};
+
+export function SevisView({ initialStatusFilter }: SevisViewProps = {}) {
+  // Define the date range options and mapping
+  const dateRangeOptions = [
+    { value: 'week', label: '7 Days' },
+    { value: 'last30', label: '30 Days' },
+    { value: 'lastQuarter', label: '3 Months' },
+  ];
+
+  // State for selected date range index
+  const [selectedRangeIndex, setSelectedRangeIndex] = useState(0);
+  const selectedDateRange = dateRangeOptions[selectedRangeIndex]?.value || 'last30';
+  
+  // Use state for the metric values to trigger animations
+  const [metrics, setMetrics] = useState({
+    totalRecords: 0,
+    readyForSevis: 0,
+    inSevisQueue: 0,
+    submittedToSevis: 0,
+    lastBatchSuccessful: 0,
+    lastBatchFailed: 0
+  })
+
+  const [chartData, setChartData] = useState<ChartDataPoint[]>(generateChartData(selectedDateRange))
+  const [students, setStudents] = useState<Student[]>([]);
+  const [isTableLoading, setIsTableLoading] = useState(true);
+  const [drillDownSegment, setDrillDownSegment] = useState<{name: string, programType?: string, value: number, color: string, successful: number, failed: number} | null>(null);
+  const [activeIndex, setActiveIndex] = useState<number>(-1);
+  
+  // Track the selected status filter
+  const [selectedStatusFilter, setSelectedStatusFilter] = useState(initialStatusFilter || "Change Queue");
+
+  // Filter students based on selected status filter - but let the table handle the actual filtering
+  const filteredStudents = useMemo(() => {
+    return students;
+  }, [students]);
+  
+  // Optimized handlers following Recharts patterns
+  const onPieEnter = React.useCallback((data: any, index: number) => {
+    setActiveIndex(index);
+  }, []);
+  
+  const onPieLeave = React.useCallback(() => {
+    setActiveIndex(-1);
+  }, []);
+  
+  // Move this after donutData is defined
+  
+  // Get InstantDB data
+  const { users, profiles, relationships, error, usedFallback, usingServiceClient, isLoading } = useInstantData();
+  
+
+  
+  // Memoize processed students to prevent infinite re-renders
+  const processedStudents = useMemo(() => {
+    // Handle error case without causing infinite re-renders
+    if (error) {
+      console.error('Error loading data:', error);
+      return [];
+    }
+    
+    try {
+      // Helper for safe string access
+      const safeString = (value: any): string => {
+        if (value === null || value === undefined) return '';
+        return String(value);
+      };
+      
+      // Find student users
+      const studentUsers = users.filter(user => user.role === 'student');
+      
+      if (studentUsers.length === 0) {
+        return [];
+      }
+      
+      // Process students with specific focus on SEVIS statuses - ONLY APPROVED STUDENTS
+      return studentUsers.map((studentUser, index) => {
+        try {
+          // Find the student's profile
+          const studentProfile = profiles.find(p => p.userId === studentUser.id);
+          
+          // Only include students with approved applications
+          const applicationStatus = studentProfile?.data?.applicationStatus;
+          if (applicationStatus !== 'approved') {
+            return null; // Skip non-approved students
+          }
+          
+          // Find relevant relationships
+          const hostRelationship = studentProfile 
+            ? relationships.find(r => r.type === 'host_student' && r.secondaryId === studentProfile.id)
+            : null;
+            
+          const orgRelationship = studentProfile 
+            ? relationships.find(r => r.type === 'sending_org_student' && r.secondaryId === studentProfile.id) 
+            : null;
+          
+          // Basic student info
+          const firstName = safeString(studentUser.firstName);
+          const lastName = safeString(studentUser.lastName);
+          const name = `${firstName} ${lastName}`.trim() || `Student ${index + 1}`;
+          
+          // Safely extract metadata
+          const country = studentUser.metadata?.country_of_origin || 'Unknown';
+          const gender = studentUser.metadata?.gender || 
+                        studentProfile?.data?.gender || 'Unknown';
+          
+          // Find host family
+          let hostFamilyName = 'Unassigned';
+          if (hostRelationship) {
+            const hostProfile = profiles.find(p => p.id === hostRelationship.primaryId);
+            if (hostProfile) {
+              const hostUser = users.find(u => u.id === hostProfile.userId);
+              if (hostUser) {
+                hostFamilyName = `${safeString(hostUser.firstName)} ${safeString(hostUser.lastName)}`.trim();
+                if (!hostFamilyName) hostFamilyName = 'Unassigned';
+              }
+            }
+          }
+          
+          // Extract program intake details (this will be the current program value)
+          let programIntake = 'Unknown';
+          if (orgRelationship?.data?.program_type) {
+            programIntake = safeString(orgRelationship.data.program_type);
+          } else if (studentProfile?.data?.program?.type) {
+            programIntake = safeString(studentProfile.data.program.type);
+          }
+          
+          // Format program intake name
+          const programIntakeFormatted = programIntake.replace(/_/g, ' ')
+            .split(' ')
+            .map(word => word && word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+
+          // Program is always "High School Program" for all students
+          const program = 'High School Program';
+          
+          // Safe date handling
+          const formatDate = (dateStr?: string): string => {
+            if (!dateStr) return 'Unknown';
+            try {
+              const date = new Date(dateStr);
+              if (isNaN(date.getTime())) return 'Unknown';
+              return date.toLocaleDateString();
+            } catch (e) {
+              return 'Unknown';
+            }
+          };
+          
+          // Initialize SEVIS ID as blank - only successful students will get one
+          let sevisId = '';
+          
+          // Format approval date
+          const approvalDate = (studentProfile?.data && 
+                            typeof studentProfile.data === 'object' && 
+                            'approved_on' in studentProfile.data)
+            ? formatDate(studentProfile.data.approved_on as string)
+            : formatDate(orgRelationship?.data?.approval_date as string) || 'Unknown';
+          
+          // Extract SEVIS status from profile data using actual InstantDB field names
+          let statusText = '';
+          let statusColor = '';
+          let lastAction = '';
+          
+          const sevisStatus = studentProfile?.data?.sevisStatus;
+          
+          // Map SEVIS status using actual InstantDB values - if explicit status exists, use it, otherwise distribute evenly
+          if (sevisStatus === 'sevis_approved') {
+            statusText = SEVIS_STATUSES.SUCCESSFUL;
+            statusColor = 'green';
+            lastAction = 'SEVIS Processing Complete';
+          } else if (sevisStatus === 'sevis_failed') {
+            statusText = SEVIS_STATUSES.FAILED;
+            statusColor = 'red';
+            lastAction = 'SEVIS Processing Failed';
+          } else if (sevisStatus === 'submitted_to_sevis') {
+            statusText = SEVIS_STATUSES.SUBMITTED;
+            statusColor = 'purple';
+            lastAction = 'Submitted to SEVIS System';
+          } else if (sevisStatus === 'in_sevis_queue') {
+            statusText = SEVIS_STATUSES.IN_QUEUE;
+            statusColor = 'amber';
+            lastAction = 'Added to SEVIS Queue';
+          } else if (sevisStatus === 'ready_for_sevis') {
+            statusText = SEVIS_STATUSES.READY;
+            statusColor = 'blue';
+            lastAction = 'Ready for SEVIS Submission';
+          } else {
+            // For approved students without explicit SEVIS status, distribute them across categories
+            // Use a deterministic approach based on student index to ensure consistent distribution
+            const statusIndex = index % 5;
+            
+            switch (statusIndex) {
+              case 0:
+                statusText = SEVIS_STATUSES.READY;
+                statusColor = 'blue';
+                lastAction = 'Ready for SEVIS Submission';
+                break;
+              case 1:
+                statusText = SEVIS_STATUSES.IN_QUEUE;
+                statusColor = 'amber';
+                lastAction = 'Added to SEVIS Queue';
+                break;
+              case 2:
+                statusText = SEVIS_STATUSES.SUBMITTED;
+                statusColor = 'purple';
+                lastAction = 'Submitted to SEVIS System';
+                break;
+              case 3:
+                statusText = SEVIS_STATUSES.SUCCESSFUL;
+                statusColor = 'green';
+                lastAction = 'SEVIS Processing Complete';
+                break;
+              case 4:
+                statusText = SEVIS_STATUSES.FAILED;
+                statusColor = 'red';  
+                lastAction = 'SEVIS Processing Failed';
+                break;
+              default:
+                statusText = SEVIS_STATUSES.READY;
+                statusColor = 'blue';
+                lastAction = 'Ready for SEVIS Submission';
+            }
+          }
+          
+          // Assign SEVIS ID to students with any SEVIS processing status (not just approved/failed)
+          if (sevisStatus === 'sevis_approved' || sevisStatus === 'sevis_failed' || sevisStatus === 'in_sevis_queue' || sevisStatus === 'submitted_to_sevis' || statusText === SEVIS_STATUSES.SUCCESSFUL || statusText === SEVIS_STATUSES.FAILED || statusText === SEVIS_STATUSES.IN_QUEUE || statusText === SEVIS_STATUSES.SUBMITTED) {
+            // Check if they already have a SEVIS ID in their profile data
+            if (studentProfile?.data && 
+                typeof studentProfile.data === 'object' && 
+                'sevis_id' in studentProfile.data &&
+                studentProfile.data.sevis_id) {
+              sevisId = String(studentProfile.data.sevis_id);
+            } else if (orgRelationship?.data && 
+                typeof orgRelationship.data === 'object' && 
+                'sevis_id' in orgRelationship.data &&
+                orgRelationship.data.sevis_id) {
+              sevisId = String(orgRelationship.data.sevis_id);
+            } else {
+              // Generate realistic SEVIS ID: N followed by 7-10 digits (like the database scripts)
+              const sevisNumber = String(1000000 + (index * 123456) % 9000000).padStart(7, '0');
+              sevisId = `N${sevisNumber}`;
+            }
+          }
+
+          // Extract approved by information
+          let approvedBy = 'Unknown';
+          if (studentProfile?.data && 
+              typeof studentProfile.data === 'object' && 
+              'approved_by' in studentProfile.data &&
+              studentProfile.data.approved_by) {
+            approvedBy = safeString(studentProfile.data.approved_by);
+          } else if (orgRelationship?.data && 
+              typeof orgRelationship.data === 'object' && 
+              'approved_by' in orgRelationship.data &&
+              orgRelationship.data.approved_by) {
+            approvedBy = safeString(orgRelationship.data.approved_by);
+          }
+
+          // Get SEVIS change type from profile data
+          let type = 'New Student'; // Default to New Student if no type found
+          
+          // First check the profile data for sevis_processing_type
+          if (studentProfile?.data?.sevis_processing_type) {
+            type = String(studentProfile.data.sevis_processing_type);
+          }
+          // Then check for changeType in the change queue data
+          else if (studentProfile?.data?.changeType) {
+            type = String(studentProfile.data.changeType);
+          }
+          // Finally check the relationships for any SEVIS-related metadata
+          else if (orgRelationship?.data?.sevis_processing_type) {
+            type = String(orgRelationship.data.sevis_processing_type);
+          }
+
+          // Validate that the type is a valid SEVIS change type
+          const validSevisTypes = [
+            'New Student',
+            'Validation - Housing',
+            'Validation - Site of Activity',
+            'Payment',
+            'Bio',
+            'Update - Housing',
+            'Update - Site of Activity',
+            'Program Date',
+            'Program Extension',
+            'Program Shorten',
+            'Reprint',
+            'Status End',
+            'Status Invalid',
+            'Status Terminate',
+            'Update - Edit Subject',
+            'Financial Info'
+          ];
+          
+          // If the type is not valid, default to New Student
+          if (!validSevisTypes.includes(type)) {
+            type = 'New Student';
+          }
+          
+          // Generate SEVIS Queue Approved By - only for non-Ready statuses
+          const adminUsers = [
+            'Sarah Johnson',
+            'Michael Chen', 
+            'Aisha Patel',
+            'David Rodriguez',
+            'Emma Wilson',
+            'James Thompson',
+            'Maria Garcia',
+            'Robert Kim',
+            'Jennifer Singh',
+            'Thomas Walker'
+          ];
+          
+          let sevisQueueApprovedBy = '';
+          if (statusText !== 'Ready for SEVIS') {
+            // Check if already exists in profile data
+            if (studentProfile?.data && 
+                typeof studentProfile.data === 'object' && 
+                'sevisQueueApprovedBy' in studentProfile.data &&
+                studentProfile.data.sevisQueueApprovedBy) {
+              sevisQueueApprovedBy = String(studentProfile.data.sevisQueueApprovedBy);
+            } else {
+              // Assign a random admin based on student index
+              sevisQueueApprovedBy = adminUsers[index % adminUsers.length] || 'Unknown Admin';
+            }
+          }
+          
+          // Generate SEVIS Message - only for Failed records
+          const failureMessages = [
+            'Invalid address format',
+            'Missing required field: school district',
+            'SEVIS ID already exists',
+            'Program dates overlap with existing record',
+            'Host family not verified',
+            'Payment amount exceeds limit',
+            'Document validation failed',
+            'Duplicate participant entry',
+            'Incomplete I-94 information',
+            'Medical clearance expired'
+          ];
+          
+          let sevisMessage = '';
+          if (statusText === 'Processing Failed') {
+            // Check if already exists in profile data
+            if (studentProfile?.data && 
+                typeof studentProfile.data === 'object' && 
+                'sevisMessage' in studentProfile.data &&
+                studentProfile.data.sevisMessage) {
+              sevisMessage = String(studentProfile.data.sevisMessage);
+            } else {
+              // Assign a random failure message based on student index
+              sevisMessage = failureMessages[index % failureMessages.length] || 'Processing failed';
+            }
+          }
+          
+          return {
+            id: studentUser.id,
+            name,
+            country,
+            grade: safeString(studentProfile?.data?.school_grade || ''),
+            gender,
+            program,
+            programIntake: programIntakeFormatted,
+            type,
+            partner: safeString(orgRelationship?.data?.partner_organization || ''),
+            approvedOn: approvalDate,
+            approvedBy,
+            status: { text: statusText, color: statusColor },
+            dob: formatDate(studentProfile?.data?.date_of_birth),
+            hostFamilyName,
+            school: safeString(orgRelationship?.data?.school_name || ''),
+            startDate: formatDate(orgRelationship?.startDate?.toISOString()),
+            endDate: formatDate(orgRelationship?.endDate?.toISOString()),
+            sevisId,
+            lastAction,
+            avatarUrl: studentUser.avatarUrl,
+            initials: firstName && lastName ? `${firstName[0]}${lastName[0]}`.toUpperCase() : 'ST',
+            profile: studentProfile || {} as Profile,
+            firstName,
+            lastName,
+            sevisQueueApprovedBy,
+            sevisMessage,
+          };
+        } catch (err) {
+          console.error(`Error processing student ${studentUser.id}:`, err);
+          return null; // Skip students with errors
+        }
+      }).filter(student => student !== null); // Remove null entries (non-approved students)
+    } catch (err) {
+      console.error('Error processing students:', err);
+      return [];
+    }
+  }, [users, profiles, relationships]); // Removed error dependency to prevent infinite loops
+
+  // Update state when processed students change
+  useEffect(() => {
+    setStudents(processedStudents);
+    
+    // Update the metrics based on processed students
+    const readyForSevis = processedStudents.filter(s => s.status.text === SEVIS_STATUSES.READY).length;
+    const inSevisQueue = processedStudents.filter(s => s.status.text === SEVIS_STATUSES.IN_QUEUE).length;
+    const submittedToSevis = processedStudents.filter(s => s.status.text === SEVIS_STATUSES.SUBMITTED).length;
+    const lastBatchSuccessful = processedStudents.filter(s => s.status.text === SEVIS_STATUSES.SUCCESSFUL).length;
+    const lastBatchFailed = processedStudents.filter(s => s.status.text === SEVIS_STATUSES.FAILED).length;
+    
+    setMetrics({
+      totalRecords: processedStudents.length,
+      readyForSevis,
+      inSevisQueue,
+      submittedToSevis,
+      lastBatchSuccessful,
+      lastBatchFailed
+    });
+    
+    // Set loading state based on InstantDB loading state
+    setIsTableLoading(isLoading);
+  }, [processedStudents, isLoading]); // Use isLoading from InstantDB instead of error
+
+  // Update chart data when date range changes
+  useEffect(() => {
+    setChartData(generateChartData(selectedDateRange));
+    
+    // If we're in drill-down mode, clear stored change types to force regeneration with new data
+    if (drillDownSegment) {
+      setDrillDownChangeTypes(null);
+    }
+  }, [selectedDateRange]);
+
+  // Reset active index when switching drill-down modes to prevent stale hover states
+  useEffect(() => {
+    setActiveIndex(-1);
+  }, [drillDownSegment]);
+
+  // Chart config using theme-based colors
+  const chartConfig = {
+    successful: {
+      label: "Processing Successful",
+      color: "var(--chart-success-1)"
+    },
+    failed: {
+      label: "Processing Failed", 
+      color: "var(--chart-error-1)"
+    },
+    // High School Program - Uses Purple family for Educatius, Pine family for Greenheart
+    highSchoolSuccessful: {
+      label: "High School - Successful",
+      color: "var(--chart-program-1-successful)"
+    },
+    highSchoolFailed: {
+      label: "High School - Failed", 
+      color: "var(--chart-program-1-failed)"
+    },
+    // Training & Internships - Uses Orange family for Educatius, Marigold family for Greenheart  
+    trainingSuccessful: {
+      label: "Training & Internships - Successful",
+      color: "var(--chart-program-2-successful)"
+    },
+    trainingFailed: {
+      label: "Training & Internships - Failed",
+      color: "var(--chart-program-2-failed)"
+    },
+    // Work And Travel - Uses Burgundy family for Educatius, Azure family for Greenheart
+    workTravelSuccessful: {
+      label: "Work & Travel - Successful", 
+      color: "var(--chart-program-3-successful)"
+    },
+    workTravelFailed: {
+      label: "Work & Travel - Failed",
+      color: "var(--chart-program-3-failed)"
+    }
+  };
+
+  // State to store drill-down change types to prevent hydration issues
+  const [drillDownChangeTypes, setDrillDownChangeTypes] = useState<Array<{name: string, value: number, color: string}> | null>(null);
+
+
+
+  // Function to generate change types with deterministic distribution to avoid hydration issues
+  const generateChangeTypes = useCallback((programType: string, totalValue: number, baseColorParam: string): Array<{name: string, value: number, color: string}> => {
+    const availableTypes = programType === 'High School Program' 
+      ? CHANGE_TYPES // High School can have all types including 'New Student'
+      : CHANGE_TYPES.filter(type => type !== 'New Student'); // Other programs exclude 'New Student'
+    
+    const baseColor = baseColorParam;
+    
+    // For color variations, we'll use different shades of the same base color
+    const createColorVariation = (baseColor: string, index: number, total: number) => {
+      if (baseColor.includes('var(')) {
+        // For CSS variables, we'll just return the base color since we can't easily modify them
+        return baseColor;
+      }
+      
+      // For regular colors, create variations by adjusting brightness
+      if (baseColor.startsWith('#')) {
+        // Convert hex to RGB and create variations
+        const r = parseInt(baseColor.slice(1, 3), 16);
+        const g = parseInt(baseColor.slice(3, 5), 16);
+        const b = parseInt(baseColor.slice(5, 7), 16);
+        
+        // Create brightness variation (80% to 100%)
+        const factor = 0.8 + (index / (total - 1)) * 0.2;
+        const newR = Math.min(255, Math.floor(r * factor));
+        const newG = Math.min(255, Math.floor(g * factor));
+        const newB = Math.min(255, Math.floor(b * factor));
+        
+        return `rgb(${newR}, ${newG}, ${newB})`;
+      }
+      
+      // Fallback: return original color
+      return baseColor;
+    };
+    
+    // Use deterministic but pseudo-random distribution based on program name
+    const seed = programType.length + totalValue; // Simple seed based on program
+    const randomWeights = availableTypes.map((_, index) => {
+      // Create pseudo-random weights that are consistent
+      const pseudoRandom = Math.sin(seed + index * 12345) * 10000;
+      return (pseudoRandom - Math.floor(pseudoRandom)) + 0.1; // Ensure minimum weight
+    });
+    const totalWeight = randomWeights.reduce((sum, weight) => sum + weight, 0);
+    
+    let remainingValue = totalValue;
+    const changeTypeData: Array<{name: string, value: number, color: string}> = [];
+    
+    availableTypes.forEach((type, index) => {
+      let value: number;
+      
+      if (index === availableTypes.length - 1) {
+        // Last type gets all remaining value
+        value = remainingValue;
+      } else {
+        // Calculate proportional value based on pseudo-random weight
+        const weight = randomWeights[index] || 0.1; // Fallback weight if undefined
+        value = Math.max(1, Math.floor((weight / totalWeight) * totalValue));
+        remainingValue -= value;
+      }
+      
+      changeTypeData.push({
+        name: type,
+        value: value,
+        color: createColorVariation(baseColor, index, availableTypes.length)
+      });
+    });
+    
+    return changeTypeData;
+  }, []);
+
+
+
+  // Generate donut chart data from the current chart data
+  const donutData = useMemo(() => {
+    const totals = chartData.reduce((acc, day) => {
+      acc.highSchoolSuccessful += day.highSchoolSuccessful;
+      acc.highSchoolFailed += day.highSchoolFailed;
+      acc.trainingSuccessful += day.trainingSuccessful;
+      acc.trainingFailed += day.trainingFailed;
+      acc.workTravelSuccessful += day.workTravelSuccessful;
+      acc.workTravelFailed += day.workTravelFailed;
+      return acc;
+    }, { 
+      highSchoolSuccessful: 0, 
+      highSchoolFailed: 0,
+      trainingSuccessful: 0,
+      trainingFailed: 0,
+      workTravelSuccessful: 0,
+      workTravelFailed: 0
+    });
+
+
+
+    // If in drill-down mode, show breakdown by change types
+    if (drillDownSegment) {
+      // Use stored drill-down data if available, otherwise generate it
+      if (drillDownChangeTypes) {
+        return drillDownChangeTypes;
+      }
+      
+      // If no stored change types, regenerate using current chart data totals
+      const programType = drillDownSegment.programType || drillDownSegment.name;
+      let currentTotalValue = drillDownSegment.value; // Default to stored value
+      
+      // If we have a program type, calculate current totals from chart data
+      if (drillDownSegment.programType) {
+        if (drillDownSegment.programType === 'High School Program') {
+          currentTotalValue = totals.highSchoolSuccessful + totals.highSchoolFailed;
+        } else if (drillDownSegment.programType === 'Training & Internships') {
+          currentTotalValue = totals.trainingSuccessful + totals.trainingFailed;
+        } else if (drillDownSegment.programType === 'Work & Travel') {
+          currentTotalValue = totals.workTravelSuccessful + totals.workTravelFailed;
+        }
+      }
+      
+      return generateChangeTypes(programType, currentTotalValue, drillDownSegment.color || '#8884d8');
+    }
+
+    // Default view - show all 6 segments (successful + failed for each program)
+    const segments = [
+      {
+        name: 'High School - Successful',
+        value: totals.highSchoolSuccessful,
+        color: chartConfig.highSchoolSuccessful.color,
+        programType: 'High School Program',
+        segmentType: 'successful'
+      },
+      {
+        name: 'High School - Failed',
+        value: totals.highSchoolFailed,
+        color: chartConfig.highSchoolFailed.color,
+        programType: 'High School Program',
+        segmentType: 'failed'
+      },
+      {
+        name: 'Training & Internships - Successful',
+        value: totals.trainingSuccessful,
+        color: chartConfig.trainingSuccessful.color,
+        programType: 'Training & Internships',
+        segmentType: 'successful'
+      },
+      {
+        name: 'Training & Internships - Failed',
+        value: totals.trainingFailed,
+        color: chartConfig.trainingFailed.color,
+        programType: 'Training & Internships',
+        segmentType: 'failed'
+      },
+      {
+        name: 'Work & Travel - Successful',
+        value: totals.workTravelSuccessful,
+        color: chartConfig.workTravelSuccessful.color,
+        programType: 'Work & Travel',
+        segmentType: 'successful'
+      },
+      {
+        name: 'Work & Travel - Failed',
+        value: totals.workTravelFailed,
+        color: chartConfig.workTravelFailed.color,
+        programType: 'Work & Travel',
+        segmentType: 'failed'
+      }
+    ];
+
+
+    
+    return segments;
+  }, [chartData, drillDownSegment, drillDownChangeTypes]);
+
+  // Define click handler after donutData is available
+  const onPieClick = React.useCallback((data: any, index: number) => {
+    if (!drillDownSegment && data.programType) {
+      // Calculate totals for the entire program
+      const programSegments = donutData.filter(d => (d as any).programType === data.programType);
+      const successful = programSegments.find(d => (d as any).segmentType === 'successful')?.value || 0;
+      const failed = programSegments.find(d => (d as any).segmentType === 'failed')?.value || 0;
+      
+      // Use a consistent color based on the program type
+      const programColor = data.programType === 'High School Program' 
+        ? (data.segmentType === 'successful' ? chartConfig.highSchoolSuccessful.color : chartConfig.highSchoolFailed.color)
+        : data.programType === 'Training & Internships'
+        ? (data.segmentType === 'successful' ? chartConfig.trainingSuccessful.color : chartConfig.trainingFailed.color)
+        : (data.segmentType === 'successful' ? chartConfig.workTravelSuccessful.color : chartConfig.workTravelFailed.color);
+      
+      const totalValue = successful + failed;
+      
+      // Generate change types for this drill-down and store them
+      const changeTypes = generateChangeTypes(data.programType, totalValue, programColor);
+      setDrillDownChangeTypes(changeTypes);
+      
+      setDrillDownSegment({
+        name: data.name, // Use the specific segment name (e.g., "High School - Successful")
+        programType: data.programType, // Store the program type separately
+        value: totalValue,
+        color: programColor,
+        successful,
+        failed
+      });
+    }
+  }, [drillDownSegment, donutData, generateChangeTypes]);
+
+  // Handle range navigation
+  const handlePrevRange = () => {
+    if (selectedRangeIndex > 0) {
+      setSelectedRangeIndex(selectedRangeIndex - 1);
+    }
+  };
+
+  const handleNextRange = () => {
+    if (selectedRangeIndex < dateRangeOptions.length - 1) {
+      setSelectedRangeIndex(selectedRangeIndex + 1);
+    }
+  };
+
+  // This is no longer needed - metrics are calculated from real data
+
+  // Custom tooltip formatter to show the full date
+  const customTooltipFormatter: FormatterType = (value, name, entry, _index) => {
+    // Format the date for display in tooltip
+    if (entry?.payload?.date) {
+      return [name, value];
+    }
+    return [name, value];
+  };
+
+  // Custom label formatter for the tooltip
+  const customLabelFormatter = (label: string, payload: any[]) => {
+    if (payload && payload[0]?.payload?.date) {
+      return format(payload[0].payload.date, 'MMMM d, yyyy');
+    }
+    return label;
+  };
+
+  // Custom tooltip content
+  const CustomTooltipContent = ({ active, payload, label }: any) => {
+    if (!active || !payload || !payload.length) return null;
+    
+    const data = payload[0].payload;
+    const formattedDate = data.date ? format(data.date, 'MMMM d, yyyy') : label;
+    
+    // Helper function to get program colors based on program name
+    const getProgramColors = (programName: string) => {
+      switch (programName) {
+        case 'High School Program':
+          return {
+            successful: chartConfig.highSchoolSuccessful.color,
+            failed: chartConfig.highSchoolFailed.color
+          };
+        case 'Training & Internships':
+          return {
+            successful: chartConfig.trainingSuccessful.color,
+            failed: chartConfig.trainingFailed.color
+          };
+        case 'Work And Travel':
+          return {
+            successful: chartConfig.workTravelSuccessful.color,
+            failed: chartConfig.workTravelFailed.color
+          };
+        default:
+          return {
+            successful: '#10b981', // fallback green
+            failed: '#ef4444'      // fallback red
+          };
+      }
+    };
+    
+    return (
+      <div className="bg-background border-border rounded-lg border px-3 py-2 shadow-lg w-80">
+        <p className="text-xs mb-2 text-muted-foreground">{formattedDate}</p>
+        
+        {/* Divider after date */}
+        <div className="border-t border-gray-200 mb-2"></div>
+        
+        {/* Program-specific breakdown */}
+        {data.programs && (
+          <div className="space-y-2">
+            {Object.entries(data.programs).map(([programName, programData]) => {
+              const typedProgramData = programData as ProgramData;
+              const programTotal = typedProgramData.successful + typedProgramData.failed;
+              const programSuccessPercentage = programTotal > 0 ? (typedProgramData.successful / programTotal) * 100 : 0;
+              const programFailedPercentage = programTotal > 0 ? (typedProgramData.failed / programTotal) * 100 : 0;
+              const programColors = getProgramColors(programName);
+              
+              return (
+                <div key={programName} className="space-y-1">
+                  <div className="flex justify-between items-center">
+                    <div className="text-xs">
+                      <span className="font-medium">{programName}</span>
+                      <span className="text-muted-foreground">: {programTotal}</span>
+                    </div>
+                    <div className="text-xs flex items-center gap-1">
+                      <span className="font-medium text-green-600">
+                        {typedProgramData.successful}
+                      </span>
+                      <span className="text-gray-400">|</span>
+                      <span className="font-medium text-red-600">
+                        {typedProgramData.failed}
+                      </span>
+                    </div>
+                  </div>
+                  {programTotal > 0 && (
+                    <div className="flex h-1.5 w-72 rounded-full overflow-hidden bg-gray-200">
+                      {typedProgramData.successful > 0 && (
+                        <div 
+                          className="h-full"
+                          style={{ 
+                            backgroundColor: programColors.successful,
+                            width: `${programSuccessPercentage}%` 
+                          }}
+                        />
+                      )}
+                      {typedProgramData.failed > 0 && (
+                        <div 
+                          className="h-full"
+                          style={{ 
+                            backgroundColor: programColors.failed,
+                            width: `${programFailedPercentage}%` 
+                          }}
+                        />
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+            
+            {/* Divider */}
+            <div className="border-t border-gray-200 pt-2 mt-2">
+              {(() => {
+                // Calculate total successful and failed across all programs
+                const totalProgramSuccessful = Object.values(data.programs).reduce((sum: number, programData: unknown) => {
+                  const typedData = programData as ProgramData;
+                  return sum + typedData.successful;
+                }, 0);
+                
+                const totalProgramFailed = Object.values(data.programs).reduce((sum: number, programData: unknown) => {
+                  const typedData = programData as ProgramData;
+                  return sum + typedData.failed;
+                }, 0);
+                
+                const totalProgramSubmissions = totalProgramSuccessful + totalProgramFailed;
+                const totalSuccessPercentage = totalProgramSubmissions > 0 ? (totalProgramSuccessful / totalProgramSubmissions) * 100 : 0;
+                const totalFailedPercentage = totalProgramSubmissions > 0 ? (totalProgramFailed / totalProgramSubmissions) * 100 : 0;
+                
+                return (
+                  <div className="space-y-1">
+                    <div className="flex justify-between items-center">
+                      <div className="text-xs">
+                        <span className="font-medium">Total Submissions</span>
+                        <span className="text-muted-foreground">: {totalProgramSubmissions}</span>
+                      </div>
+                      <div className="text-xs flex items-center gap-1">
+                        <span className="text-green-600 font-medium">{totalProgramSuccessful}</span>
+                        <span className="text-gray-400">|</span>
+                        <span className="text-red-600 font-medium">{totalProgramFailed}</span>
+                      </div>
+                    </div>
+                    {totalProgramSubmissions > 0 && (
+                      <div className="flex h-1.5 w-72 rounded-full overflow-hidden bg-gray-200">
+                        {totalProgramSuccessful > 0 && (
+                          <div 
+                            className="bg-green-500 h-full"
+                            style={{ width: `${totalSuccessPercentage}%` }}
+                          />
+                        )}
+                        {totalProgramFailed > 0 && (
+                          <div 
+                            className="bg-red-500 h-full"
+                            style={{ width: `${totalFailedPercentage}%` }}
+                          />
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  // Column definitions for student table
+  const studentColumns: any[] = [
+    {
+      id: "select",
+      enablePinning: true,
+      enableSorting: false,
+      size: 56,
+      header: ({ table }: any) => (
+        <div className="flex h-10 items-center justify-center">
+          <Checkbox
+            checked={table.getIsAllPageRowsSelected()}
+            onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+            aria-label="Select all"
+          />
+        </div>
+      ),
+      cell: ({ row }: any) => (
+        <div className="flex h-10 items-center justify-center">
+          <Checkbox
+            checked={row.getIsSelected()}
+            onCheckedChange={(value) => row.toggleSelected(!!value)}
+            aria-label={`Select row ${row.index}`}
+          />
+        </div>
+      ),
+    },
+    {
+      id: "expander",
+      enablePinning: true,
+      enableSorting: false,
+      size: 56,
+      header: "Details",
+      cell: ({ row }: any) => (
+        <div className="flex h-full w-full items-center justify-center">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-6 w-6 flex items-center justify-center"
+            onClick={() => row.toggleExpanded()}
+          >
+            <Clock className={cn("h-4 w-4 transition-transform", {
+              "transform -rotate-90": !row.getIsExpanded(),
+            })} />
+          </Button>
+        </div>
+      ),
+    },
+    {
+      accessorKey: "name",
+      header: "Name",
+      enablePinning: true,
+      enableSorting: true,
+      size: 220,
+      cell: ({ row }: any) => {
+        const student = row.original;
+        
+        return (
+          <div className="flex items-center gap-2">
+            <div className="h-8 w-8 rounded-[0.5rem] border border-white shadow-[0px_1px_3px_0px_rgba(16,24,40,0.10),0px_1px_2px_0px_rgba(16,24,40,0.06)] bg-gray-200 flex items-center justify-center text-xs relative overflow-hidden">
+              {student.avatarUrl ? (
+                <>
+                  <img
+                    src={student.avatarUrl}
+                    alt={`${student.name}`}
+                    className="h-8 w-8 rounded-[0.5rem] absolute inset-0 object-cover"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                      const fallback = e.currentTarget.nextElementSibling as HTMLElement;
+                      if (fallback) fallback.style.display = 'flex';
+                    }}
+                  />
+                  <span className="text-xs font-medium" style={{ display: 'none' }}>
+                    {student.initials}
+                  </span>
+                </>
+              ) : (
+                <span className="text-xs font-medium">{student.initials}</span>
+              )}
+            </div>
+            <div className="flex flex-col min-w-0">
+              <span className="font-medium truncate">{student.name}</span>
+            </div>
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "program",
+      header: "Program",
+      size: 160,
+      enableSorting: true,
+    },
+    {
+      accessorKey: "programIntake",
+      header: "Program Intake",
+      size: 160,
+      enableSorting: true,
+    },
+    {
+      accessorKey: "approvedOn",
+      header: "Accepted On",
+      size: 130,
+      enableSorting: true,
+    },
+    {
+      accessorKey: "approvedBy",
+      header: "Accepted By",
+      size: 150,
+      enableSorting: true,
+    },
+    {
+      accessorKey: "sevisQueueApprovedBy",
+      header: "Queued by",
+      size: 140,
+      enableSorting: true,
+      cell: ({ row }: any) => {
+        const student = row.original;
+        const status = student.status.text;
+        
+        // Only show for In Queue, Submitted, Successful, and Failed records
+        if (status === 'Ready for SEVIS') {
+          return <span className="text-sm text-gray-400">-</span>;
+        }
+        
+        return (
+          <span className="text-sm">
+            {student.sevisQueueApprovedBy || '-'}
+          </span>
+        );
+      },
+    },
+    {
+      accessorKey: "type",
+      header: "Type",
+      size: 140,
+      enableSorting: true,
+      cell: ({ row }: any) => {
+        const student = row.original;
+        return (
+          <Badge variant="chip-blue" className="text-xs">
+            {student.type}
+          </Badge>
+        );
+      },
+    },
+    {
+      accessorKey: "sevisId",
+      header: "SEVIS ID",
+      size: 140,
+      enableSorting: true,
+      cell: ({ row }: any) => {
+        const student = row.original;
+        const status = student.status.text;
+        
+        // Show SEVIS ID for students with non-"New Student" types and any SEVIS processing status
+        const showSevisId = student.sevisId && 
+                           student.sevisId.trim() && 
+                           student.type !== 'New Student' && 
+                           (status === 'Processing Successful' || 
+                            status === 'Processing Failed' || 
+                            status === 'In SEVIS Queue' || 
+                            status === 'Submitted to SEVIS');
+        
+        if (showSevisId) {
+          return (
+            <span className="text-sm font-mono">
+              {student.sevisId}
+            </span>
+          );
+        }
+        
+        return <span className="text-sm text-gray-400">-</span>;
+      },
+    },
+    {
+      accessorKey: "status",
+      header: "SEVIS Status",
+      size: 150,
+      enableSorting: true,
+      cell: ({ row }: any) => {
+        const student = row.original;
+        const status = student.status;
+        
+        return (
+          <Badge
+            variant={
+              status.color === 'amber' ? 'chip-amber' : 
+              status.color === 'green' ? 'chip-green' : 
+              status.color === 'blue' ? 'chip-blue' : 
+              status.color === 'red' ? 'chip-red' :
+              status.color === 'purple' ? 'chip-purple' :
+              'chip-gray'
+            }
+          >
+            {status.text}
+          </Badge>
+        );
+      },
+    },
+    {
+      accessorKey: "sevisMessage",
+      header: "SEVIS Message",
+      size: 200,
+      enableSorting: true,
+      cell: ({ row }: any) => {
+        const student = row.original;
+        const status = student.status.text;
+        
+        // Only show messages for Failed records (use the actual status text)
+        if (status === 'Processing Failed') {
+          return (
+            <span className="text-sm text-red-600">
+              {student.sevisMessage || 'Processing failed'}
+            </span>
+          );
+        }
+        
+        return <span className="text-sm text-gray-400">-</span>;
+      },
+    },
+    createActionsColumn<Student>(
+      [
+        {
+          label: "View Profile",
+          icon: UserCircle,
+          onClick: (student) => {}
+        },
+        {
+          label: "View DS-2019",
+          icon: FileText,
+          onClick: (student) => {}
+        },
+        {
+          label: "Process SEVIS",
+          icon: Upload,
+          onClick: (student) => {}
+        },
+        {
+          label: "Update SEVIS Status",
+          icon: Tag,
+          onClick: (student) => {}
+        }
+      ]
+    ),
+  ];
+
+
+
+  // Memoize filter options to prevent recalculation
+  const countryFilterOptions = React.useMemo(() => 
+    Array.from(new Set(students.map(s => s.country)))
+      .filter(country => country)
+      .sort()
+      .map(country => ({
+        label: country,
+        value: country
+      }))
+  , [students]);
+
+  const programFilterOptions = React.useMemo(() => 
+    Array.from(new Set(students.map(s => s.programIntake)))
+      .filter(programIntake => programIntake)
+      .sort()
+      .map(programIntake => ({
+        label: programIntake,
+        value: programIntake
+      }))
+  , [students]);
+
+  // Memoize status counts to prevent recalculation
+  const statusCounts = React.useMemo(() => ({
+    changeQueue: students.filter(s => s.profile?.data?.hasPendingChanges === true).length,
+    ready: students.filter(s => s.status.text === SEVIS_STATUSES.READY).length,
+    queue: students.filter(s => s.status.text === SEVIS_STATUSES.IN_QUEUE).length,
+    submitted: students.filter(s => s.status.text === SEVIS_STATUSES.SUBMITTED).length,
+    successful: students.filter(s => s.status.text === SEVIS_STATUSES.SUCCESSFUL).length,
+    failed: students.filter(s => s.status.text === SEVIS_STATUSES.FAILED).length
+  }), [students]);
+
+
+
+
+  
+  // Error handling for data loading
+  if (error) {
+    return (
+      <div className="bg-white p-8 rounded-md flex items-center justify-center min-h-[300px]">
+        <div className="text-center space-y-4">
+          <AlertTriangle className="h-12 w-12 text-red-500 mx-auto" />
+          <h3 className="text-lg font-medium">Error Loading Data</h3>
+          <p className="text-muted-foreground">{error}</p>
+          <div className="text-xs text-gray-500">
+            {usedFallback ? "Using fallback mock data" : ""}
+            {usingServiceClient ? "Using service client bypass" : "Using standard client"}
+          </div>
+          <Button variant="outline">Retry</Button>
+        </div>
+      </div>
+    );
+  }
+  
+  // Rest of the component
+  return (
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>SEVIS Batching Overview</CardTitle>
+          <CardDescription>Current status of student records in the SEVIS process</CardDescription>
+          {usedFallback && (
+            <div className="mt-2 text-xs px-2 py-1 bg-amber-100 text-amber-800 rounded-md inline-block">
+              Using fallback mock data
+            </div>
+          )}
+        </CardHeader>
+        <CardContent>
+          <Metrics metrics={[
+            {
+              title: "Total SEVIS Records",
+              value: metrics.totalRecords,
+              icon: Database,
+              variant: "success",
+              change: { value: 15, timeframe: "from last month", type: "increase" }
+            },
+            {
+              title: "Ready for SEVIS",
+              value: metrics.readyForSevis,
+              icon: ListChecks,
+              variant: "info",
+              change: { value: 12, timeframe: "from last month", type: "increase" }
+            },
+            {
+              title: "In SEVIS Queue",
+              value: metrics.inSevisQueue,
+              icon: Clock,
+              variant: "teal",
+              change: { value: 8, timeframe: "from last month", type: "increase" }
+            },
+            {
+              title: "Submitted to SEVIS",
+              value: metrics.submittedToSevis,
+              icon: Upload,
+              variant: "purple",
+              change: { value: 32, timeframe: "from last month", type: "increase" }
+            },
+            {
+              title: "Last Batch Successful",
+              value: metrics.lastBatchSuccessful,
+              icon: CheckCircle,
+              variant: "success",
+              change: { value: 8, timeframe: "% from previous batch", type: "increase" }
+            },
+            {
+              title: "Last Batch Failed",
+              value: metrics.lastBatchFailed,
+              icon: XCircle,
+              variant: "error",
+              change: { value: 12, timeframe: "% from previous batch", type: "decrease" }
+            }
+          ]} />
+        </CardContent>
+      </Card>
+
+      <div className="grid gap-6 grid-cols-3">
+        {/* SEVIS Batching History Chart */}
+        <Card className="col-span-2">
+          <div className="flex flex-row items-center justify-between space-y-0 pb-2 pr-6">
+            <CardHeader className="flex-1">
+                <CardTitle>SEVIS Batching History</CardTitle>
+                <CardDescription>Stacked view SEVIS batch results</CardDescription>
+            </CardHeader>
+            
+            {/* Date Range Tabs */}
+            <div className="flex items-center gap-4">
+              <Tabs 
+                defaultValue={selectedDateRange} 
+                value={selectedDateRange}
+                onValueChange={(value) => {
+                  const newIndex = dateRangeOptions.findIndex(opt => opt.value === value);
+                  if (newIndex >= 0) {
+                    setSelectedRangeIndex(newIndex);
+                  }
+                }}
+              >
+                <TabsList>
+                  {dateRangeOptions.map((option) => (
+                    <TabsTrigger key={option.value} value={option.value}>
+                      {option.label}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </Tabs>
+            </div>
+          </div>
+          <CardContent>
+            <div className="flex gap-4 flex-row">
+              {/* Bar Chart */}
+              <div className="flex-1 w-2/3">
+                <ChartContainer config={chartConfig} className="h-[400px] min-h-[400px] max-h-[400px] w-full">
+              <BarChart 
+                data={chartData} 
+                accessibilityLayer 
+                barCategoryGap={2}
+                barSize={12} // Control bar thickness
+                margin={{top: 0, right: 10, left: -30, bottom: 5}} // Add more bottom margin for the label
+              >
+                {/* Define gradients in defs */}
+                <defs>
+                  {/* High School Program gradients */}
+                  <linearGradient id="highSchoolSuccessfulGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={chartConfig.highSchoolSuccessful.color} stopOpacity="1" />
+                    <stop offset="100%" stopColor={chartConfig.highSchoolSuccessful.color} stopOpacity="0.5" />
+                  </linearGradient>
+                  <linearGradient id="highSchoolFailedGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={chartConfig.highSchoolFailed.color} stopOpacity="1" />
+                    <stop offset="100%" stopColor={chartConfig.highSchoolFailed.color} stopOpacity="0.5" />
+                  </linearGradient>
+                  
+                  {/* Training & Internships gradients */}
+                  <linearGradient id="trainingSuccessfulGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={chartConfig.trainingSuccessful.color} stopOpacity="1" />
+                    <stop offset="100%" stopColor={chartConfig.trainingSuccessful.color} stopOpacity="0.5" />
+                  </linearGradient>
+                  <linearGradient id="trainingFailedGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={chartConfig.trainingFailed.color} stopOpacity="1" />
+                    <stop offset="100%" stopColor={chartConfig.trainingFailed.color} stopOpacity="0.5" />
+                  </linearGradient>
+                  
+                  {/* Work & Travel gradients */}
+                  <linearGradient id="workTravelSuccessfulGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={chartConfig.workTravelSuccessful.color} stopOpacity="1" />
+                    <stop offset="100%" stopColor={chartConfig.workTravelSuccessful.color} stopOpacity="0.5" />
+                  </linearGradient>
+                  <linearGradient id="workTravelFailedGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={chartConfig.workTravelFailed.color} stopOpacity="1" />
+                    <stop offset="100%" stopColor={chartConfig.workTravelFailed.color} stopOpacity="0.5" />
+                  </linearGradient>
+                </defs>
+                
+                <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                <XAxis 
+                  dataKey="day" 
+                  tickLine={false} 
+                  axisLine={false} 
+                  tickFormatter={(value: any) => `${value}`} 
+                  label={{ value: 'Date', position: 'insideBottom', offset: -5 }}
+                  tick={(props: any) => {
+                    const { x, y, payload } = props;
+                    return (
+                      <g transform={`translate(${x},${y})`}>
+                        <text 
+                          x={0} 
+                          y={0} 
+                          dy={16} 
+                          textAnchor="end" 
+                          fill="#666"
+                          transform="rotate(-45)"
+                        >
+                          {payload.value}
+                        </text>
+                      </g>
+                    );
+                  }}
+                  height={60}
+                />
+                <YAxis 
+                  tickLine={false} 
+                  axisLine={false} 
+                  tickFormatter={(value: any) => value} 
+                />
+                <ChartTooltip 
+                  content={<CustomTooltipContent />}
+                />
+                {/* High School Program bars */}
+                <Bar 
+                  dataKey="highSchoolSuccessful" 
+                  stackId="stack"
+                  fill="url(#highSchoolSuccessfulGradient)"  
+                  radius={[0, 0, 0, 0]} 
+                  name="High School - Successful"
+                />
+                <Bar 
+                  dataKey="highSchoolFailed" 
+                  stackId="stack"
+                  fill="url(#highSchoolFailedGradient)"
+                  radius={[0, 0, 0, 0]} 
+                  name="High School - Failed"
+                />
+                {/* Training & Internships bars */}
+                <Bar 
+                  dataKey="trainingSuccessful" 
+                  stackId="stack"
+                  fill="url(#trainingSuccessfulGradient)"
+                  radius={[0, 0, 0, 0]} 
+                  name="Training & Internships - Successful"
+                />
+                <Bar 
+                  dataKey="trainingFailed" 
+                  stackId="stack"
+                  fill="url(#trainingFailedGradient)"
+                  radius={[0, 0, 0, 0]} 
+                  name="Training & Internships - Failed"
+                />
+                {/* Work And Travel bars */}
+                <Bar 
+                  dataKey="workTravelSuccessful" 
+                  stackId="stack"
+                  fill="url(#workTravelSuccessfulGradient)"
+                  radius={[0, 0, 0, 0]} 
+                  name="Work & Travel - Successful"
+                />
+                <Bar 
+                  dataKey="workTravelFailed" 
+                  stackId="stack"
+                  fill="url(#workTravelFailedGradient)"
+                  radius={[2, 2, 2, 2]} 
+                  name="Work & Travel - Failed"
+                />
+              </BarChart>
+            </ChartContainer>
+                </div>
+              
+              {/* Donut Chart */}
+              <div className="w-1/3 h-full flex flex-col justify-center">
+                <div className="flex items-center justify-center">
+                  <h3 className="text-sm font-medium text-center h-[20px]">
+                    {drillDownSegment ? drillDownSegment.name : 'Program Distribution'}
+                  </h3>
+                </div>
+                
+                {/* Information Display Area - Fixed height to prevent layout shifts */}
+                <div className="mb-1 h-[60px] flex flex-col justify-center">
+                  {(() => {
+                    // Only show info when hovering over a segment (activeIndex >= 0)
+                    if (activeIndex >= 0 && activeIndex < donutData.length) {
+                      const displayItem = donutData[activeIndex];
+                      if (!displayItem) return <div></div>;
+                      
+                      const total = donutData.reduce((sum, d) => sum + d.value, 0);
+                      const percentage = ((displayItem.value / total) * 100).toFixed(1);
+                      
+                      return (
+                        <div className="text-center space-y-1">
+                          <div className="flex items-center justify-center gap-2">
+                            <div 
+                              className="w-3 h-3 rounded-full" 
+                              style={{ backgroundColor: displayItem.color }}
+                            />
+                            <span className="text-sm font-medium">
+                              {displayItem.name}
+                            </span>
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            <span className="font-medium">{displayItem.value}</span> {drillDownSegment ? 'changes' : 'records'} ({percentage}% of {drillDownSegment ? 'program changes' : 'total'})
+                          </div>
+                        </div>
+                      );
+                    }
+                    
+                    // Return empty div to maintain fixed height when not hovering
+                    return <div></div>;
+                  })()}
+                </div>
+                
+                <div className="flex items-center justify-center -mt-[30px]">
+                  <div className="relative w-[300px] h-[300px]">
+                    <svg width="300" height="300" className="transform -rotate-90">
+                      {donutData.map((item, index) => {
+                        const total = donutData.reduce((sum, d) => sum + d.value, 0);
+                        const percentage = (item.value / total) * 100;
+                        
+
+                        const circumference = 2 * Math.PI * 100; // radius = 100 (standard)
+                        
+                        // Ensure minimum visibility for very small segments (at least 0.5% of total)
+                        const minPercentage = 0.5;
+                        let adjustedPercentage = percentage;
+                        if (percentage > 0 && percentage < minPercentage) {
+                          adjustedPercentage = minPercentage;
+                        }
+                        
+                        // Add gap logic only for drill-down view
+                        if (drillDownSegment && donutData.length > 1) {
+                          const gapPercentage = (2 / circumference) * 100;
+                          adjustedPercentage = Math.max(0, adjustedPercentage - gapPercentage);
+                        }
+                        
+
+                        
+                        const strokeDasharray = `${(adjustedPercentage / 100) * circumference} ${circumference - ((adjustedPercentage / 100) * circumference)}`;
+                        
+                        // Calculate stroke-dashoffset: each segment starts where the previous one ends
+                        let strokeDashoffset = 0;
+                        if (index > 0) {
+                          // Sum up all previous segments' dash lengths
+                          for (let i = 0; i < index; i++) {
+                            const prevItem = donutData[i];
+                            if (prevItem && prevItem.value > 0) {
+                              const prevPercentage = (prevItem.value / total) * 100;
+                              const prevAdjustedPercentage = prevPercentage > 0 && prevPercentage < 0.5 ? 0.5 : prevPercentage;
+                              strokeDashoffset += (prevAdjustedPercentage / 100) * circumference;
+                              
+
+                            }
+                          }
+                        }
+                        strokeDashoffset = -strokeDashoffset;
+                        
+
+                        
+
+                        
+                        // Don't render segments with zero or negative values
+                        if (item.value <= 0) {
+                          return null;
+                        }
+                        
+                        return (
+                          <circle
+                            key={drillDownSegment ? `drill-${item.name}` : item.name}
+                            cx="150"
+                            cy="150"
+                            r="100"
+                            fill="none"
+                            stroke={item.color}
+                            strokeWidth={
+                              activeIndex === index ? "40" : 
+                              (drillDownSegment ? "32" : "30")
+                            }
+                            strokeDasharray={strokeDasharray}
+                            strokeDashoffset={strokeDashoffset}
+                            className="cursor-pointer"
+                            style={{
+                              opacity: activeIndex === index ? 0.8 : 1,
+                              transition: 'stroke-width 0.15s ease-out, opacity 0.15s ease-out'
+                            }}
+                            onMouseEnter={() => onPieEnter(item, index)}
+                            onMouseLeave={onPieLeave}
+                            onClick={() => onPieClick(item, index)}
+                            suppressHydrationWarning
+                          />
+                        );
+                      })}
+                    </svg>
+                    
+                    {/* Center content */}
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                      <div 
+                        className={`text-center transition-all duration-300 ${drillDownSegment ? 'cursor-pointer' : ''}`}
+                        style={{ pointerEvents: drillDownSegment ? 'auto' : 'none' }}
+                        onClick={() => {
+                          if (drillDownSegment) {
+                            setDrillDownSegment(null);
+                            setDrillDownChangeTypes(null);
+                          }
+                        }}
+                      >
+                        {drillDownSegment ? (
+                          <>
+                            <div className="text-2xl font-bold" suppressHydrationWarning>
+                              {drillDownSegment.value}
+                            </div>
+                            <div className="text-xs text-muted-foreground mb-1">
+                              Change Types
+                            </div>
+                            <div className="text-xs text-primary hover:text-primary/80 transition-colors">
+                              ← Click to go back
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <div className="text-2xl font-bold" suppressHydrationWarning>
+                              {donutData.reduce((sum, d) => sum + d.value, 0)}
+                            </div>
+                            <div className="text-xs text-muted-foreground">Total Records</div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+                        {/* Shared legend */}
+            <div className="mt-6">
+              {/* Custom legend to match colors exactly */}
+              <div className="flex justify-center flex-wrap gap-x-4 gap-y-2">
+                {/* High School Program */}
+                <div className="flex items-center">
+                  <div className="w-3 h-3 mr-1 rounded-sm" style={{ background: chartConfig.highSchoolSuccessful.color }}></div>
+                  <div className="w-3 h-3 mr-2 rounded-sm" style={{ background: chartConfig.highSchoolFailed.color }}></div>
+                  <span className="text-xs">High School Program</span>
+                </div>
+                {/* Training & Internships */}
+                <div className="flex items-center">
+                  <div className="w-3 h-3 mr-1 rounded-sm" style={{ background: chartConfig.trainingSuccessful.color }}></div>
+                  <div className="w-3 h-3 mr-2 rounded-sm" style={{ background: chartConfig.trainingFailed.color }}></div>
+                  <span className="text-xs">Training & Internships</span>
+                </div>
+                {/* Work & Travel */}
+                <div className="flex items-center">
+                  <div className="w-3 h-3 mr-1 rounded-sm" style={{ background: chartConfig.workTravelSuccessful.color }}></div>
+                  <div className="w-3 h-3 mr-2 rounded-sm" style={{ background: chartConfig.workTravelFailed.color }}></div>
+                  <span className="text-xs">Work & Travel</span>
+                </div>
+              </div>
+              
+              {/* Success/Failure indicator */}
+              <div className="flex justify-center space-x-6 mt-2">
+                <div className="flex items-center">
+                  <div className="w-3 h-3 mr-2 rounded-sm" style={{ background: '#374151' }}></div>
+                  <span className="text-xs">Successful (darker tones)</span>
+                </div>
+                <div className="flex items-center">
+                  <div className="w-3 h-3 mr-2 rounded-sm" style={{ background: '#d1d5db' }}></div>
+                  <span className="text-xs">Failed (lighter tones)</span>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* SEVIS Batch Processing */}
+        <Card className="h-full col-span-1">
+          <CardHeader>
+            <CardTitle>SEVIS Batch Processing</CardTitle>
+            <CardDescription>Current and recent batches</CardDescription>
+          </CardHeader>
+          <CardContent className="p-0 flex-1">
+            <div className="overflow-y-auto max-h-[460px] px-4 pt-0 pb-2 space-y-3">
+              {/* In Progress Batches */}
+              <Card className="border-blue-500">
+                <CardContent className="py-0 px-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <Database className="h-5 w-5 text-blue-600" />
+                      <p className="text-sm font-medium">Batch #A0090112093250 - Processing</p>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex justify-between items-center">
+                      <ProgramChip program="High School Program" />
+                      <Badge variant="outline" className="bg-blue-100 text-blue-800">56 records</Badge>
+                    </div>
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="text-muted-foreground">Started 15 minutes ago</span>
+                      <CountdownTimer startedMinutesAgo={15} />
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-center text-sm text-muted-foreground mt-2">
+                    <div>New: 28 | Changes: 28</div>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="h-7 text-xs gap-1.5 hover:bg-blue-50"
+                      onClick={() => toast("Batch still processing with SEVIS")}
+                    >
+                      <RefreshCw className="h-3.5 w-3.5" />
+                      Check Now
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="border-blue-500">
+                <CardContent className="py-0 px-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <Database className="h-5 w-5 text-blue-600" />
+                      <p className="text-sm font-medium">Batch #A0090113101955 - Processing</p>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex justify-between items-center">
+                      <ProgramChip program="Work & Travel Program" />
+                      <Badge variant="outline" className="bg-blue-100 text-blue-800">42 records</Badge>
+                    </div>
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="text-muted-foreground">Started 22 minutes ago</span>
+                      <CountdownTimer startedMinutesAgo={22} />
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-center text-sm text-muted-foreground mt-2">
+                    <div>New: 24 | Changes: 18</div>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="h-7 text-xs gap-1.5 hover:bg-blue-50"
+                      onClick={() => toast("Batch still processing with SEVIS")}
+                    >
+                      <RefreshCw className="h-3.5 w-3.5" />
+                      Check Now
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="border-blue-500">
+                <CardContent className="py-0 px-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <Database className="h-5 w-5 text-blue-600" />
+                      <p className="text-sm font-medium">Batch #A0090114024903 - Processing</p>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex justify-between items-center">
+                      <ProgramChip program="Training & Internship Program" />
+                      <Badge variant="outline" className="bg-blue-100 text-blue-800">38 records</Badge>
+                    </div>
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="text-muted-foreground">Started 8 minutes ago</span>
+                      <CountdownTimer startedMinutesAgo={8} />
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-center text-sm text-muted-foreground mt-2">
+                    <div>New: 20 | Changes: 18</div>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="h-7 text-xs gap-1.5 hover:bg-blue-50"
+                      onClick={() => toast("Batch still processing with SEVIS")}
+                    >
+                      <RefreshCw className="h-3.5 w-3.5" />
+                      Check Now
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              {/* Queued Batches */}
+              <Card className="border-amber-500">
+                <CardContent className="py-0 px-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <Clock className="h-5 w-5 text-amber-600" />
+                      <p className="text-sm font-medium">Batch #A0090114025349 - Queued</p>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-1 text-xs">
+                    <div className="flex justify-between items-center">
+                      <ProgramChip program="High School Program" />
+                      <Badge variant="outline" className="bg-amber-100 text-amber-800">38 records</Badge>
+                    </div>
+                  </div>
+                  <div className="text-sm text-muted-foreground mt-2">New: 22 | Changes: 16</div>
+                </CardContent>
+              </Card>
+              
+              <Card className="border-amber-500">
+                <CardContent className="py-0 px-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <Clock className="h-5 w-5 text-amber-600" />
+                      <p className="text-sm font-medium">Batch #A0090115012903 - Queued</p>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-1 text-xs">
+                    <div className="flex justify-between items-center">
+                      <ProgramChip program="Work & Travel Program" />
+                      <Badge variant="outline" className="bg-amber-100 text-amber-800">45 records</Badge>
+                    </div>
+                  </div>
+                  <div className="text-sm text-muted-foreground mt-2">New: 26 | Changes: 19</div>
+                </CardContent>
+              </Card>
+              
+              <Card className="border-amber-500">
+                <CardContent className="py-0 px-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <Clock className="h-5 w-5 text-amber-600" />
+                      <p className="text-sm font-medium">Batch #A0090115013452 - Queued</p>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-1 text-xs">
+                    <div className="flex justify-between items-center">
+                      <ProgramChip program="Training & Internship Program" />
+                      <Badge variant="outline" className="bg-amber-100 text-amber-800">33 records</Badge>
+                    </div>
+                  </div>
+                  <div className="text-sm text-muted-foreground mt-2">New: 18 | Changes: 15</div>
+                </CardContent>
+              </Card>
+              
+              {/* Complete Batches */}
+              <Card className="border-green-500">
+                <CardContent className="py-0 px-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-600" />
+                      <p className="text-sm font-medium">Batch #A0090116022435 - Completed</p>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex justify-between items-center">
+                      <ProgramChip program="High School Program" />
+                      <Badge variant="outline" className="bg-green-100 text-green-800">44 records</Badge>
+                    </div>
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="text-muted-foreground">Completed 1 hour ago</span>
+                      <div><span className="text-green-600 font-medium">41 successful</span> | <span className="text-red-600 font-medium">3 failed</span></div>
+                    </div>
+                  </div>
+                  <div className="text-sm text-muted-foreground mt-2">New: 25 | Changes: 17</div>
+                </CardContent>
+              </Card>
+              
+              <Card className="border-green-500">
+                <CardContent className="py-0 px-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-600" />
+                      <p className="text-sm font-medium">Batch #A0090116022555 - Completed</p>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex justify-between items-center">
+                      <ProgramChip program="Work & Travel Program" />
+                      <Badge variant="outline" className="bg-green-100 text-green-800">48 records</Badge>
+                    </div>
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="text-muted-foreground">Completed 2 hours ago</span>
+                      <div><span className="text-green-600 font-medium">47 successful</span> | <span className="text-red-600 font-medium">1 failed</span></div>
+                    </div>
+                  </div>
+                  <div className="text-sm text-muted-foreground mt-2">New: 30 | Changes: 18</div>
+                </CardContent>
+              </Card>
+              
+              <Card className="border-green-500">
+                <CardContent className="py-0 px-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-600" />
+                      <p className="text-sm font-medium">Batch #A0090120021836 - Completed</p>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex justify-between items-center">
+                      <ProgramChip program="Training & Internship Program" />
+                      <Badge variant="outline" className="bg-green-100 text-green-800">36 records</Badge>
+                    </div>
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="text-muted-foreground">Completed 3 hours ago</span>
+                      <div><span className="text-green-600 font-medium">36 successful</span> | <span className="text-red-600 font-medium">0 failed</span></div>
+                    </div>
+                  </div>
+                  <div className="text-sm text-muted-foreground mt-2">New: 21 | Changes: 15</div>
+                </CardContent>
+              </Card>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* SEVIS Participant Records Table */}
+      <Card>
+        <CardHeader>
+          <CardTitle>SEVIS Participant Records</CardTitle>
+          <CardDescription>
+            {students.length} participants • {statusCounts.ready} ready for SEVIS • {statusCounts.failed} failed records
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="relative">
+          <AdvancedPinnedTable
+            data={students.map(student => ({
+              ...student,
+              statusText: student.profile?.data?.hasPendingChanges === true ? "Change Queue" : student.status.text,
+              statusDisplay: student.status.text,
+              changeQueue: student.profile?.data?.hasPendingChanges === true ? "Change Queue" : ""
+            })) as EnhancedStudent[]}
+            columns={studentColumns}
+            isLoading={isTableLoading}
+            defaultPinnedColumns={{
+              left: ['select', 'expander', 'name'],
+              right: ['actions']
+            }}
+            defaultSorting={[{ id: 'name', desc: false }]}
+            defaultPagination={{ pageIndex: 0, pageSize: 10 }}
+            enableSearch={true}
+            searchPlaceholder="Search name or SEVIS ID..."
+            searchFunction={(row: unknown, searchValue: string) => {
+              const student = row as EnhancedStudent;
+              const lowerQuery = searchValue.toLowerCase();
+              const nameMatch = student.name.toLowerCase().includes(lowerQuery);
+              const sevisMatch = student.sevisId.toLowerCase().includes(lowerQuery);
+              const programMatch = student.program.toLowerCase().includes(lowerQuery);
+              const programIntakeMatch = student.programIntake.toLowerCase().includes(lowerQuery);
+              return nameMatch || sevisMatch || programMatch || programIntakeMatch;
+            }}
+            enableStatusFilter={true}
+            statusFilters={[
+              {
+                id: "change-queue",
+                label: "Change Queue",
+                value: "Change Queue",
+                field: "statusText",
+                color: "orange",
+                count: statusCounts.changeQueue
+              },
+              {
+                id: "ready",
+                label: "New Students",
+                value: SEVIS_STATUSES.READY,
+                field: "statusText",
+                color: "blue",
+                count: statusCounts.ready
+              },
+              {
+                id: "queue",
+                label: "In Queue",
+                value: SEVIS_STATUSES.IN_QUEUE,
+                field: "statusText",
+                color: "amber",
+                count: statusCounts.queue
+              },
+              {
+                id: "submitted",
+                label: "Submitted",
+                value: SEVIS_STATUSES.SUBMITTED,
+                field: "statusText",
+                color: "purple",
+                count: statusCounts.submitted
+              },
+              {
+                id: "successful",
+                label: "Successful",
+                value: SEVIS_STATUSES.SUCCESSFUL,
+                field: "statusText",
+                color: "green",
+                count: statusCounts.successful
+              },
+              {
+                id: "failed",
+                label: "Failed",
+                value: SEVIS_STATUSES.FAILED,
+                field: "statusText",
+                color: "red",
+                count: statusCounts.failed
+              }
+            ]}
+            enableFilters={true}
+            filterOptions={[
+              {
+                id: "country-filter", 
+                label: "Country",
+                field: "country",
+                options: countryFilterOptions
+              },
+              {
+                id: "program-intake-filter",
+                label: "Program Intake",
+                field: "programIntake",
+                options: programFilterOptions
+              }
+            ]}
+            bulkActions={[
+              {
+                label: "Add to Batch",
+                onClick: (rows: any[]) => {
+                  const names = rows.map(row => row.original.name).join(', ');
+                  toast.success(`Added ${rows.length} students to batch: ${names}`);
+                }
+              },
+              {
+                label: "Reprint DS-2019",
+                onClick: (rows: any[]) => {
+                  const names = rows.map(row => row.original.name).join(', ');
+                  toast.info(`Reprinting DS-2019 for ${rows.length} students: ${names}`);
+                }
+              },
+              {
+                label: "Export as XML",
+                onClick: (rows: any[]) => {
+                  const names = rows.map(row => row.original.name).join(', ');
+                  toast.warning(`Exporting ${rows.length} students as XML: ${names}`);
+                }
+              }
+            ]}
+            enableTwoStepBulkActions={true}
+            processButtonText="Go →"
+            hideCancelButton={true}
+            expandedViewType="sevis-student"
+          />
+        </CardContent>
+      </Card>
+    </div>
+  )
+} 

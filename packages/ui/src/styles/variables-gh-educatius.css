@@ -1,0 +1,199 @@
+:root {
+  /* CUSTOM VARIABLES */
+  --base-primary-main-lightmode-greenheart: var(--greenheart-aloe-700);
+  --base-primary-main-lightmode-educatius: var(--educatius-teal-600);
+  --base-primary-main-darkmode-greenheart: var(--greenheart-aloe-50);
+  --base-primary-main-darkmode-educatius: var(--educatius-teal-50);
+  --base-primary-dark-lightmode-greenheart: var(--greenheart-aloe-800);
+  --base-primary-dark-lightmode-educatius: var(--educatius-teal-700);
+  --base-primary-dark-darkmode-greenheart: var(--greenheart-aloe-25);
+  --base-primary-dark-darkmode-educatius: var(--educatius-teal-25);
+  --base-primary-light-lightmode-greenheart: var(--greenheart-aloe-600);
+  --base-primary-light-lightmode-educatius: var(--educatius-teal-500);
+  --base-primary-light-darkmode-greenheart: var(--greenheart-aloe-100);
+  --base-primary-light-darkmode-educatius: var(--educatius-teal-100);
+  --base-primary-contrast-lightmode-greenheart: oklch(100% 0 0);
+  --base-primary-contrast-lightmode-educatius: oklch(100% 0 0);
+  --base-primary-contrast-darkmode-greenheart: var(--greenheart-aloe-950);
+  --base-primary-contrast-darkmode-educatius: var(--educatius-teal-950);
+
+  /* Borders */
+  --borders-primary-border-brand-lightmode-greenheart: var(--greenheart-aloe-300);
+  --borders-primary-border-brand-lightmode-educatius: var(--educatius-teal-300);
+  --borders-primary-border-brand-darkmode-greenheart: var(--greenheart-aloe-400);
+  --borders-primary-border-brand-darkmode-educatius: var(--educatius-teal-400);
+  --borders-primary-border-solid-lightmode-greenheart: var(--greenheart-aloe-600);
+  --borders-primary-border-solid-lightmode-educatius: var(--educatius-teal-600);
+  --borders-primary-border-solid-darkmode-greenheart: var(--greenheart-aloe-500);
+  --borders-primary-border-solid-darkmode-educatius: var(--educatius-teal-500);
+  --borders-primary-border-solid-alt-lightmode-greenheart: var(--greenheart-aloe-700);
+  --borders-primary-border-solid-alt-lightmode-educatius: var(--educatius-teal-700);
+  --borders-primary-border-solid-alt-darkmode-greenheart: var(--greenheart-aloe-600);
+  --borders-primary-border-solid-alt-darkmode-educatius: var(--educatius-teal-600);
+
+  /* Spacing */
+  --spacing-spacing-4-greenheart: 4px;
+  --spacing-spacing-4-rem-greenheart: 0.25rem;
+  --spacing-spacing-4-educatius: 4px;
+  --spacing-spacing-4-rem-educatius: 0.25rem;
+  --spacing-spacing-8-greenheart: 8px;
+  --spacing-spacing-8-rem-greenheart: 0.5rem;
+  --spacing-spacing-8-educatius: 8px;
+  --spacing-spacing-8-rem-educatius: 0.5rem;
+  --spacing-spacing-0-greenheart: 0px;
+  --spacing-spacing-0-rem-greenheart: 0rem;
+  --spacing-spacing-0-educatius: 0px;
+  --spacing-spacing-0-rem-educatius: 0rem;
+  --spacing-spacing-2-greenheart: 2px;
+  --spacing-spacing-2-rem-greenheart: 0.125rem;
+  --spacing-spacing-2-educatius: 2px;
+  --spacing-spacing-2-rem-educatius: 0.125rem;
+  --spacing-spacing-6-greenheart: 6px;
+  --spacing-spacing-6-rem-greenheart: 0.375rem;
+  --spacing-spacing-6-educatius: 6px;
+  --spacing-spacing-6-rem-educatius: 0.375rem;
+  --spacing-spacing-10-greenheart: 10px;
+  --spacing-spacing-10-rem-greenheart: 0.625rem;
+  --spacing-spacing-10-educatius: 10px;
+  --spacing-spacing-10-rem-educatius: 0.625rem;
+  --spacing-spacing-12-greenheart: 12px;
+  --spacing-spacing-12-rem-greenheart: 0.75rem;
+  --spacing-spacing-12-educatius: 12px;
+  --spacing-spacing-12-rem-educatius: 0.75rem;
+  --spacing-spacing-14-greenheart: 14px;
+  --spacing-spacing-14-rem-greenheart: 0.875rem;
+  --spacing-spacing-14-educatius: 14px;
+  --spacing-spacing-14-rem-educatius: 0.875rem;
+  --spacing-spacing-16-greenheart: 16px;
+  --spacing-spacing-16-rem-greenheart: 1rem;
+  --spacing-spacing-16-educatius: 16px;
+  --spacing-spacing-16-rem-educatius: 1rem;
+  --spacing-spacing-18-greenheart: 18px;
+  --spacing-spacing-18-rem-greenheart: 1.125rem;
+  --spacing-spacing-18-educatius: 18px;
+  --spacing-spacing-18-rem-educatius: 1.125rem;
+  --spacing-spacing-20-greenheart: 20px;
+  --spacing-spacing-20-rem-greenheart: 1.25rem;
+  --spacing-spacing-20-educatius: 20px;
+  --spacing-spacing-20-rem-educatius: 1.25rem;
+  --spacing-spacing-24-greenheart: 24px;
+  --spacing-spacing-24-rem-greenheart: 1.5rem;
+  --spacing-spacing-24-educatius: 24px;
+  --spacing-spacing-24-rem-educatius: 1.5rem;
+
+  /* Focus Rings */
+  --focus-rings-focus-shadow-color-primary-lightmode-greenheart: oklch(75.7% 0.174 130.2 / 0.24);
+  --focus-rings-focus-shadow-color-primary-lightmode-educatius: oklch(60.7% 0.105 189 / 0.24);
+  --focus-rings-focus-shadow-secondary-lightmode-greenheart: oklch(75.7% 0.174 130.2 / 0.24);
+  --focus-rings-focus-shadow-secondary-lightmode-educatius: oklch(63% 0 0 / 0.14);
+
+  /* Button Spacing */
+  --spacing-button-spacing-sm-horizontal-greenheart: var(--spacing-spacing-12);
+  --spacing-button-spacing-sm-horizontal-educatius: var(--spacing-spacing-12);
+  --spacing-button-spacing-sm-vertical-greenheart: var(--spacing-spacing-8);
+  --spacing-button-spacing-sm-vertical-educatius: var(--spacing-spacing-8);
+  --spacing-button-spacing-md-vertical-greenheart: var(--spacing-spacing-10);
+  --spacing-button-spacing-md-vertical-educatius: var(--spacing-spacing-10);
+  --spacing-button-spacing-md-horizontal-greenheart: var(--spacing-spacing-14);
+  --spacing-button-spacing-md-horizontal-educatius: var(--spacing-spacing-14);
+  --spacing-button-spacing-lg-horizontal-greenheart: var(--spacing-spacing-18);
+  --spacing-button-spacing-lg-horizontal-educatius: var(--spacing-spacing-18);
+  --spacing-button-spacing-lg-vertical-greenheart: var(--spacing-spacing-12);
+  --spacing-button-spacing-lg-vertical-educatius: var(--spacing-spacing-12);
+
+  /* Secondary Borders */
+  --borders-secondary-border-brand-lightmode-greenheart: var(--greenheart-aloe-300);
+  --borders-secondary-border-brand-lightmode-educatius: var(--educatius-teal-300);
+  --borders-secondary-border-solid-lightmode-greenheart: var(--greenheart-aloe-500);
+  --borders-secondary-border-solid-lightmode-educatius: var(--educatius-teal-500);
+  --borders-secondary-border-alt-lightmode-greenheart: var(--greenheart-aloe-500);
+  --borders-secondary-border-alt-lightmode-educatius: var(--educatius-teal-500);
+  --borders-secondary-border-brand-darkmode-greenheart: oklch(100% 0 NaN);
+  --borders-secondary-border-brand-darkmode-educatius: oklch(100% 0 NaN);
+  --borders-secondary-border-solid-darkmode-greenheart: oklch(100% 0 NaN);
+  --borders-secondary-border-solid-darkmode-educatius: oklch(100% 0 NaN);
+  --borders-secondary-border-alt-darkmode-greenheart: oklch(100% 0 NaN);
+  --borders-secondary-border-alt-darkmode-educatius: oklch(100% 0 NaN);
+
+  /* Button Components */
+  --components-buttons-backgrounds-primary-button-bg-light-greenheart: var(--greenheart-aloe-700);
+  --components-buttons-backgrounds-primary-button-bg-light-educatius: var(--educatius-teal-600);
+  --components-buttons-backgrounds-primary-button-bg-dark-greenheart: var(--greenheart-aloe-200);
+  --components-buttons-backgrounds-primary-button-bg-dark-educatius: var(--educatius-teal-200);
+  --components-buttons-backgrounds-primary-button-hover-bg-light-greenheart: var(--greenheart-aloe-900);
+  --components-buttons-backgrounds-primary-button-hover-bg-light-educatius: var(--educatius-teal-800);
+  --components-buttons-backgrounds-primary-button-hover-bg-dark-greenheart: var(--greenheart-aloe-50);
+  --components-buttons-backgrounds-primary-button-hover-bg-dark-educatius: var(--educatius-teal-50);
+  --components-buttons-backgrounds-primary-button-focus-bg-light-greenheart: var(--greenheart-aloe-700);
+  --components-buttons-backgrounds-primary-button-focus-bg-light-educatius: var(--educatius-teal-600);
+  --components-buttons-backgrounds-primary-button-focus-bg-dark-greenheart: var(--greenheart-aloe-200);
+  --components-buttons-backgrounds-primary-button-focus-bg-dark-educatius: var(--educatius-teal-200);
+
+  /* Grey Base Colors */
+  --base-grey-25-greenheart: var(--greenheart-mountain-25);
+  --base-grey-25-educatius: oklch(99.1% 0 NaN);
+  --base-grey-50-greenheart: var(--greenheart-mountain-50);
+  --base-grey-50-educatius: oklch(98.2% 0 NaN);
+  --base-grey-100-greenheart: var(--greenheart-mountain-100);
+  --base-grey-100-educatius: oklch(93.1% 0 NaN);
+  --base-grey-200-greenheart: var(--greenheart-mountain-200);
+  --base-grey-200-educatius: oklch(90.4% 0 NaN);
+  --base-grey-300-greenheart: var(--greenheart-mountain-300);
+  --base-grey-300-educatius: oklch(84.8% 0 NaN);
+  --base-grey-400-greenheart: var(--greenheart-mountain-400);
+  --base-grey-400-educatius: oklch(76.7% 0 NaN);
+  --base-grey-500-greenheart: var(--greenheart-mountain-500);
+  --base-grey-500-educatius: oklch(56.6% 0 NaN);
+  --base-grey-600-greenheart: var(--greenheart-mountain-600);
+  --base-grey-600-educatius: oklch(49.6% 0 NaN);
+  --base-grey-700-greenheart: var(--greenheart-mountain-700);
+  --base-grey-700-educatius: oklch(42.4% 0 NaN);
+  --base-grey-800-greenheart: var(--greenheart-mountain-800);
+  --base-grey-800-educatius: oklch(35.2% 0 NaN);
+  --base-grey-900-greenheart: var(--greenheart-mountain-900);
+  --base-grey-900-educatius: oklch(27.3% 0 NaN);
+  --base-grey-950-greenheart: var(--greenheart-mountain-950);
+  --base-grey-950-educatius: oklch(19.1% 0 NaN);
+
+  /* Navigation Components */
+  --components-main-navigation-nav-link-default-greenheart: var(--greenheart-aloe-700);
+  --components-main-navigation-nav-link-default-educatius: var(--base-grey-25);
+  --components-main-navigation-nav-link-hover-greenheart: var(--greenheart-aloe-900);
+  --components-main-navigation-nav-link-hover-educatius: var(--base-grey-25);
+  --components-main-navigation-nav-link-active-greenheart: var(--greenheart-aloe-700);
+  --components-main-navigation-nav-link-active-educatius: var(--base-grey-25);
+  --components-main-navigation-nav-link-bg-default-greenheart: var(--base-transparent);
+  --components-main-navigation-nav-link-bg-default-educatius: var(--base-transparent);
+  --components-main-navigation-nav-link-bg-hover-greenheart: var(--base-grey-50);
+  --components-main-navigation-nav-link-bg-hover-educatius: var(--educatius-burgundy-700);
+  --components-main-navigation-nav-link-bg-active-greenheart: var(--base-transparent);
+  --components-main-navigation-nav-link-bg-active-educatius: var(--base-transparent);
+
+  /* Transparent Base */
+  --base-transparent-greenheart: oklch(100% 0 NaN / 0);
+  --base-transparent-educatius: oklch(100% 0 NaN / 0);
+
+  /* Navigation Indicators */
+  --components-main-navigation-indicator-default-greenheart: var(--base-transparent);
+  --components-main-navigation-indicator-default-educatius: var(--base-transparent);
+  --components-main-navigation-indicator-hover-greenheart: var(--greenheart-aloe-200);
+  --components-main-navigation-indicator-hover-educatius: var(--educatius-orange-300);
+  --components-main-navigation-indicator-active-greenheart: var(--greenheart-aloe-500);
+  --components-main-navigation-indicator-active-educatius: var(--educatius-orange-500);
+
+  /* Navigation Icons */
+  --components-main-navigation-icon-defaultbg-greenheart: var(--base-transparent);
+  --components-main-navigation-icon-defaultbg-educatius: var(--base-transparent);
+  --components-main-navigation-icon-hoverbg-greenheart: var(--base-grey-50);
+  --components-main-navigation-icon-hoverbg-educatius: var(--educatius-burgundy-700);
+  --components-main-navigation-icon-activebg-greenheart: var(--greenheart-aloe-600);
+  --components-main-navigation-icon-activebg-educatius: var(--educatius-orange-600);
+  --components-main-navigation-icon-iconcolourdefault-greenheart: var(--components-main-navigation-nav-link-default);
+  --components-main-navigation-icon-iconcolourdefault-educatius: var(--components-main-navigation-nav-link-default);
+  --components-main-navigation-icon-iconcolourhover-greenheart: var(--components-main-navigation-nav-link-hover);
+  --components-main-navigation-icon-iconcolourhover-educatius: var(--components-main-navigation-nav-link-hover);
+  --components-main-navigation-icon-iconcolouractive-greenheart: var(--base-primary-contrast-lightmode);
+  --components-main-navigation-icon-iconcolouractive-educatius: var(--base-primary-contrast-lightmode);
+  --components-main-navigation-nav-bg-default-greenheart: var(--base-primary-contrast-lightmode);
+  --components-main-navigation-nav-bg-default-educatius: var(--educatius-teal-600);
+} 

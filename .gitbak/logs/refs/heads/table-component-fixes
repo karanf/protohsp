@@ -1,0 +1,11 @@
+0000000000000000000000000000000000000000 7e4633fac15d757cca27eb25d820d9b41b1f2f6b karanf <karan.fadnavis@enroller.co.nz> 1743804594 +1300	branch: Created from HEAD
+7e4633fac15d757cca27eb25d820d9b41b1f2f6b 7bfb5d97269b6376dec621087c95700c2be1f75f karanf <karan.fadnavis@enroller.co.nz> 1743824807 +1300	commit: fixed advanced table layout
+7bfb5d97269b6376dec621087c95700c2be1f75f addb3b8e35e86f248523c331835d379ed5b998d5 karanf <karan.fadnavis@enroller.co.nz> 1743825299 +1300	commit: sorting functionality sussed
+addb3b8e35e86f248523c331835d379ed5b998d5 645e6eb3d10e7ce65fcb0cd086c10163d047ae61 karanf <karan.fadnavis@enroller.co.nz> 1743829834 +1300	commit: added bulk actions dropdown
+645e6eb3d10e7ce65fcb0cd086c10163d047ae61 a3761011cd24f95302b1070ed6dedd9318f80d0f karanf <karan.fadnavis@enroller.co.nz> 1743840892 +1300	commit: quick filters kind of well styled. metrics messed up
+a3761011cd24f95302b1070ed6dedd9318f80d0f 7edc8ff5b2cdc5faa326556baa1b84fc30d76113 karanf <karan.fadnavis@enroller.co.nz> 1743881468 +1200	commit: fixed column widths for pinned columns
+7edc8ff5b2cdc5faa326556baa1b84fc30d76113 9d6b427add39b3d97297e5ff5c3b7ddc953980fd karanf <karan.fadnavis@enroller.co.nz> 1743883909 +1200	commit: page optimisations
+9d6b427add39b3d97297e5ff5c3b7ddc953980fd fbf5dfe39600c73ab88c8d6265275b6ba019171f karanf <karan.fadnavis@enroller.co.nz> 1743884365 +1200	commit: now skeleton loader on all views
+fbf5dfe39600c73ab88c8d6265275b6ba019171f 6756d59fe18caca55cfb15edfc2c3902e7456c6a karanf <karan.fadnavis@enroller.co.nz> 1743884984 +1200	commit: loading sequence fixed
+6756d59fe18caca55cfb15edfc2c3902e7456c6a 405e98d3d4ffcf1d9a4d0db872bf6c2d1727d05f karanf <karan.fadnavis@enroller.co.nz> 1743891471 +1200	commit: metrics stuff
+405e98d3d4ffcf1d9a4d0db872bf6c2d1727d05f 4f8929b86596803e428da184ea43b03a41f5b453 karanf <karan.fadnavis@enroller.co.nz> 1743901143 +1200	commit: filter ux looking good

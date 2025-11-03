@@ -1,0 +1,40 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+	ignorecase = true
+	precomposeunicode = true
+[user]
+	email = karan.fadnavis@enroller.co.nz
+[remote "origin"]
+	url = https://KaranFadnavisEnr@bitbucket.org/enrollernz/egab-prototypes.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "main"]
+	remote = origin
+	merge = refs/heads/main
+	vscode-merge-base = origin/master
+[branch "left-navigation"]
+	vscode-merge-base = origin/main
+	remote = origin
+	merge = refs/heads/left-navigation
+[branch "admin-dashboards"]
+	vscode-merge-base = origin/left-navigation
+[branch "user-app-view-sevis"]
+	vscode-merge-base = origin/main
+[branch "table-component-fixes"]
+	vscode-merge-base = origin/main
+[branch "expander-content"]
+	vscode-merge-base = origin/main
+[branch "landing-page"]
+	vscode-merge-base = origin/main
+[branch "more-mock-data"]
+	vscode-merge-base = origin/main
+[branch "sevis-pages"]
+	vscode-merge-base = origin/main
+	remote = origin
+	merge = refs/heads/sevis-pages
+[branch "instant-db"]
+	vscode-merge-base = origin/master
+[branch "cursordemo"]
+	vscode-merge-base = origin/master

@@ -1,0 +1,2 @@
+0000000000000000000000000000000000000000 94c996e2fe093c2bd488de9a32d2b1e408dde9ef karanf <karan.fadnavis@enroller.co.nz> 1750825457 +1200	WIP on cursordemo: 5ac1ed9 changes icons and colours
+94c996e2fe093c2bd488de9a32d2b1e408dde9ef c076e4a62d9f5d8d0b7be07c5b3c67863b7c0dd1 karanf <karan.fadnavis@enroller.co.nz> 1751665545 +1200	WIP on sevis-pages: 6afb90d Refactor data fetching to use InstantDB across multiple views, replacing useSupabaseData. This change enhances data handling efficiency and prepares the codebase for future performance improvements.

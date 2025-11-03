@@ -1,0 +1,294 @@
+# EGAB Component Rules
+
+This document defines the standards and best practices for component development in the EGAB project.
+
+## Component Structure
+
+### File Organization
+
+Components should be organized as follows:
+
+```
+components/
+├── ui/               # Base UI components
+│   ├── button.tsx
+│   ├── input.tsx
+│   └── ...
+├── templates/        # Layout templates
+│   ├── dashboard.tsx
+│   ├── auth-layout.tsx
+│   └── ...
+└── feature/          # Feature-specific components
+    ├── user/
+    │   ├── profile-card.tsx
+    │   └── ...
+    └── ...
+```
+
+### Application-Specific Components
+
+For Greenheart (Receiving Organization) application:
+```
+apps/greenheart/components/
+├── coordinator/      # Local Coordinator specific components
+│   ├── application-form.tsx
+│   ├── dashboard.tsx
+│   └── ...
+├── host-family/      # Host Family related components
+│   ├── application-form.tsx
+│   ├── matching-card.tsx
+│   └── ...
+├── placement/        # Student placement components
+│   ├── placement-workflow.tsx
+│   ├── match-form.tsx
+│   └── ...
+└── admin/            # Admin components
+    ├── approval-interface.tsx
+    ├── sevis-workflow.tsx
+    └── ...
+```
+
+For Educatius (Sending Organization) application:
+```
+apps/educatius/components/
+├── student/          # Student management components
+│   ├── lead-card.tsx
+│   ├── application-form.tsx
+│   └── ...
+├── application/      # Application workflow components
+│   ├── application-status.tsx
+│   ├── feedback-form.tsx
+│   └── ...
+├── monitoring/       # Student monitoring components
+│   ├── progress-tracker.tsx
+│   ├── check-in-form.tsx
+│   └── ...
+└── admin/            # Admin components
+    ├── dashboard.tsx
+    ├── reports.tsx
+    └── ...
+```
+
+### Component Naming
+
+- Use PascalCase for component names
+- Use kebab-case for file names
+- Name files based on the primary component they export
+- Use descriptive, clear names that indicate the component's purpose
+
+## Component Implementation
+
+### Basic Structure
+
+```tsx
+"use client"; // Only when required for client-side features
+
+import { cn } from "@/lib/utils";
+import { cva, type VariantProps } from "class-variance-authority";
+
+// Define variants if applicable
+const componentVariants = cva("base-classes", {
+  variants: {
+    // variants here
+  },
+  defaultVariants: {
+    // defaults here
+  },
+});
+
+// Define props interface
+interface ComponentProps
+  extends React.HTMLAttributes<HTMLElement>,
+    VariantProps<typeof componentVariants> {
+  // additional props
+}
+
+// Export component
+export function Component({
+  className,
+  // destructure specific props
+  ...props
+}: ComponentProps) {
+  return (
+    <element
+      className={cn(componentVariants({}), className)}
+      {...props}
+    />
+  );
+}
+```
+
+### Prop Guidelines
+
+1. Accept and forward a `className` prop for style overrides
+2. Use semantic HTML elements as the base
+3. Forward appropriate HTML attributes via spreads
+4. Define default values for required props
+5. Use TypeScript for type safety
+
+## Application-Specific Patterns
+
+### Multi-step Workflow Components
+
+For application processes and approvals:
+
+```tsx
+interface WorkflowStepProps {
+  currentStep: number;
+  totalSteps: number;
+  onNext: () => void;
+  onPrevious: () => void;
+  onComplete: () => void;
+  status: 'incomplete' | 'complete' | 'error';
+}
+
+export function WorkflowStep({
+  currentStep,
+  totalSteps,
+  onNext,
+  onPrevious,
+  onComplete,
+  status,
+  children,
+  ...props
+}: WorkflowStepProps) {
+  // Implementation
+}
+```
+
+### Approval Components
+
+For review and approval processes:
+
+```tsx
+interface ApprovalActionsProps {
+  onApprove: () => void;
+  onReject: () => void;
+  onRequestChanges: (feedback: string) => void;
+  currentStatus: 'pending' | 'approved' | 'rejected' | 'changes_requested';
+  userRole: 'coordinator' | 'director' | 'admin';
+}
+
+export function ApprovalActions({
+  onApprove,
+  onReject,
+  onRequestChanges,
+  currentStatus,
+  userRole,
+  ...props
+}: ApprovalActionsProps) {
+  // Implementation with role-based permissions
+}
+```
+
+## Component API Design
+
+### Variants
+
+- Use `cva` for defining component variants
+- Implement common variant patterns:
+  - `size`: Typically `sm`, `md`, `lg`, etc.
+  - `variant`: Visual variations like `default`, `primary`, `secondary`, etc.
+  - `intent`: Purpose-based variations like `success`, `error`, `warning`, etc.
+
+### Composition
+
+- Prefer composition over configuration
+- Create small, focused components that can be combined
+- Use the Compound Component pattern for complex components:
+
+```tsx
+// Example of Compound Component pattern
+export function Tabs({ children, ...props }) {
+  // implementation
+}
+
+export function TabsList({ children, ...props }) {
+  // implementation
+}
+
+export function TabsTrigger({ children, ...props }) {
+  // implementation
+}
+
+export function TabsContent({ children, ...props }) {
+  // implementation
+}
+
+// Usage
+<Tabs>
+  <TabsList>
+    <TabsTrigger>Tab 1</TabsTrigger>
+    <TabsTrigger>Tab 2</TabsTrigger>
+  </TabsList>
+  <TabsContent>Content 1</TabsContent>
+  <TabsContent>Content 2</TabsContent>
+</Tabs>
+```
+
+## Styling Guidelines
+
+### Tailwind CSS
+
+- Use Tailwind CSS for all styling
+- Group related utilities for readability
+- Use the `cn` utility for conditional classes
+- Follow a consistent order for utility classes:
+  1. Layout (display, position)
+  2. Dimensions (width, height)
+  3. Spacing (margin, padding)
+  4. Typography (font, text)
+  5. Visual (colors, borders)
+  6. Interactive (hover, focus)
+
+### Design Tokens
+
+- Use design tokens from the design system
+- Prefer CSS variables for theming
+- Maintain consistent spacing, typography, and color usage
+
+## Accessibility
+
+### Requirements
+
+- All components must be keyboard accessible
+- Use semantic HTML elements
+- Include appropriate ARIA attributes
+- Ensure proper focus management
+- Support screen readers
+- Maintain adequate color contrast
+
+### Focus Management
+
+- Visible focus styles for all interactive elements
+- Proper tab order for interactive elements
+- Focus trapping for modal interfaces
+
+## Performance
+
+### Best Practices
+
+- Minimize component re-renders
+- Use `React.memo` for expensive components
+- Avoid anonymous functions in render methods
+- Optimize event handlers with `useCallback`
+- Memoize computed values with `useMemo`
+
+## Testing
+
+Components should have:
+
+- Unit tests for logic
+- Integration tests for interactions
+- Accessibility tests
+- Snapshot or visual regression tests
+
+## Documentation
+
+Each component should include:
+
+1. Purpose description
+2. Props documentation
+3. Usage examples
+4. Accessibility considerations
+5. Performance notes (if applicable) 

@@ -1,0 +1,62 @@
+{
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "css.validate": false,
+  "deno.enablePaths": [
+    "supabase/functions"
+  ],
+  "deno.lint": true,
+  "deno.unstable": [
+    "bare-node-builtins",
+    "byonm",
+    "sloppy-imports",
+    "unsafe-proto",
+    "webgpu",
+    "broadcast-channel",
+    "worker-options",
+    "cron",
+    "kv",
+    "ffi",
+    "fs",
+    "http",
+    "net"
+  ],
+  "eslint.workingDirectories": [
+    {
+      "mode": "auto"
+    }
+  ],
+  "less.validate": false,
+  "scss.validate": false,
+  // TypeScript error suppression for React 19 + Lucide React compatibility
+  "typescript.preferences.includePackageJsonAutoImports": "off",
+  "typescript.diagnostics.ignoredCodes": [
+    2322, // Type is not assignable to type (JSX element compatibility)
+    2324, // Property does not exist on type (ForwardRef issues)
+    2769, // No overload matches this call (React 19 JSX)
+    7006, // Parameter implicitly has 'any' type (Lucide icon props)
+    7031, // Binding element implicitly has 'any' type
+    2604, // JSX element type does not have any construct or call signatures
+    2355, // A function whose declared type is neither 'void' nor 'any' must return a value
+    2345  // Argument of type is not assignable to parameter
+  ],
+  // Reduce TypeScript strictness for external libraries
+  "typescript.preferences.strictModeDisabled": false,
+  "typescript.suggest.autoImports": true,
+  "typescript.validate.enable": true,
+  "typescript.reportStyleChecksAsWarnings": false,
+  // ESLint integration
+  "eslint.probe": [
+    "javascript",
+    "javascriptreact", 
+    "typescript",
+    "typescriptreact"
+  ],
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ]
+}

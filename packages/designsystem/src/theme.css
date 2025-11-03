@@ -1,0 +1,891 @@
+@theme {
+    /* Font families */
+    --font-family-sans: var(--font-family-default);
+    --font-family-mono: var(--font-family-mono);
+    
+    /* Font sizes */
+    --font-size-xs: 0.75rem 1rem;
+    --font-size-sm: 0.875rem 1.25rem;
+    --font-size-base: 1rem 1.5rem;
+    --font-size-lg: 1.125rem 1.75rem;
+    --font-size-xl: 1.25rem 1.75rem;
+    --font-size-2xl: 1.5rem 2rem;
+    --font-size-3xl: 1.875rem 2.25rem;
+    --font-size-4xl: 2.25rem 2.5rem;
+    --font-size-5xl: 3rem 1;
+    --font-size-6xl: 3.75rem 1;
+    --font-size-7xl: 4.5rem 1;
+    --font-size-8xl: 6rem 1;
+    --font-size-9xl: 8rem 1;
+    --font-size-radio: 1rem 1.5rem;
+    
+    --color-primary: var(--theme-color-primary);
+    --color-primary-25: var(--theme-color-primary-25);
+    --color-primary-50: var(--theme-color-primary-50);
+    --color-primary-100: var(--theme-color-primary-100);
+    --color-primary-200: var(--theme-color-primary-200);
+    --color-primary-300: var(--theme-color-primary-300);
+    --color-primary-400: var(--theme-color-primary-400);
+    --color-primary-500: var(--theme-color-primary-500);
+    --color-primary-600: var(--theme-color-primary-600);
+    --color-primary-700: var(--theme-color-primary-700);
+    --color-primary-800: var(--theme-color-primary-800);
+    --color-primary-900: var(--theme-color-primary-900);
+    --color-primary-950: var(--theme-color-primary-950);
+
+    /* Greenheart Colours */
+  --greenheart-aloe-25: oklch(94.89818987414603% 0.03624892304848757 125.84132713794503);
+  --greenheart-aloe-50: oklch(91.46409166604428% 0.06163827255831599 126.6066476250407);
+  --greenheart-aloe-100: oklch(88.37328007903267% 0.08679873396035932 127.20771420610731);
+  --greenheart-aloe-200: oklch(85.02588320224362% 0.11141215487623572 127.81452491273046);
+  --greenheart-aloe-300: oklch(81.73529390696369% 0.13478483462216165 128.48644084924194);
+  --greenheart-aloe-400: oklch(78.82155800553782% 0.15597673519417118 129.25610864833516);
+  --greenheart-aloe-500: oklch(75.678861311948% 0.17385481238929715 130.21758135386665);
+  --greenheart-aloe-600: oklch(66.42970559863323% 0.1506675034766854 130.0268671802753);
+  --greenheart-aloe-700: oklch(53.754189954868814% 0.11948409731693738 129.58331174802424);
+  --greenheart-aloe-800: oklch(47.100892290878534% 0.10338373060216798 129.49285864354079);
+  --greenheart-aloe-900: oklch(36.83044975688913% 0.07789632756112833 129.24813741068374);
+  --greenheart-aloe-950: oklch(25.474026619730754% 0.04800346188021225 127.88464556969694);
+  --greenheart-poppy-25: oklch(93.0851418846235% 0.03558911942062948 11.375468608211122);
+  --greenheart-poppy-50: oklch(88.6560291022492% 0.060453814500190335 13.288207671977034);
+  --greenheart-poppy-100: oklch(84.4044241621727% 0.08651072653755155 13.707467189950933);
+  --greenheart-poppy-200: oklch(80.3252431949272% 0.11332381451456455 15.13977966692471);
+  --greenheart-poppy-300: oklch(76.5050299285894% 0.1404409046339851 16.57826781993805);
+  --greenheart-poppy-400: oklch(73.03675013440514% 0.16704411898187096 17.69517986764299);
+  --greenheart-poppy-500: oklch(72.2869888875566% 0.17229675037365533 20.691311627089306);
+  --greenheart-poppy-600: oklch(61.43156835070346% 0.1671867209143422 19.104404519217326);
+  --greenheart-poppy-700: oklch(52.73216862137795% 0.1400899659357228 18.881602718123986);
+  --greenheart-poppy-800: oklch(43.67046016744486% 0.11409925407514938 18.86557076473673);
+  --greenheart-poppy-900: oklch(34.11801569681327% 0.08375042283862498 18.429094628026064);
+  --greenheart-poppy-950: oklch(23.70630492602356% 0.05178846504052065 16.078173039386627);
+  --greenheart-lavender-25: oklch(91.7277901590852% 0.027070283632245187 290.4517199606786);
+  --greenheart-lavender-50: oklch(86.26847608757512% 0.045590966682061064 292.36761949421145);
+  --greenheart-lavender-100: oklch(80.72107692985202% 0.06607727747746148 291.6742905810545);
+  --greenheart-lavender-200: oklch(75.1792341839277% 0.085866834561783 291.8376479870581);
+  --greenheart-lavender-300: oklch(69.52660845954156% 0.10614019640669317 290.91054700162067);
+  --greenheart-lavender-400: oklch(64.00164241644184% 0.12818974857551876 290.21049277130265);
+  --greenheart-lavender-500: oklch(64.98121051727905% 0.10051553153565929 285.2542126931769);
+  --greenheart-lavender-600: oklch(51.4423568307472% 0.12918212507738566 288.6740329471644);
+  --greenheart-lavender-700: oklch(44.27101163053937% 0.10872855529616199 288.57799397064923);
+  --greenheart-lavender-800: oklch(37.1676408560212% 0.08709887650680972 288.481802718683);
+  --greenheart-lavender-900: oklch(29.319474888974632% 0.06420116572386192 288.14822670509807);
+  --greenheart-lavender-950: oklch(20.91348284249% 0.03904806848641115 287.09322635156764);
+  --greenheart-sky-blue-25: oklch(96.43402236570748% 0.02011742486195497 216.19413635483377);
+  --greenheart-sky-blue-50: oklch(91.08484972855211% 0.047853233514467686 218.0954822202264);
+  --greenheart-sky-blue-100: oklch(85.97819988167512% 0.07457364210651926 220.11891139776864);
+  --greenheart-sky-blue-200: oklch(81.11297105287514% 0.09796936559515888 221.16458371661395);
+  --greenheart-sky-blue-300: oklch(76.56639219280243% 0.11751043314369058 222.82401570767587);
+  --greenheart-sky-blue-400: oklch(72.5250473532946% 0.13126935434439604 226.30809335385783);
+  --greenheart-sky-blue-500: oklch(68.87335332745283% 0.13824125387505123 230.63359003242846);
+  --greenheart-sky-blue-600: oklch(60.572909319011416% 0.12088564862796033 230.13190656240602);
+  --greenheart-sky-blue-700: oklch(51.976936816011175% 0.10289712268161906 229.40727354736853);
+  --greenheart-sky-blue-800: oklch(43.062187820610184% 0.08503534512123345 229.17733261752093);
+  --greenheart-sky-blue-900: oklch(33.59824531403865% 0.06520835481046863 227.52416266021592);
+  --greenheart-sky-blue-950: oklch(23.403874897085288% 0.043866027096446096 223.7620737164728);
+  --greenheart-citrine-25: oklch(97.83171923333921% 0.04333876674231643 98.64332685927127);
+  --greenheart-citrine-50: oklch(96.08262275922597% 0.08201631257958376 99.51892474837973);
+  --greenheart-citrine-100: oklch(94.47994326904158% 0.1172202303322915 99.9097512100592);
+  --greenheart-citrine-200: oklch(93.02455508757073% 0.14689999764167544 99.94183249877005);
+  --greenheart-citrine-300: oklch(91.62378623538636% 0.16879685904768899 99.93142846632128);
+  --greenheart-citrine-400: oklch(90.44432129475537% 0.1812190020528261 98.96536631899255);
+  --greenheart-citrine-500: oklch(89.37721428611714% 0.18443337614861258 97.39088783837627);
+  --greenheart-citrine-600: oklch(79.79444057042141% 0.16455033570640798 97.11708721593857);
+  --greenheart-citrine-700: oklch(70.02667544734356% 0.14465215479990695 97.80149254742321);
+  --greenheart-citrine-800: oklch(59.78681764978675% 0.12340553656559243 97.4995284538744);
+  --greenheart-citrine-900: oklch(49.2096984427063% 0.10188908643567435 98.66302236992567);
+  --greenheart-citrine-950: oklch(37.891499942638326% 0.07841086279572693 98.46483458722378);
+  --greenheart-pine-25: oklch(92.52142796316542% 0.02577350595643379 161.91337223585936);
+  --greenheart-pine-50: oklch(85.7553697771417% 0.05021815426127504 161.62719428770174);
+  --greenheart-pine-100: oklch(78.78721539763698% 0.07382627773631223 160.31591810610917);
+  --greenheart-pine-200: oklch(72.16980324292143% 0.09739511857328645 159.08051376904393);
+  --greenheart-pine-300: oklch(65.74675899182438% 0.11878822511887548 157.2207399821682);
+  --greenheart-pine-400: oklch(59.34417203398037% 0.13542153325154255 154.33124825451478);
+  --greenheart-pine-500: oklch(53.639357023849755% 0.1457028559609738 150.5841517557726);
+  --greenheart-pine-600: oklch(48.044209644457844% 0.12953074824154417 150.15212714363207);
+  --greenheart-pine-700: oklch(42.60312238969641% 0.11392587305501205 149.26845143866615);
+  --greenheart-pine-800: oklch(36.7876722737568% 0.09394731061436667 147.92330419608243);
+  --greenheart-pine-900: oklch(31.188988946892103% 0.07387222912993993 143.55044911244426);
+  --greenheart-pine-950: oklch(25.474026619730754% 0.04800346188021225 127.88464556969694);
+  --greenheart-mountain-25: oklch(98.80873963836093% 0.00092682996534196% 0);
+  --greenheart-mountain-50: oklch(96.41534938583236% 0.00101593785318502% 0);
+  --greenheart-mountain-100: oklch(91.0032247674927% 0.0010463319047806199 286.37323911562055);
+  --greenheart-mountain-200: oklch(87.22397890954515% 0.0010955138353044474 197.13625320004232);
+  --greenheart-mountain-300: oklch(75.11240493452964% 0.0014126601460391866 286.36587760692674);
+  --greenheart-mountain-400: oklch(62.62200305936177% 0.0019104823363901983 247.8531050364591);
+  --greenheart-mountain-500: oklch(53.801405585857545% 0.0033307248117950346 264.53154901570065);
+  --greenheart-mountain-600: oklch(48.49304894597765% 0.00203664976893798 247.8653109807581);
+  --greenheart-mountain-700: oklch(42.795395072276335% 0.001626830413284819 286.33083915024457);
+  --greenheart-mountain-800: oklch(37.089198721705834% 0.0021778959785267787 247.88293403096156);
+  --greenheart-mountain-900: oklch(30.95622654262075% 0.0017648988803854787 286.29618968725606);
+  --greenheart-mountain-950: oklch(24.77587084976901% 0 0);
+  --greenheart-marigold-25: oklch(98.32428391821178% 0.018270950683644014 86.1454928002579);
+  --greenheart-marigold-50: oklch(96.0799897711079% 0.04556669311834835 87.75507408303082);
+  --greenheart-marigold-100: oklch(93.91566377104529% 0.07204429864995439 88.10859878583665);
+  --greenheart-marigold-200: oklch(91.8548114949006% 0.0960372094520364 87.8319002729142);
+  --greenheart-marigold-300: oklch(89.672149334539% 0.11839040752449798 86.80227703404842);
+  --greenheart-marigold-400: oklch(87.78338854006029% 0.13826035872666445 86.19195953282951);
+  --greenheart-marigold-500: oklch(85.99716954790347% 0.15389566906172644 84.99768218068004);
+  --greenheart-marigold-600: oklch(76.79513304232425% 0.13677220250530714 85.27977810320635);
+  --greenheart-marigold-700: oklch(67.42346436428278% 0.11879831464447053 84.93530102909057);
+  --greenheart-marigold-800: oklch(57.59373086396472% 0.10037513426112438 85.3198318807348);
+  --greenheart-marigold-900: oklch(47.449962753936994% 0.08064253737513948 84.72808413659425);
+  --greenheart-marigold-950: oklch(36.59533938770853% 0.05985058165757263 85.25926276122402);
+  --greenheart-azure-25: oklch(97.82123236066178% 0.010914067304697487 211.03750814779792);
+  --greenheart-azure-50: oklch(94.64482405631325% 0.027758134389576028 207.84296820638497);
+  --greenheart-azure-100: oklch(91.80589055753259% 0.04388425144456936 205.30304672177485);
+  --greenheart-azure-200: oklch(88.80452282489489% 0.0597955995652933 206.7096737166765);
+  --greenheart-azure-300: oklch(85.86272430486619% 0.07449317834236574 206.59232785020464);
+  --greenheart-azure-400: oklch(83.2956793979793% 0.08762932513406921 205.7330142199909);
+  --greenheart-azure-500: oklch(80.57637354405635% 0.0993255838774466 206.04161123942185);
+  --greenheart-azure-600: oklch(72.11704997328047% 0.0886356093227536 205.77336606611362);
+  --greenheart-azure-700: oklch(63.19776199918918% 0.07642489980209331 206.74706142527904);
+  --greenheart-azure-800: oklch(54.1240235782701% 0.06467613571439615 205.14972358550355);
+  --greenheart-azure-900: oklch(44.47345496842946% 0.051263529466853267 206.54537815694724);
+  --greenheart-azure-950: oklch(34.49951507101717% 0.0383323804576205 206.0332772028823);
+
+
+    /* Educatius Colours */
+  --educatius-teal-25: oklch(95.81983036669122% 0.012706908587389867 196.94419885476051);
+  --educatius-teal-50: oklch(90.67121519510485% 0.05242310588152505 190.32382463753513);
+  --educatius-teal-100: oklch(86.24398426107132% 0.0884963986574455 187.58799218558315);
+  --educatius-teal-200: oklch(82.20379018214032% 0.11559325683306498 186.11729952558676);
+  --educatius-teal-300: oklch(78.83693718557504% 0.13180149957110612 184.34715528285358);
+  --educatius-teal-400: oklch(70.0150766324049% 0.11954499886160004 186.37985940883567);
+  --educatius-teal-500: oklch(60.69238729089951% 0.10516853464886365 188.97110509240346);
+  --educatius-teal-600: oklch(53.81971563306145% 0.09295283926932306 189.94096027481083);
+  --educatius-teal-700: oklch(46.7584345750919% 0.08018922112225463 192.45008520496566);
+  --educatius-teal-800: oklch(39.38005436949552% 0.06722104058058571 194.76894793196382);
+  --educatius-teal-900: oklch(33.172877933660914% 0.054390283446767294 200.44785567647784);
+  --educatius-teal-950: oklch(26.72734839648862% 0.040835744439899235 210.9669965066551);
+  --educatius-purple-25: oklch(93.20635974845027% 0.02263297590121973 305.5924698071306);
+  --educatius-purple-50: oklch(88.81301671392572% 0.03320221213738917 297.1586381756034);
+  --educatius-purple-100: oklch(83.3263348064498% 0.055308809362165895 299.2614557185696);
+  --educatius-purple-200: oklch(77.54060186032862% 0.07949838528797672 299.53911813779104);
+  --educatius-purple-300: oklch(71.93513723624591% 0.10260058294455851 298.89890772083214);
+  --educatius-purple-400: oklch(52.07819662322731% 0.1699233284201022 299.3706514571636);
+  --educatius-purple-500: oklch(35.500196843223875% 0.2000406167516932 290.679038958977);
+  --educatius-purple-600: oklch(33.39785933659806% 0.180929238430519 292.8904737608795);
+  --educatius-purple-700: oklch(31.244923458147984% 0.16050724090859325 294.8480562806103);
+  --educatius-purple-800: oklch(29.58006113813847% 0.13799919472293648 297.2419007158442);
+  --educatius-purple-900: oklch(27.92016711588017% 0.1110012910183635 299.50900662509116);
+  --educatius-purple-950: oklch(26.812649718706226% 0.07890136497725773 302.91528927054003);
+  --educatius-orange-25: oklch(96.87819654655458% 0.02701502201178618 78.19581566656785);
+  --educatius-orange-50: oklch(89.3117921403062% 0.11539028245191413 84.87399147688666);
+  --educatius-orange-100: oklch(82.7680666979781% 0.16667320763354945 79.59562899392915);
+  --educatius-orange-200: oklch(77.89917268293067% 0.17107659613663023 66.03131662800877);
+  --educatius-orange-300: oklch(73.49232183566812% 0.18458470012637998 53.83026952568099);
+  --educatius-orange-400: oklch(69.96267216711807% 0.20195880121627574 44.44138497603086);
+  --educatius-orange-500: oklch(66.90214051483753% 0.2203683006747287 37.717797206447074);
+  --educatius-orange-600: oklch(59.7843986774223% 0.1950758595181309 38.148518491047525);
+  --educatius-orange-700: oklch(52.452948959259615% 0.16892278932665192 38.75924139171565);
+  --educatius-orange-800: oklch(44.56331992598718% 0.14152338374186318 39.424577153485416);
+  --educatius-orange-900: oklch(36.635065433861726% 0.11289569021145093 40.91322793222554);
+  --educatius-orange-950: oklch(28.285754425885745% 0.08233126420354113 43.969003569042684);
+  --educatius-burgundy-25: oklch(93.86155015271046% 0.010084089072585626 1.9931990643564177);
+  --educatius-burgundy-50: oklch(88.09455655710136% 0.03230203133995596 37.1345926388085);
+  --educatius-burgundy-100: oklch(82.31652704227827% 0.056804269009575296 43.3922683398506);
+  --educatius-burgundy-200: oklch(68.19780922301732% 0.09074820117274138 20.54959610223574);
+  --educatius-burgundy-300: oklch(54.65007768228609% 0.13352698673683083 13.016048634883816);
+  --educatius-burgundy-400: oklch(45.28527355523573% 0.11909347684301605 10.559228916507607);
+  --educatius-burgundy-500: oklch(35.18774857350556% 0.10433269454897129 6.54158954923912);
+  --educatius-burgundy-600: oklch(32.82995743325155% 0.09610657556313394 6.316804767404506);
+  --educatius-burgundy-700: oklch(30.431426425952246% 0.08768598373666293 6.047535372452103);
+  --educatius-burgundy-800: oklch(28.129665923137537% 0.07748789502389972 6.340491215677105);
+  --educatius-burgundy-900: oklch(25.644603624612074% 0.06849105577844698 6.04524059783779);
+  --educatius-burgundy-950: oklch(23.105960226235073% 0.05914831093917864 5.681289559135848);
+
+    /* Chart Colors */
+    --chart-primary-color: oklch(0.77 0.1254 215.02); /* Darker blue - based on info alert */
+    --chart-success-color: oklch(0.81 0.146 176.94); /* Darker green - based on success alert */
+    --chart-error-color: oklch(0.76 0.1454 38.94);   /* Darker red - based on error alert */
+
+    /* Chart Gradient Colors */
+    --chart-primary-1: oklch(0.77 0.1254 215.02); /* Top color for blue gradient */
+    --chart-primary-2: oklch(96.3% 0.02 224.3); /* Bottom color for blue gradient */
+    --chart-success-1: oklch(0.81 0.146 176.94); /* Top color for green gradient */
+    --chart-success-2: oklch(96.6% 0.017 145.4); /* Bottom color for green gradient */
+    --chart-error-1: oklch(0.76 0.1454 38.94); /* Top color for red gradient */
+    --chart-error-2: oklch(95.9% 0.017 17.5); /* Bottom color for red gradient */
+
+
+    /* Alert Variables */
+
+    /* Error Alert */
+    --alert-error-bg:  oklch(95.9% 0.017 17.5);
+    --alert-error-border: oklch(0.57 0.2002 26.41);
+    --alert-error-text: oklch(34.2% 0.091 24.1);
+    --alert-error-icon-color: oklch(0.57 0.2002 26.41);
+
+    /* Warning Alert */
+    --alert-warning-bg: oklch(97.2% 0.023 75.9);
+    --alert-warning-border: oklch(0.68 0.1847 48.15);
+    --alert-warning-text: oklch(39.8% 0.088 66.9);
+    --alert-warning-icon-color: oklch(0.68 0.1847 48.15);
+
+    /* Info Alert */
+    --alert-info-bg: oklch(96.3% 0.02 224.3);
+    --alert-info-border: oklch(0.6 0.1466 243.46);
+    --alert-info-text: oklch(36.2% 0.078 236.4);
+    --alert-info-icon-color: oklch(0.6 0.1466 243.46);
+
+    /* Success Alert */
+    --alert-success-bg: oklch(96.6% 0.017 145.4);
+    --alert-success-border: oklch(0.52 0.1347 144.17);
+    --alert-success-text: oklch(35.4% 0.078 144.7);
+    --alert-success-icon-color: oklch(0.52 0.1347 144.17);
+}
+
+@layer base {
+    :root {
+        /* Default font families */
+        --font-family-default: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+        --font-family-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        
+        /* Default text colors */
+        --color-text-default: var(--theme-color-grey-800);
+        --color-text-placeholder: var(--theme-color-grey-500);
+        --color-foreground: var(--color-text-default);
+        
+        /* Default Button Variables */
+        --button-default-bg: var(--color-primary-500);
+        --button-default-border: var(--color-primary-500);
+        --button-default-text: white;
+        --button-default-shadow: none;
+        --button-default-hover-bg: var(--color-primary-600);
+        --button-default-hover-border: var(--color-primary-600);
+        --button-default-hover-text: white;
+        --button-default-hover-shadow: none;
+        --button-default-focus-bg: var(--color-primary-600);
+        --button-default-focus-border: var(--color-primary-600);
+        --button-default-focus-text: white;
+        --button-default-focus-shadow: var(--focus-ring-primary);
+        --button-default-active-bg: var(--color-primary-700);
+        --button-default-active-border: var(--color-primary-700);
+        --button-default-active-text: white;
+        --button-default-active-shadow: var(--focus-ring-primary);
+        --button-default-focus-ring: var(--color-primary-200);
+
+        /* Destructive Button Variables */
+        --button-destructive-bg: var(--color-destructive);
+        --button-destructive-border: var(--color-destructive);
+        --button-destructive-text: white;
+        --button-destructive-shadow: none;
+        --button-destructive-hover-bg: var(--color-destructive-600);
+        --button-destructive-hover-border: var(--color-destructive-600);
+        --button-destructive-hover-text: white;
+        --button-destructive-hover-shadow: none;
+        --button-destructive-focus-bg: var(--color-destructive-600);
+        --button-destructive-focus-border: var(--color-destructive-600);
+        --button-destructive-focus-text: white;
+        --button-destructive-focus-shadow: var(--focus-ring-error);
+        --button-destructive-active-bg: var(--color-destructive-700);
+        --button-destructive-active-border: var(--color-destructive-700);
+        --button-destructive-active-text: white;
+        --button-destructive-active-shadow: var(--focus-ring-error);
+        --button-destructive-focus-ring: var(--color-destructive-200);
+
+        /* Secondary Button Variables */
+        --button-secondary-bg: var(--color-secondary);
+        --button-secondary-border: var(--color-secondary);
+        --button-secondary-border-width: 2px;
+        --button-secondary-text: var(--color-secondary-foreground);
+        --button-secondary-shadow: none;
+        --button-secondary-hover-bg: var(--color-secondary-600);
+        --button-secondary-hover-border: var(--color-secondary-600);
+        --button-secondary-hover-text: var(--color-secondary-foreground);
+        --button-secondary-hover-shadow: none;
+        --button-secondary-focus-bg: var(--color-secondary-600);
+        --button-secondary-focus-border: var(--color-secondary-600);
+        --button-secondary-focus-text: var(--color-secondary-foreground);
+        --button-secondary-focus-shadow: var(--focus-ring-secondary);
+        --button-secondary-active-bg: var(--color-secondary-700);
+        --button-secondary-active-border: var(--color-secondary-700);
+        --button-secondary-active-text: var(--color-secondary-foreground);
+        --button-secondary-active-shadow: var(--focus-ring-secondary);
+        --button-secondary-focus-ring: var(--color-secondary-200);
+
+        /* Tertiary Button Variables */
+        --button-tertiary-bg: var(--color-background);
+        --button-tertiary-border: var(--color-border);
+        --button-tertiary-text: var(--color-foreground);
+        --button-tertiary-shadow: none;
+        --button-tertiary-hover-bg: var(--color-accent);
+        --button-tertiary-hover-border: var(--color-accent);
+        --button-tertiary-hover-text: var(--color-accent-foreground);
+        --button-tertiary-hover-shadow: none;
+        --button-tertiary-focus-bg: var(--color-accent);
+        --button-tertiary-focus-border: var(--color-accent);
+        --button-tertiary-focus-text: var(--color-accent-foreground);
+        --button-tertiary-focus-shadow: var(--focus-ring-tertiary);
+        --button-tertiary-active-bg: var(--color-accent-600);
+        --button-tertiary-active-border: var(--color-accent-600);
+        --button-tertiary-active-text: var(--color-accent-foreground);
+        --button-tertiary-active-shadow: var(--focus-ring-tertiary);
+        --button-tertiary-focus-ring: var(--color-accent-200);
+
+        /* Outline Button Variables */
+        --button-outline-bg: transparent;
+        --button-outline-border: var(--color-border);
+        --button-outline-text: var(--color-foreground);
+        --button-outline-shadow: none;
+        --button-outline-hover-bg: var(--color-accent);
+        --button-outline-hover-border: var(--color-accent);
+        --button-outline-hover-text: var(--color-accent-foreground);
+        --button-outline-hover-shadow: none;
+        --button-outline-focus-bg: var(--color-accent);
+        --button-outline-focus-border: var(--color-accent);
+        --button-outline-focus-text: var(--color-accent-foreground);
+        --button-outline-focus-shadow: var(--focus-ring-tertiary);
+        --button-outline-active-bg: var(--color-accent-600);
+        --button-outline-active-border: var(--color-accent-600);
+        --button-outline-active-text: var(--color-accent-foreground);
+        --button-outline-active-shadow: var(--focus-ring-tertiary);
+        --button-outline-focus-ring: var(--color-accent-200);
+
+        /* Ghost Button Variables */
+        --button-ghost-bg: transparent;
+        --button-ghost-border: transparent;
+        --button-ghost-text: var(--color-foreground);
+        --button-ghost-shadow: none;
+        --button-ghost-hover-bg: var(--color-accent);
+        --button-ghost-hover-border: transparent;
+        --button-ghost-hover-text: var(--color-accent-foreground);
+        --button-ghost-hover-shadow: none;
+        --button-ghost-focus-bg: var(--color-accent);
+        --button-ghost-focus-border: transparent;
+        --button-ghost-focus-text: var(--color-accent-foreground);
+        --button-ghost-focus-shadow: var(--focus-ring-tertiary);
+        --button-ghost-active-bg: var(--color-accent-600);
+        --button-ghost-active-border: transparent;
+        --button-ghost-active-text: var(--color-accent-foreground);
+        --button-ghost-active-shadow: var(--focus-ring-tertiary);
+        --button-ghost-focus-ring: var(--color-accent-200);
+
+        /* Link Button Variables */
+        --button-link-bg: transparent;
+        --button-link-border: transparent;
+        --button-link-text: var(--color-primary);
+        --button-link-shadow: none;
+        --button-link-hover-bg: transparent;
+        --button-link-hover-border: transparent;
+        --button-link-hover-text: var(--color-primary-700);
+        --button-link-hover-shadow: none;
+        --button-link-focus-bg: transparent;
+        --button-link-focus-border: transparent;
+        --button-link-focus-text: var(--color-primary-700);
+        --button-link-focus-shadow: var(--focus-ring-primary);
+        --button-link-active-bg: transparent;
+        --button-link-active-border: transparent;
+        --button-link-active-text: var(--color-primary-800);
+        --button-link-active-shadow: var(--focus-ring-primary);
+        --button-link-focus-ring: var(--color-primary-200);
+
+        /* Global Button Properties */
+        --button-padding-x: 1rem;
+        --button-padding-y: 0.5rem;
+        --button-border-radius: 0.375rem;
+
+        /* Focus Ring Shadow Definitions */
+        --focus-ring-primary: 0px 1px 2px 0px var(--primary-shadow-color-1), 0px 0px 0px 4px var(--primary-shadow-color-2);
+        --focus-ring-secondary: 0px 1px 2px 0px var(--secondary-shadow-color-1), 0px 0px 0px 4px var(--secondary-shadow-color-2);
+        --focus-ring-tertiary: 0px 1px 2px 0px var(--tertiary-shadow-color-1), 0px 0px 0px 4px var(--tertiary-shadow-color-2);
+        --focus-ring-grey: 0px 1px 2px 0px var(--grey-shadow-color-1), 0px 0px 0px 4px var(--grey-shadow-color-2);
+        --focus-ring-error: 0px 1px 2px 0px var(--error-shadow-color-1), 0px 0px 0px 4px var(--error-shadow-color-2);
+
+        /* Text Input Variables */
+        --input-bg: white;
+        --input-border: var(--color-border);
+        --input-disabled-bg: var(--color-grey-50);
+        --input-hover-border: var(--color-primary-300);
+        --input-focus-border: var(--color-primary-300);
+        --input-focus-shadow: var(--focus-ring-primary);
+
+        /* Elevation Shadow Definitions */
+        --elevation-1: 0px 1px 2px oklch(20.99130133% 0.034134981 263.4360409 / 0.05);
+        --elevation-2: 0px 1px 2px oklch(20.99130133% 0.034134981 263.4360409 / 0.06), 0px 1px 3px oklch(20.99130133% 0.034134981 263.4360409 / 0.1);
+        --elevation-3: 0px 2px 4px oklch(20.99130133% 0.034134981 263.4360409 / 0.06), 0px 4px 8px oklch(20.99130133% 0.034134981 263.4360409 / 0.1);
+        --elevation-4: 0px 4px 6px oklch(20.99130133% 0.034134981 263.4360409 / 0.03), 0px 12px 16px oklch(20.99130133% 0.034134981 263.4360409 / 0.08);
+        --elevation-5: 0px 8px 8px oklch(20.99130133% 0.034134981 263.4360409 / 0.03), 0px 20px 24px oklch(20.99130133% 0.034134981 263.4360409 / 0.08);
+        --elevation-6: 0px 24px 48px oklch(20.99130133% 0.034134981 263.4360409 / 0.18);
+        --elevation-7: 0px 32px 64px oklch(20.99130133% 0.034134981 263.4360409 / 0.14);
+        --elevation-8: 0px 5px 5px oklch(0% 0 0 / 0.2), 0px 8px 10px oklch(0% 0 0 / 0.14), 0px 3px 14px oklch(0% 0 0 / 0.12);
+        --elevation-9: 0px 5px 6px oklch(0% 0 0 / 0.2), 0px 9px 12px oklch(0% 0 0 / 0.14), 0px 3px 16px oklch(0% 0 0 / 0.12);
+        --elevation-10: 0px 6px 6px oklch(0% 0 0 / 0.2), 0px 10px 14px oklch(0% 0 0 / 0.14), 0px 4px 18px oklch(0% 0 0 / 0.12);
+        --elevation-11: 0px 6px 7px oklch(0% 0 0 / 0.2), 0px 11px 15px oklch(0% 0 0 / 0.14), 0px 4px 20px oklch(0% 0 0 / 0.12);
+        --elevation-12: 0px 7px 8px oklch(0% 0 0 / 0.2), 0px 12px 17px oklch(0% 0 0 / 0.14), 0px 5px 22px oklch(0% 0 0 / 0.12);
+        --elevation-13: 0px 7px 8px oklch(0% 0 0 / 0.2), 0px 13px 19px oklch(0% 0 0 / 0.14), 0px 5px 24px oklch(0% 0 0 / 0.12);
+        --elevation-14: 0px 7px 9px oklch(0% 0 0 / 0.2), 0px 14px 21px oklch(0% 0 0 / 0.14), 0px 5px 26px oklch(0% 0 0 / 0.12);
+        --elevation-15: 0px 8px 9px oklch(0% 0 0 / 0.2), 0px 15px 22px oklch(0% 0 0 / 0.14), 0px 6px 28px oklch(0% 0 0 / 0.12);
+        --elevation-16: 0px 8px 10px oklch(0% 0 0 / 0.2), 0px 16px 24px oklch(0% 0 0 / 0.14), 0px 6px 30px oklch(0% 0 0 / 0.12);
+        --elevation-17: 0px 8px 11px oklch(0% 0 0 / 0.2), 0px 17px 26px oklch(0% 0 0 / 0.14), 0px 6px 32px oklch(0% 0 0 / 0.12);
+        --elevation-18: 0px 9px 11px oklch(0% 0 0 / 0.2), 0px 18px 28px oklch(0% 0 0 / 0.14), 0px 7px 34px oklch(0% 0 0 / 0.12);
+        --elevation-19: 0px 9px 12px oklch(0% 0 0 / 0.2), 0px 19px 29px oklch(0% 0 0 / 0.14), 0px 7px 36px oklch(0% 0 0 / 0.12);
+        --elevation-20: 0px 10px 13px oklch(0% 0 0 / 0.2), 0px 20px 31px oklch(0% 0 0 / 0.14), 0px 8px 38px oklch(0% 0 0 / 0.12);
+        --elevation-21: 0px 10px 13px oklch(0% 0 0 / 0.2), 0px 21px 33px oklch(0% 0 0 / 0.14), 0px 8px 40px oklch(0% 0 0 / 0.12);
+        --elevation-22: 0px 10px 14px oklch(0% 0 0 / 0.2), 0px 22px 35px oklch(0% 0 0 / 0.14), 0px 8px 42px oklch(0% 0 0 / 0.12);
+        --elevation-23: 0px 11px 14px oklch(0% 0 0 / 0.2), 0px 23px 36px oklch(0% 0 0 / 0.14), 0px 9px 44px oklch(0% 0 0 / 0.12);
+        --elevation-24: 0px 11px 15px oklch(0% 0 0 / 0.2), 0px 24px 38px oklch(0% 0 0 / 0.14), 0px 9px 46px oklch(0% 0 0 / 0.12);
+
+        /* Utility Classes for Elevations */
+        .elevation-1 { box-shadow: var(--elevation-1); }
+        .elevation-2 { box-shadow: var(--elevation-2); }
+        .elevation-3 { box-shadow: var(--elevation-3); }
+        .elevation-4 { box-shadow: var(--elevation-4); }
+        .elevation-5 { box-shadow: var(--elevation-5); }
+        .elevation-6 { box-shadow: var(--elevation-6); }
+        .elevation-7 { box-shadow: var(--elevation-7); }
+        .elevation-8 { box-shadow: var(--elevation-8); }
+        .elevation-9 { box-shadow: var(--elevation-9); }
+        .elevation-10 { box-shadow: var(--elevation-10); }
+        .elevation-11 { box-shadow: var(--elevation-11); }
+        .elevation-12 { box-shadow: var(--elevation-12); }
+        .elevation-13 { box-shadow: var(--elevation-13); }
+        .elevation-14 { box-shadow: var(--elevation-14); }
+        .elevation-15 { box-shadow: var(--elevation-15); }
+        .elevation-16 { box-shadow: var(--elevation-16); }
+        .elevation-17 { box-shadow: var(--elevation-17); }
+        .elevation-18 { box-shadow: var(--elevation-18); }
+        .elevation-19 { box-shadow: var(--elevation-19); }
+        .elevation-20 { box-shadow: var(--elevation-20); }
+        .elevation-21 { box-shadow: var(--elevation-21); }
+        .elevation-22 { box-shadow: var(--elevation-22); }
+        .elevation-23 { box-shadow: var(--elevation-23); }
+        .elevation-24 { box-shadow: var(--elevation-24); }
+
+        
+
+    }
+    html { font-size: 16px; }
+
+    button:not(:disabled),
+        [role="button"]:not(:disabled) {
+            cursor: pointer;
+    }
+
+    body {
+        font-family: var(--font-family-default);
+    }
+
+    p {
+        font-size: 16px !important;
+    }
+
+    [data-theme='greenheart'] {
+        /* Default text colors */
+        --color-text-default: var(--greenheart-mountain-950);
+        --color-text-placeholder: var(--greenheart-mountain-500);
+        --color-foreground: var(--color-text-default);
+        
+        /* Focus Ring Shadow Colors */
+        --primary-shadow-color-1: oklch(19.13% 0 0 / 5%);
+        --primary-shadow-color-2: oklch(75.678861311948% 0.17385481238929715 130.21758135386665 / 0.24);
+        --secondary-shadow-color-1: oklch(19.13% 0 0 / 5%);
+        --secondary-shadow-color-2: oklch(75.678861311948% 0.17385481238929715 130.21758135386665 / 0.24);
+        --tertiary-shadow-color-1: oklch(19.13% 0 0 / 5%);
+        --tertiary-shadow-color-2: oklch(71.55% 0 0 / 24%);
+        --grey-shadow-color-1: oklch(19.13% 0 0 / 5%);
+        --grey-shadow-color-2: oklch(71.55% 0 0 / 24%);
+        --error-shadow-color-1: oklch(19.13% 0 0 / 5%);
+        --error-shadow-color-2: oklch(43.67046016744486% 0.11409925407514938 18.86557076473673 / 0.24);
+
+        --theme-color-primary: var(--greenheart-aloe-700);
+        --theme-color-primary-25: var(--greenheart-aloe-25);
+        --theme-color-primary-50: var(--greenheart-aloe-50);
+        --theme-color-primary-100: var(--greenheart-aloe-100);
+        --theme-color-primary-200: var(--greenheart-aloe-200);
+        --theme-color-primary-300: var(--greenheart-aloe-300);
+        --theme-color-primary-400: var(--greenheart-aloe-400);
+        --theme-color-primary-500: var(--greenheart-aloe-500);
+        --theme-color-primary-600: var(--greenheart-aloe-600);
+        --theme-color-primary-700: var(--greenheart-aloe-700);
+        --theme-color-primary-800: var(--greenheart-aloe-800);
+        --theme-color-primary-900: var(--greenheart-aloe-900);
+        --theme-color-primary-950: var(--greenheart-aloe-950);
+
+        --theme-color-grey-25: var(--greenheart-mountain-25);
+        --theme-color-grey-50: var(--greenheart-mountain-50);
+        --theme-color-grey-100: var(--greenheart-mountain-100);
+        --theme-color-grey-200: var(--greenheart-mountain-200);
+        --theme-color-grey-300: var(--greenheart-mountain-300);
+        --theme-color-grey-400: var(--greenheart-mountain-400);
+        --theme-color-grey-500: var(--greenheart-mountain-500);
+        --theme-color-grey-600: var(--greenheart-mountain-600);
+        --theme-color-grey-700: var(--greenheart-mountain-700);
+        --theme-color-grey-800: var(--greenheart-mountain-800);
+        --theme-color-grey-900: var(--greenheart-mountain-900);
+        --theme-color-grey-950: var(--greenheart-mountain-950);
+
+        /* Default Button */
+        --button-default-bg: var(--greenheart-aloe-700);
+        --button-default-border: var(--greenheart-aloe-700);
+        --button-default-text: white;
+        --button-default-shadow: none;
+        --button-default-hover-bg: var(--greenheart-aloe-900);
+        --button-default-hover-border: var(--greenheart-aloe-300);
+        --button-default-hover-text: white;
+        --button-default-hover-shadow: none;
+        --button-default-focus-bg: var(--greenheart-aloe-800);
+        --button-default-focus-border: var(--greenheart-aloe-300);
+        --button-default-focus-text: white;
+        --button-default-focus-shadow: var(--focus-ring-primary);
+        --button-default-active-bg: var(--greenheart-aloe-700);
+        --button-default-active-border: var(--greenheart-aloe-800);
+        --button-default-active-text: white;
+        --button-default-active-shadow: var(--focus-ring-primary);
+        --button-default-focus-ring: ;
+
+        /* Destructive Button */
+        --button-destructive-bg: white;
+        --button-destructive-border: var(--greenheart-poppy-700);
+        --button-destructive-text: var(--greenheart-poppy-800);
+        --button-destructive-shadow: none;
+        --button-destructive-hover-bg: var(--greenheart-poppy-25);
+        --button-destructive-hover-border: var(--greenheart-poppy-900);
+        --button-destructive-hover-text: var(--greenheart-poppy-800);
+        --button-destructive-hover-shadow: none;
+        --button-destructive-focus-bg: white;
+        --button-destructive-focus-border: var(--greenheart-poppy-800);
+        --button-destructive-focus-text: var(--greenheart-poppy-800);
+        --button-destructive-focus-shadow: var(--focus-ring-error);
+        --button-destructive-active-bg: white;
+        --button-destructive-active-border: var(--greenheart-poppy-800);
+        --button-destructive-active-text: var(--greenheart-poppy-800);
+        --button-destructive-active-shadow: var(--focus-ring-error);
+        --button-destructive-focus-ring: var(--greenheart-poppy-200);
+
+        /* Secondary Button */
+        --button-secondary-bg: white;
+        --button-secondary-border: var(--greenheart-aloe-300);
+        --button-secondary-border-width: 2px;
+        --button-secondary-text: var(--greenheart-aloe-700);
+        --button-secondary-shadow: none;
+        --button-secondary-hover-bg: var(--greenheart-aloe-25);
+        --button-secondary-hover-border: var(--greenheart-aloe-100);
+        --button-secondary-hover-text: var(--greenheart-aloe-800);
+        --button-secondary-hover-shadow: none;
+        --button-secondary-focus-bg: white;
+        --button-secondary-focus-border: var(--greenheart-aloe-200);
+        --button-secondary-focus-text: var(--greenheart-aloe-800);
+        --button-secondary-focus-shadow: var(--focus-ring-secondary);
+        --button-secondary-active-bg: white;
+        --button-secondary-active-border: var(--greenheart-aloe-500);
+        --button-secondary-active-text: var(--greenheart-aloe-900);
+        --button-secondary-active-shadow: var(--focus-ring-secondary);
+        --button-secondary-focus-ring: var(--greenheart-aloe-200);
+
+        /* Tertiary Button */
+        --button-tertiary-bg: white;
+        --button-tertiary-border: var(--theme-color-grey-200);
+        --button-tertiary-text: var(--theme-color-grey-500);
+        --button-tertiary-shadow: none;
+        --button-tertiary-hover-bg: var(--theme-color-grey-50);
+        --button-tertiary-hover-border: var(--theme-color-grey-400);
+        --button-tertiary-hover-text: var(--theme-color-grey-500);
+        --button-tertiary-hover-shadow: none;
+        --button-tertiary-focus-bg: var(--theme-color-grey-25);
+        --button-tertiary-focus-border: var(--theme-color-grey-300);
+        --button-tertiary-focus-text: var(--theme-color-grey-500);
+        --button-tertiary-focus-shadow: var(--focus-ring-tertiary);
+        --button-tertiary-active-bg: var(--theme-color-grey-25);
+        --button-tertiary-active-border: var(--theme-color-grey-300);
+        --button-tertiary-active-text: var(--theme-color-grey-500);
+        --button-tertiary-active-shadow: var(--focus-ring-tertiary);
+        --button-tertiary-focus-ring: var(--theme-color-grey-100);
+
+        /* Outline Button */
+        --button-outline-bg: transparent;
+        --button-outline-border: var(--greenheart-aloe-300);
+        --button-outline-text: var(--greenheart-aloe-700);
+        --button-outline-shadow: none;
+        --button-outline-hover-bg: var(--greenheart-aloe-50);
+        --button-outline-hover-border: var(--greenheart-aloe-300);
+        --button-outline-hover-text: var(--greenheart-aloe-700);
+        --button-outline-hover-shadow: none;
+        --button-outline-focus-bg: var(--greenheart-aloe-50);
+        --button-outline-focus-border: var(--greenheart-aloe-400);
+        --button-outline-focus-text: var(--greenheart-aloe-800);
+        --button-outline-focus-shadow: var(--focus-ring-tertiary);
+        --button-outline-active-bg: var(--greenheart-aloe-100);
+        --button-outline-active-border: var(--greenheart-aloe-500);
+        --button-outline-active-text: var(--greenheart-aloe-800);
+        --button-outline-active-shadow: var(--focus-ring-tertiary);
+        --button-outline-focus-ring: var(--greenheart-aloe-200);
+
+        /* Ghost Button */
+        --button-ghost-bg: transparent;
+        --button-ghost-border: transparent;
+        --button-ghost-text: var(--greenheart-aloe-700);
+        --button-ghost-shadow: none;
+        --button-ghost-hover-bg: var(--greenheart-aloe-25);
+        --button-ghost-hover-border: transparent;
+        --button-ghost-hover-text: var(--greenheart-aloe-800);
+        --button-ghost-hover-shadow: none;
+        --button-ghost-focus-bg: white;
+        --button-ghost-focus-border: transparent;
+        --button-ghost-focus-text: var(--greenheart-aloe-800);
+        --button-ghost-focus-shadow: var(--focus-ring-tertiary);
+        --button-ghost-active-bg: var(--greenheart-aloe-100);
+        --button-ghost-active-border: transparent;
+        --button-ghost-active-text: var(--greenheart-aloe-900);
+        --button-ghost-active-shadow: var(--focus-ring-tertiary);
+        --button-ghost-focus-ring: var(--greenheart-aloe-200);
+
+        /* Link Button */
+        --button-link-bg: transparent;
+        --button-link-border: transparent;
+        --button-link-text: var(--greenheart-aloe-600);
+        --button-link-shadow: none;
+        --button-link-hover-bg: transparent;
+        --button-link-hover-border: transparent;
+        --button-link-hover-text: var(--greenheart-aloe-700);
+        --button-link-hover-shadow: none;
+        --button-link-focus-bg: transparent;
+        --button-link-focus-border: transparent;
+        --button-link-focus-text: var(--greenheart-aloe-800);
+        --button-link-focus-shadow: var(--focus-ring-primary);
+        --button-link-active-bg: transparent;
+        --button-link-active-border: transparent;
+        --button-link-active-text: var(--greenheart-aloe-800);
+        --button-link-active-shadow: var(--focus-ring-primary);
+        --button-link-focus-ring: var(--greenheart-aloe-200);
+
+        /* Text Input Variables */
+        --input-bg: white;
+        --input-border: var(--theme-color-grey-200);
+        --input-disabled-bg: var(--greenheart-mountain-50);
+        --input-hover-border: var(--greenheart-aloe-300);
+        --input-focus-border: var(--greenheart-aloe-300);
+        --input-focus-shadow: var(--focus-ring-primary);
+
+        /* Chart Theme Colors - Greenheart */
+        --chart-program-1-successful: var(--greenheart-pine-300);
+        --chart-program-1-failed: var(--greenheart-pine-100);
+        --chart-program-2-successful: var(--greenheart-marigold-300);
+        --chart-program-2-failed: var(--greenheart-marigold-100);
+        --chart-program-3-successful: var(--greenheart-azure-300);
+        --chart-program-3-failed: var(--greenheart-azure-200);
+    }
+
+    [data-theme='educatius'] {
+        /* Font Family */
+        --font-family-default: var(--font-the-future), system-ui, -apple-system, sans-serif;
+        --font-family-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        
+        /* Default text colors */
+        --color-text-default: var(--theme-color-grey-950);
+        --color-text-placeholder: var(--theme-color-grey-500);
+        --color-foreground: var(--color-text-default);
+        
+        /* Focus Ring Shadow Colors */
+        --primary-shadow-color-1: oklch(27.27% 0 0 / 5%);
+        --primary-shadow-color-2: oklch(60.69238729089951% 0.10516853464886365 188.97110509240346 / 0.24);
+        --tertiary-shadow-color-1: oklch(27.27% 0 0 / 5%);
+        --tertiary-shadow-color-2: oklch(63.01% 0 0 / 14%);
+        --secondary-shadow-color-1: oklch(27.27% 0 0 / 5%);
+        --secondary-shadow-color-2: oklch(60.69238729089951% 0.10516853464886365 188.97110509240346 / 0.24);
+        --grey-shadow-color-1: oklch(27.27% 0 0 / 5%);
+        --grey-shadow-color-2: oklch(63.01% 0 0 / 14%);
+        --error-shadow-color-1: oklch(27.27% 0 0 / 5%);
+        --error-shadow-color-2: oklch(30.431426425952246% 0.08768598373666293 6.047535372452103 / 0.24);
+
+        --theme-color-primary: var(--educatius-teal-600);
+        --theme-color-primary-25: var(--educatius-teal-25);
+        --theme-color-primary-50: var(--educatius-teal-50);
+        --theme-color-primary-100: var(--educatius-teal-100);
+        --theme-color-primary-200: var(--educatius-teal-200);
+        --theme-color-primary-300: var(--educatius-teal-300);
+        --theme-color-primary-400: var(--educatius-teal-400);
+        --theme-color-primary-500: var(--educatius-teal-500);
+        --theme-color-primary-600: var(--educatius-teal-600);
+        --theme-color-primary-700: var(--educatius-teal-700);
+        --theme-color-primary-800: var(--educatius-teal-800);
+        --theme-color-primary-900: var(--educatius-teal-900);
+        --theme-color-primary-950: var(--educatius-teal-950);
+
+        /* --theme-color-grey-25: oklch(99.1068896634314% 1.694109781728% 0);
+        --theme-color-grey-50: oklch(98.21176331531957% 1.660744847761% 0);
+        --theme-color-grey-100: oklch(93.09991350432057% 1.470205780183% 0);
+        --theme-color-grey-200: oklch(90.36519899733118% 1.368272033733% 0);
+        --theme-color-grey-300: oklch(84.83222077792561% 1.162035840969% 0);
+        --theme-color-grey-400: oklch(76.6755207130457% 1.85800302444% 0);
+        --theme-color-grey-500: oklch(56.583632710667196% 1.10909809651% 0);
+        --theme-color-grey-600: oklch(49.615554250476265% 1.849369955612% 0);
+        --theme-color-grey-700: oklch(42.39264809444689% 1.580143373603% 0);
+        --theme-color-grey-800: oklch(35.23247379858556% 1.313255071058% 0);
+        --theme-color-grey-900: oklch(27.274099897138065% 1.016614680858% 0);
+        --theme-color-grey-950: oklch(19.12512983834251% 0.000238724618% 0); */
+
+        --theme-color-grey-25: var(--greenheart-mountain-25);
+        --theme-color-grey-50: var(--greenheart-mountain-50);
+        --theme-color-grey-100: var(--greenheart-mountain-100);
+        --theme-color-grey-200: var(--greenheart-mountain-200);
+        --theme-color-grey-300: var(--greenheart-mountain-300);
+        --theme-color-grey-400: var(--greenheart-mountain-400);
+        --theme-color-grey-500: var(--greenheart-mountain-500);
+        --theme-color-grey-600: var(--greenheart-mountain-600);
+        --theme-color-grey-700: var(--greenheart-mountain-700);
+        --theme-color-grey-800: var(--greenheart-mountain-800);
+        --theme-color-grey-900: var(--greenheart-mountain-900);
+        --theme-color-grey-950: var(--greenheart-mountain-950);
+
+        /* Default Button */
+        --button-default-bg: var(--educatius-teal-600);
+        --button-default-border: var(--educatius-teal-600);
+        --button-default-text: white;
+        --button-default-shadow: none;
+        --button-default-hover-bg: var(--educatius-teal-800);
+        --button-default-hover-border: var(--educatius-teal-300);
+        --button-default-hover-text: white;
+        --button-default-hover-shadow: none;
+        --button-default-focus-bg: var(--educatius-teal-600);
+        --button-default-focus-border: var(--educatius-teal-600);
+        --button-default-focus-text: white;
+        --button-default-focus-shadow: var(--focus-ring-primary);
+        --button-default-active-bg: var(--educatius-teal-600);
+        --button-default-active-border: var(--educatius-teal-600);
+        --button-default-active-text: white;
+        --button-default-active-shadow: var(--focus-ring-primary);
+        --button-default-focus-ring: ;
+
+        /* Destructive Button */
+        --button-destructive-bg: white;
+        --button-destructive-border: var(--educatius-burgundy-300);
+        --button-destructive-text: var(--educatius-burgundy-300);
+        --button-destructive-shadow: none;
+        --button-destructive-hover-bg: var(--educatius-burgundy-25);
+        --button-destructive-hover-border: var(--educatius-burgundy-400);
+        --button-destructive-hover-text: var(--educatius-burgundy-400);
+        --button-destructive-hover-shadow: none;
+        --button-destructive-focus-bg: white;
+        --button-destructive-focus-border: var(--educatius-burgundy-300);
+        --button-destructive-focus-text: var(--educatius-burgundy-300);
+        --button-destructive-focus-shadow: var(--focus-ring-error);
+        --button-destructive-active-bg: white;
+        --button-destructive-active-border: var(--educatius-burgundy-300);
+        --button-destructive-active-text: var(--educatius-burgundy-300);
+        --button-destructive-active-shadow: var(--focus-ring-error);
+        --button-destructive-focus-ring: var(--educatius-burgundy-200);
+
+        /* Secondary Button (using Greenheart's tertiary style) */
+        --button-tertiary-bg: white;
+        --button-tertiary-border: var(--theme-color-grey-200);
+        --button-tertiary-text: var(--theme-color-grey-500);
+        --button-tertiary-shadow: none;
+        --button-tertiary-hover-bg: var(--theme-color-grey-100);
+        --button-tertiary-hover-border: var(--theme-color-grey-400);
+        --button-tertiary-hover-text: var(--theme-color-grey-500);
+        --button-tertiary-hover-shadow: none;
+        --button-tertiary-focus-bg: var(--theme-color-grey-25);
+        --button-tertiary-focus-border: var(--theme-color-grey-300);
+        --button-tertiary-focus-text: var(--theme-color-grey-500);
+        --button-tertiary-focus-shadow: var(--focus-ring-tertiary);
+        --button-tertiary-active-bg: var(--theme-color-grey-25);
+        --button-tertiary-active-border: var(--theme-color-grey-300);
+        --button-tertiary-active-text: var(--theme-color-grey-500);
+        --button-tertiary-active-shadow: var(--focus-ring-tertiary);
+        --button-tertiary-focus-ring: var(--theme-color-grey-100);
+
+        /* Tertiary Button (using Greenheart's secondary style) */
+        --button-secondary-bg: white;
+        --button-secondary-border: var(--educatius-teal-300);
+        --button-secondary-text: var(--educatius-teal-600);
+        --button-secondary-shadow: none;
+        --button-secondary-hover-bg: var(--educatius-teal-25);
+        --button-secondary-hover-border: var(--educatius-teal-100);
+        --button-secondary-hover-text: var(--educatius-teal-600);
+        --button-secondary-hover-shadow: none;
+        --button-secondary-focus-bg: white;
+        --button-secondary-focus-border: var(--educatius-teal-200);
+        --button-secondary-focus-text: var(--educatius-teal-600);
+        --button-secondary-focus-shadow: var(--focus-ring-secondary);
+        --button-secondary-active-bg: white;
+        --button-secondary-active-border: var(--educatius-teal-300);
+        --button-secondary-active-text: var(--educatius-teal-900);
+        --button-secondary-active-shadow: var(--focus-ring-secondary);
+        --button-secondary-focus-ring: var(--educatius-teal-200);
+
+        /* Outline Button */
+        --button-outline-bg: transparent;
+        --button-outline-border: var(--theme-color-grey-300);
+        --button-outline-text: var(--educatius-teal-700);
+        --button-outline-shadow: none;
+        --button-outline-hover-bg: var(--educatius-teal-50);
+        --button-outline-hover-border: var(--educatius-teal-300);
+        --button-outline-hover-text: var(--educatius-teal-700);
+        --button-outline-hover-shadow: none;
+        --button-outline-focus-bg: var(--educatius-teal-50);
+        --button-outline-focus-border: var(--educatius-teal-400);
+        --button-outline-focus-text: var(--educatius-teal-800);
+        --button-outline-focus-shadow: var(--focus-ring-tertiary);
+        --button-outline-active-bg: var(--educatius-teal-100);
+        --button-outline-active-border: var(--educatius-teal-500);
+        --button-outline-active-text: var(--educatius-teal-800);
+        --button-outline-active-shadow: var(--focus-ring-tertiary);
+        --button-outline-focus-ring: var(--educatius-teal-200);
+
+        /* Ghost Button */
+        --button-ghost-bg: transparent;
+        --button-ghost-border: transparent;
+        --button-ghost-text: var(--educatius-teal-700);
+        --button-ghost-shadow: none;
+        --button-ghost-hover-bg: var(--educatius-teal-25);
+        --button-ghost-hover-border: transparent;
+        --button-ghost-hover-text: var(--educatius-teal-800);
+        --button-ghost-hover-shadow: none;
+        --button-ghost-focus-bg: var(--educatius-teal-50);
+        --button-ghost-focus-border: transparent;
+        --button-ghost-focus-text: var(--educatius-teal-800);
+        --button-ghost-focus-shadow: var(--focus-ring-tertiary);
+        --button-ghost-active-bg: var(--educatius-teal-100);
+        --button-ghost-active-border: transparent;
+        --button-ghost-active-text: var(--educatius-teal-900);
+        --button-ghost-active-shadow: var(--focus-ring-tertiary);
+        --button-ghost-focus-ring: var(--educatius-teal-200);
+
+        /* Link Button */
+        --button-link-bg: transparent;
+        --button-link-border: transparent;
+        --button-link-text: var(--educatius-teal-600);
+        --button-link-shadow: none;
+        --button-link-hover-bg: transparent;
+        --button-link-hover-border: transparent;
+        --button-link-hover-text: var(--educatius-teal-700);
+        --button-link-hover-shadow: none;
+        --button-link-focus-bg: transparent;
+        --button-link-focus-border: transparent;
+        --button-link-focus-text: var(--educatius-teal-800);
+        --button-link-focus-shadow: var(--focus-ring-primary);
+        --button-link-active-bg: transparent;
+        --button-link-active-border: transparent;
+        --button-link-active-text: var(--educatius-teal-800);
+        --button-link-active-shadow: var(--focus-ring-primary);
+        --button-link-focus-ring: var(--educatius-teal-200);
+
+        /* Text Input Variables */
+        --input-bg: white;
+        --input-border: var(--theme-color-grey-200);
+        --input-disabled-bg: var(--theme-color-grey-50);
+        --input-hover-border: var(--educatius-teal-300);
+        --input-focus-border: var(--educatius-teal-300);
+        --input-focus-shadow: var(--focus-ring-primary);
+
+        /* Chart Theme Colors - Educatius */
+        --chart-program-1-successful: var(--educatius-purple-300);
+        --chart-program-1-failed: var(--educatius-purple-100);
+        --chart-program-2-successful: var(--educatius-orange-300);
+        --chart-program-2-failed: var(--educatius-orange-100);
+        --chart-program-3-successful: var(--educatius-burgundy-200);
+        --chart-program-3-failed: var(--educatius-burgundy-50);
+    }
+
+    /* Apply font-family to body and elements for educatius theme */
+    [data-theme='educatius'] body {
+        font-family: var(--font-family-default);
+    }
+
+    [data-theme='educatius'] code,
+    [data-theme='educatius'] pre,
+    [data-theme='educatius'] .font-mono {
+        font-family: var(--font-family-mono);
+    }
+}

@@ -1,0 +1,227 @@
+0000000000000000000000000000000000000000 c22eb6427cff87b0a15e3d6f47d70355ed966f8d karanf <karanf@gmail.com> 1742409783 +1300	commit (initial): feat(create-turbo): create basic
+c22eb6427cff87b0a15e3d6f47d70355ed966f8d 29e29ba8ff1b738bdccea9b17d289b8d0613c451 karanf <karanf@gmail.com> 1742409783 +1300	commit: feat(create-turbo): apply official-starter transform
+29e29ba8ff1b738bdccea9b17d289b8d0613c451 557af05b584040d7cfaa642e033697949edd491e karanf <karanf@gmail.com> 1742409783 +1300	commit: feat(create-turbo): apply pnpm-eslint transform
+557af05b584040d7cfaa642e033697949edd491e bf6a9d2d71acb0374676f05552eb93682a782ed6 karanf <karanf@gmail.com> 1742409797 +1300	commit: feat(create-turbo): install dependencies
+bf6a9d2d71acb0374676f05552eb93682a782ed6 3102ebc919560268084d48f7163122a5f6fb905c karanf <karan.fadnavis@enroller.co.nz> 1742416579 +1300	commit: basic project created
+3102ebc919560268084d48f7163122a5f6fb905c 3f422fd4081feee107694527b951784bb33bd469 karanf <karan.fadnavis@enroller.co.nz> 1742434826 +1300	commit: added tw4, but exports not working yet
+3f422fd4081feee107694527b951784bb33bd469 ad5bbd47c7e1bbd8d662fc094c67d11781e84cf6 karanf <karan.fadnavis@enroller.co.nz> 1742437538 +1300	commit: repo imports not erroring out now tw still not working
+ad5bbd47c7e1bbd8d662fc094c67d11781e84cf6 26af60566e20c95d713b922d8b19e290927b7aad karanf <karan.fadnavis@enroller.co.nz> 1742440589 +1300	commit: tw import syntax
+26af60566e20c95d713b922d8b19e290927b7aad 2c7b143127a0ca3c6c8319df103e490a068c4e32 karanf <karan.fadnavis@enroller.co.nz> 1742455687 +1300	commit: tailwind finally working
+2c7b143127a0ca3c6c8319df103e490a068c4e32 884b9253996b0134a230ae1732b28c6241010c1c karanf <karan.fadnavis@enroller.co.nz> 1742455739 +1300	commit: just checking monorepo and colours
+884b9253996b0134a230ae1732b28c6241010c1c 9e964a4f96c1e0c4f94d1ca58d5b9de0a7020187 karanf <karan.fadnavis@enroller.co.nz> 1742455821 +1300	commit: just checking monorepo and colours
+9e964a4f96c1e0c4f94d1ca58d5b9de0a7020187 655fc902e0885b62036d5a217e4cec8c8de3416a karanf <karan.fadnavis@enroller.co.nz> 1742456004 +1300	commit: pnpm lockfile
+655fc902e0885b62036d5a217e4cec8c8de3416a e347b3effffd3af220ece891537ac926249582f1 karanf <karan.fadnavis@enroller.co.nz> 1742456216 +1300	commit: pnpm lockfile again
+e347b3effffd3af220ece891537ac926249582f1 7d76a1034acf63cce51bc55d055559516a0e3e39 karanf <karan.fadnavis@enroller.co.nz> 1742456587 +1300	commit: build scripts for monorepo
+7d76a1034acf63cce51bc55d055559516a0e3e39 59479b0d1dfdc9ef9559756fbd793479e5946126 karanf <karan.fadnavis@enroller.co.nz> 1742839725 +1300	commit: added shadcn components
+59479b0d1dfdc9ef9559756fbd793479e5946126 8b8d0b5cef33273594ab1b82956843d59268e65b karanf <karan.fadnavis@enroller.co.nz> 1742885120 +1300	commit: finally added all shadcn canary components, updated the config files for tailwind v4, fixed the global reset issue
+8b8d0b5cef33273594ab1b82956843d59268e65b e7c17e60502899c2d48172c3f195ab0674d36770 karanf <karan.fadnavis@enroller.co.nz> 1742933080 +1300	commit: theming has begun
+e7c17e60502899c2d48172c3f195ab0674d36770 0bb7c4534725f9198566c4892521320c3583a2a4 karanf <karan.fadnavis@enroller.co.nz> 1742955102 +1300	commit: more theming stuff
+0bb7c4534725f9198566c4892521320c3583a2a4 30d9452a203bab058ffe3f22260a95ac9d0cce89 karanf <karan.fadnavis@enroller.co.nz> 1742957209 +1300	commit: added button and input styled as per theme
+30d9452a203bab058ffe3f22260a95ac9d0cce89 4fe428bf5c14f2f3b4e3056b099690e417293e77 karanf <karan.fadnavis@enroller.co.nz> 1743024193 +1300	commit: sidebar is good enough now
+4fe428bf5c14f2f3b4e3056b099690e417293e77 05f5db36f36064a06fede1a7dd41dc7814c6f569 karanf <karan.fadnavis@enroller.co.nz> 1743109659 +1300	commit: working on sidebar content
+05f5db36f36064a06fede1a7dd41dc7814c6f569 4fbba77e616161ce029c41d59c4f777fe127c2ad karanf <karan.fadnavis@enroller.co.nz> 1743110247 +1300	commit: new packages installed
+4fbba77e616161ce029c41d59c4f777fe127c2ad 79b742ba5694381097ae6bceea5dff073cb7678b karanf <karan.fadnavis@enroller.co.nz> 1743112502 +1300	commit: fixed pnpm stuff
+79b742ba5694381097ae6bceea5dff073cb7678b 5b5883c3c4903884723f4da8989e7227df3f042f karanf <karan.fadnavis@enroller.co.nz> 1743114389 +1300	commit: left sidebar
+5b5883c3c4903884723f4da8989e7227df3f042f 3121cc0b8a1480f34094364149a65c976553eee1 karanf <karan.fadnavis@enroller.co.nz> 1743361392 +1300	commit: Added the new active context stuff to help woth cursor development
+3121cc0b8a1480f34094364149a65c976553eee1 2e20d7279833a619d9f5bbdfab837b0bc91e47eb karanf <karan.fadnavis@enroller.co.nz> 1743362085 +1300	commit: few more rules added
+2e20d7279833a619d9f5bbdfab837b0bc91e47eb dda8a6f8376fd3b4acaebe2fe3b22717aedac5c8 karanf <karan.fadnavis@enroller.co.nz> 1743376673 +1300	commit: added seed data
+dda8a6f8376fd3b4acaebe2fe3b22717aedac5c8 284b05f84618e600ac5e432a73374a561acf53e8 karanf <karan.fadnavis@enroller.co.nz> 1743450208 +1300	commit: some sidebar styling
+284b05f84618e600ac5e432a73374a561acf53e8 1067faa83a9472aa79bf7462a02097d7b67b7f74 karanf <karan.fadnavis@enroller.co.nz> 1743461060 +1300	commit: pinned columns working
+1067faa83a9472aa79bf7462a02097d7b67b7f74 1067faa83a9472aa79bf7462a02097d7b67b7f74 karanf <karan.fadnavis@enroller.co.nz> 1743566406 +1300	reset: moving to origin/main
+1067faa83a9472aa79bf7462a02097d7b67b7f74 1067faa83a9472aa79bf7462a02097d7b67b7f74 karanf <karan.fadnavis@enroller.co.nz> 1743573752 +1300	reset: moving to origin/main
+1067faa83a9472aa79bf7462a02097d7b67b7f74 1067faa83a9472aa79bf7462a02097d7b67b7f74 karanf <karan.fadnavis@enroller.co.nz> 1743615856 +1300	reset: moving to origin/main
+1067faa83a9472aa79bf7462a02097d7b67b7f74 5cfb175f1e96ddc650f764922ba1d0a2d806b65e karanf <karan.fadnavis@enroller.co.nz> 1743616625 +1300	commit: pinning and blurs working
+5cfb175f1e96ddc650f764922ba1d0a2d806b65e e7470db9ef493cccd3a5482a55d9527162e01000 karanf <karan.fadnavis@enroller.co.nz> 1743617564 +1300	commit: few spacing changes
+e7470db9ef493cccd3a5482a55d9527162e01000 aca62ea743dcaaa628e411347f76143cbbbf8bae karanf <karan.fadnavis@enroller.co.nz> 1743617888 +1300	commit: pagination working
+aca62ea743dcaaa628e411347f76143cbbbf8bae ad76e7d92fe11fd4f0b2d89dc558a7bd93df97f7 karanf <karan.fadnavis@enroller.co.nz> 1743624579 +1300	commit: columns aligned with content
+ad76e7d92fe11fd4f0b2d89dc558a7bd93df97f7 0583d388fbd175b96cfae7f4531f2a70cd4cd39d karanf <karan.fadnavis@enroller.co.nz> 1743631854 +1300	commit: positioning and more styling changes
+0583d388fbd175b96cfae7f4531f2a70cd4cd39d e1e747b9522cc6e21e98e8a1ef53c3023cd00b13 karanf <karan.fadnavis@enroller.co.nz> 1743634867 +1300	commit: table expand rows fixed
+e1e747b9522cc6e21e98e8a1ef53c3023cd00b13 a550c5ed8dbdcc57998b78e4a8d9f11771c89b4f karanf <karan.fadnavis@enroller.co.nz> 1743634991 +1300	commit: added shadow to expanded content
+a550c5ed8dbdcc57998b78e4a8d9f11771c89b4f dcd3b0fbe6eb6816829a60a7a80c9122527c9b6b karanf <karan.fadnavis@enroller.co.nz> 1743637120 +1300	commit: some styles defined
+dcd3b0fbe6eb6816829a60a7a80c9122527c9b6b a79f061d8941b4363c1c5359add92c9e6f16f77e karanf <karan.fadnavis@enroller.co.nz> 1743639058 +1300	commit: added advanced table component
+a79f061d8941b4363c1c5359add92c9e6f16f77e 58714c0fe596ea68073574e49320308f33cc21bb karanf <karan.fadnavis@enroller.co.nz> 1743639435 +1300	commit: trying this again
+58714c0fe596ea68073574e49320308f33cc21bb de79f73ec11661563d13fa9025bd1799ef6a69e5 karanf <karan.fadnavis@enroller.co.nz> 1743645952 +1300	commit: building the page 1
+de79f73ec11661563d13fa9025bd1799ef6a69e5 de79f73ec11661563d13fa9025bd1799ef6a69e5 karanf <karan.fadnavis@enroller.co.nz> 1743651774 +1300	checkout: moving from main to left-navigation
+de79f73ec11661563d13fa9025bd1799ef6a69e5 ce838b4e268f46c35d82abcaf0a6d910b041ce01 karanf <karan.fadnavis@enroller.co.nz> 1743654867 +1300	commit: sidebar nav set up
+ce838b4e268f46c35d82abcaf0a6d910b041ce01 ce838b4e268f46c35d82abcaf0a6d910b041ce01 karanf <karan.fadnavis@enroller.co.nz> 1743655014 +1300	checkout: moving from left-navigation to admin-dashboards
+ce838b4e268f46c35d82abcaf0a6d910b041ce01 76ce9e8970efd93ab227c8b1435ded1ad4ca3a8c karanf <karan.fadnavis@enroller.co.nz> 1743655526 +1300	commit: created basic pages for sevis user
+76ce9e8970efd93ab227c8b1435ded1ad4ca3a8c ce838b4e268f46c35d82abcaf0a6d910b041ce01 karanf <karan.fadnavis@enroller.co.nz> 1743659296 +1300	reset: moving to HEAD^
+ce838b4e268f46c35d82abcaf0a6d910b041ce01 76ce9e8970efd93ab227c8b1435ded1ad4ca3a8c karanf <karan.fadnavis@enroller.co.nz> 1743659512 +1300	reset: moving to 76ce9e8970efd93ab227c8b1435ded1ad4ca3a8c
+76ce9e8970efd93ab227c8b1435ded1ad4ca3a8c ce838b4e268f46c35d82abcaf0a6d910b041ce01 karanf <karan.fadnavis@enroller.co.nz> 1743659582 +1300	reset: moving to ce838b4e268f46c35d82abcaf0a6d910b041ce01
+ce838b4e268f46c35d82abcaf0a6d910b041ce01 de79f73ec11661563d13fa9025bd1799ef6a69e5 karanf <karan.fadnavis@enroller.co.nz> 1743659690 +1300	checkout: moving from admin-dashboards to main
+de79f73ec11661563d13fa9025bd1799ef6a69e5 de79f73ec11661563d13fa9025bd1799ef6a69e5 karanf <karan.fadnavis@enroller.co.nz> 1743659864 +1300	checkout: moving from main to main
+de79f73ec11661563d13fa9025bd1799ef6a69e5 add463eaffd4c8b35f5cd974e296843b4c6fcf81 karanf <karan.fadnavis@enroller.co.nz> 1743660033 +1300	pull: Fast-forward
+add463eaffd4c8b35f5cd974e296843b4c6fcf81 add463eaffd4c8b35f5cd974e296843b4c6fcf81 karanf <karan.fadnavis@enroller.co.nz> 1743660484 +1300	checkout: moving from main to user-app-view-sevis
+add463eaffd4c8b35f5cd974e296843b4c6fcf81 8f87ee2e59182ae0c85f8409e3e78aa0df8db185 karanf <karan.fadnavis@enroller.co.nz> 1743710106 +1300	commit: SPA like behaviour and dynamic header titles added
+8f87ee2e59182ae0c85f8409e3e78aa0df8db185 74bd8bb4054731dfc1ef0f2f5a5ccca935bd7a52 karanf <karan.fadnavis@enroller.co.nz> 1743711057 +1300	commit: routes are better now
+74bd8bb4054731dfc1ef0f2f5a5ccca935bd7a52 e0decec93dbe58742eb6db47e1fd4a9d85b7a722 karanf <karan.fadnavis@enroller.co.nz> 1743720593 +1300	commit: more consistent styling
+e0decec93dbe58742eb6db47e1fd4a9d85b7a722 738b2dd5876fd2c6c501e93a14ee3c4ab1fb5ac9 karanf <karan.fadnavis@enroller.co.nz> 1743721107 +1300	commit: added redirects
+738b2dd5876fd2c6c501e93a14ee3c4ab1fb5ac9 a1ad90bc5e074c9a7fa871fd8a881af7f77c31e2 karanf <karan.fadnavis@enroller.co.nz> 1743743521 +1300	commit: skeletons added
+a1ad90bc5e074c9a7fa871fd8a881af7f77c31e2 b07dd856b8a0cd7fe688456d2f05b99c781eef04 karanf <karan.fadnavis@enroller.co.nz> 1743761121 +1300	commit: ts errors fixed
+b07dd856b8a0cd7fe688456d2f05b99c781eef04 0d52868cd8247450b5227f31026c0892185bbb43 karanf <karan.fadnavis@enroller.co.nz> 1743796366 +1300	commit: project finally using supabase data
+0d52868cd8247450b5227f31026c0892185bbb43 9cc2967b50a6ef889c028ead54a58a98a0d90d68 karanf <karan.fadnavis@enroller.co.nz> 1743797119 +1300	commit: lockfile fixes
+9cc2967b50a6ef889c028ead54a58a98a0d90d68 48a7c7eb148556b6d0debef2d5b73b4ced9c1032 karanf <karan.fadnavis@enroller.co.nz> 1743797364 +1300	commit: hook factory fixes
+48a7c7eb148556b6d0debef2d5b73b4ced9c1032 d9ccf3d4cd3fae668aa02231640d29a0f93a0fda karanf <karan.fadnavis@enroller.co.nz> 1743798584 +1300	commit: vercel 404 fixes
+d9ccf3d4cd3fae668aa02231640d29a0f93a0fda 107400091b17fcca832f62e4b562b9f46d021b00 karanf <karan.fadnavis@enroller.co.nz> 1743800129 +1300	commit: few style and redirect changes
+107400091b17fcca832f62e4b562b9f46d021b00 dd5cb3962ad5dce580328fabd71252b67e1dd7f3 karanf <karan.fadnavis@enroller.co.nz> 1743800590 +1300	commit: changed to sevis-user instead of sevis
+dd5cb3962ad5dce580328fabd71252b67e1dd7f3 5e4db94fa9d8fa8a714933fc037ad3e0f0985c0a karanf <karan.fadnavis@enroller.co.nz> 1743801489 +1300	commit: fixed host family data loading
+5e4db94fa9d8fa8a714933fc037ad3e0f0985c0a 5cde47cec10a1d50c5ebadbdee5ecf3b4cef1353 karanf <karan.fadnavis@enroller.co.nz> 1743801673 +1300	commit: renamed overview to sevis
+5cde47cec10a1d50c5ebadbdee5ecf3b4cef1353 3be45b1cf135c735df5db3cf1445ed0b23ffa470 karanf <karan.fadnavis@enroller.co.nz> 1743803032 +1300	commit: fixed some next output errors
+3be45b1cf135c735df5db3cf1445ed0b23ffa470 add463eaffd4c8b35f5cd974e296843b4c6fcf81 karanf <karan.fadnavis@enroller.co.nz> 1743803249 +1300	checkout: moving from user-app-view-sevis to main
+add463eaffd4c8b35f5cd974e296843b4c6fcf81 7e4633fac15d757cca27eb25d820d9b41b1f2f6b karanf <karan.fadnavis@enroller.co.nz> 1743804525 +1300	pull: Fast-forward
+7e4633fac15d757cca27eb25d820d9b41b1f2f6b 7e4633fac15d757cca27eb25d820d9b41b1f2f6b karanf <karan.fadnavis@enroller.co.nz> 1743804594 +1300	checkout: moving from main to table-component-fixes
+7e4633fac15d757cca27eb25d820d9b41b1f2f6b 7bfb5d97269b6376dec621087c95700c2be1f75f karanf <karan.fadnavis@enroller.co.nz> 1743824807 +1300	commit: fixed advanced table layout
+7bfb5d97269b6376dec621087c95700c2be1f75f addb3b8e35e86f248523c331835d379ed5b998d5 karanf <karan.fadnavis@enroller.co.nz> 1743825299 +1300	commit: sorting functionality sussed
+addb3b8e35e86f248523c331835d379ed5b998d5 645e6eb3d10e7ce65fcb0cd086c10163d047ae61 karanf <karan.fadnavis@enroller.co.nz> 1743829834 +1300	commit: added bulk actions dropdown
+645e6eb3d10e7ce65fcb0cd086c10163d047ae61 a3761011cd24f95302b1070ed6dedd9318f80d0f karanf <karan.fadnavis@enroller.co.nz> 1743840892 +1300	commit: quick filters kind of well styled. metrics messed up
+a3761011cd24f95302b1070ed6dedd9318f80d0f 7edc8ff5b2cdc5faa326556baa1b84fc30d76113 karanf <karan.fadnavis@enroller.co.nz> 1743881468 +1200	commit: fixed column widths for pinned columns
+7edc8ff5b2cdc5faa326556baa1b84fc30d76113 9d6b427add39b3d97297e5ff5c3b7ddc953980fd karanf <karan.fadnavis@enroller.co.nz> 1743883909 +1200	commit: page optimisations
+9d6b427add39b3d97297e5ff5c3b7ddc953980fd fbf5dfe39600c73ab88c8d6265275b6ba019171f karanf <karan.fadnavis@enroller.co.nz> 1743884365 +1200	commit: now skeleton loader on all views
+fbf5dfe39600c73ab88c8d6265275b6ba019171f 6756d59fe18caca55cfb15edfc2c3902e7456c6a karanf <karan.fadnavis@enroller.co.nz> 1743884984 +1200	commit: loading sequence fixed
+6756d59fe18caca55cfb15edfc2c3902e7456c6a 405e98d3d4ffcf1d9a4d0db872bf6c2d1727d05f karanf <karan.fadnavis@enroller.co.nz> 1743891471 +1200	commit: metrics stuff
+405e98d3d4ffcf1d9a4d0db872bf6c2d1727d05f 4f8929b86596803e428da184ea43b03a41f5b453 karanf <karan.fadnavis@enroller.co.nz> 1743901143 +1200	commit: filter ux looking good
+4f8929b86596803e428da184ea43b03a41f5b453 7e4633fac15d757cca27eb25d820d9b41b1f2f6b karanf <karan.fadnavis@enroller.co.nz> 1743901207 +1200	checkout: moving from table-component-fixes to main
+7e4633fac15d757cca27eb25d820d9b41b1f2f6b 8ca592c557b0bdac545a6d39dba7412769500302 karanf <karan.fadnavis@enroller.co.nz> 1743901213 +1200	pull: Fast-forward
+8ca592c557b0bdac545a6d39dba7412769500302 8ca592c557b0bdac545a6d39dba7412769500302 karanf <karan.fadnavis@enroller.co.nz> 1743901251 +1200	checkout: moving from main to expander-content
+8ca592c557b0bdac545a6d39dba7412769500302 651c3d700ffdddd18adf5cec7194511d67f533bc karanf <karan.fadnavis@enroller.co.nz> 1743914801 +1200	commit: expanded content looking good
+651c3d700ffdddd18adf5cec7194511d67f533bc a30906285431bb82694b4d46fc29e887f89eb12f karanf <karan.fadnavis@enroller.co.nz> 1743918342 +1200	commit: lots of style changes
+a30906285431bb82694b4d46fc29e887f89eb12f 8ca592c557b0bdac545a6d39dba7412769500302 karanf <karan.fadnavis@enroller.co.nz> 1743918457 +1200	checkout: moving from expander-content to main
+8ca592c557b0bdac545a6d39dba7412769500302 865f8ed943f458d1ee79128ec3429e14e7389097 karanf <karan.fadnavis@enroller.co.nz> 1743918461 +1200	pull: Fast-forward
+865f8ed943f458d1ee79128ec3429e14e7389097 865f8ed943f458d1ee79128ec3429e14e7389097 karanf <karan.fadnavis@enroller.co.nz> 1743918513 +1200	checkout: moving from main to landing-page
+865f8ed943f458d1ee79128ec3429e14e7389097 b8719226c346154d7ced1cc70d41bca3fd1ecf01 karanf <karan.fadnavis@enroller.co.nz> 1743924059 +1200	commit: made landing page
+b8719226c346154d7ced1cc70d41bca3fd1ecf01 5c661d0d6046904351bc66a9f87b5326cea37e90 karanf <karan.fadnavis@enroller.co.nz> 1743925206 +1200	commit: user area sorted
+5c661d0d6046904351bc66a9f87b5326cea37e90 865f8ed943f458d1ee79128ec3429e14e7389097 karanf <karan.fadnavis@enroller.co.nz> 1743925753 +1200	checkout: moving from landing-page to main
+865f8ed943f458d1ee79128ec3429e14e7389097 072e4b778c012b116cf7a971d4eb9893f3482383 karanf <karan.fadnavis@enroller.co.nz> 1743925761 +1200	pull: Fast-forward
+072e4b778c012b116cf7a971d4eb9893f3482383 072e4b778c012b116cf7a971d4eb9893f3482383 karanf <karan.fadnavis@enroller.co.nz> 1743925800 +1200	checkout: moving from main to more-mock-data
+072e4b778c012b116cf7a971d4eb9893f3482383 45b3beeec7fadb4e5ea03af290f26aa1c53407d2 karanf <karan.fadnavis@enroller.co.nz> 1743966509 +1200	commit: added active state shadows to tabs
+45b3beeec7fadb4e5ea03af290f26aa1c53407d2 90eeaf894d8e7d4ed37f819fb07e4a290aef2ad4 karanf <karan.fadnavis@enroller.co.nz> 1743967386 +1200	commit: tab badge colours sorted
+90eeaf894d8e7d4ed37f819fb07e4a290aef2ad4 5e23c62223e4b94c7b2cc27f5abefb5df7127f84 karanf <karan.fadnavis@enroller.co.nz> 1743968536 +1200	commit: Fix status filter display to show 'Status:' instead of 'text:'
+5e23c62223e4b94c7b2cc27f5abefb5df7127f84 4e96470492576c523b75d491fcf3fcee277bcc8f karanf <karan.fadnavis@enroller.co.nz> 1743968690 +1200	commit: fixed quick filter display text
+4e96470492576c523b75d491fcf3fcee277bcc8f 60ae33375afb844a751b8e7a83980286b27b25ff karanf <karan.fadnavis@enroller.co.nz> 1743998024 +1200	commit: adding bulk functionality
+60ae33375afb844a751b8e7a83980286b27b25ff 85ed0e6b37e6aba11b27584e7245e4540874afc8 karanf <karan.fadnavis@enroller.co.nz> 1744016841 +1200	commit: added a fuk ton of data
+85ed0e6b37e6aba11b27584e7245e4540874afc8 309e569936672a101dd8f3af2297828060e52668 karanf <karan.fadnavis@enroller.co.nz> 1744053999 +1200	commit: Student page now looks better
+309e569936672a101dd8f3af2297828060e52668 cbd2015e425090dd4863455f85a5e7f9d59b1637 karanf <karan.fadnavis@enroller.co.nz> 1744055759 +1200	commit: added reviewer field
+cbd2015e425090dd4863455f85a5e7f9d59b1637 072e4b778c012b116cf7a971d4eb9893f3482383 karanf <karan.fadnavis@enroller.co.nz> 1744055825 +1200	checkout: moving from more-mock-data to main
+072e4b778c012b116cf7a971d4eb9893f3482383 1bbc70732b8d627e9cc40b386606fa4c4679598f karanf <karan.fadnavis@enroller.co.nz> 1744055838 +1200	pull origin main: Fast-forward
+1bbc70732b8d627e9cc40b386606fa4c4679598f 1ff5034b7b5ba62ce232df7d3341bf52c19c4c6b karanf <karan.fadnavis@enroller.co.nz> 1744055848 +1200	merge more-mock-data: Merge made by the 'ort' strategy.
+1ff5034b7b5ba62ce232df7d3341bf52c19c4c6b 1ff5034b7b5ba62ce232df7d3341bf52c19c4c6b karanf <karan.fadnavis@enroller.co.nz> 1744059989 +1200	checkout: moving from main to sevis-pages
+1ff5034b7b5ba62ce232df7d3341bf52c19c4c6b 6f4ba0979e8fc73833b326efa213d9addc4b2d94 karanf <karan.fadnavis@enroller.co.nz> 1744060378 +1200	commit: changed custom svgs to lucide
+6f4ba0979e8fc73833b326efa213d9addc4b2d94 fd58660e60b2b79dcea7bba46f5f96efcd2595fc karanf <karan.fadnavis@enroller.co.nz> 1744175810 +1200	commit: changed sevis metrics
+fd58660e60b2b79dcea7bba46f5f96efcd2595fc 9d90f1137e9042df69f82b09cd92e4f51bc2ce4d karanf <karan.fadnavis@enroller.co.nz> 1744224978 +1200	commit: Chart added
+9d90f1137e9042df69f82b09cd92e4f51bc2ce4d c77de9fde347583965942038b9fb80a338b09fb8 karanf <karan.fadnavis@enroller.co.nz> 1744225151 +1200	commit: Chart legend added
+c77de9fde347583965942038b9fb80a338b09fb8 bebf88dfffdb31ed9c23cd6181afdfb92e1199ee karanf <karan.fadnavis@enroller.co.nz> 1744227523 +1200	commit: added student table. changed range slider to a tabs selector
+bebf88dfffdb31ed9c23cd6181afdfb92e1199ee 5ff4a725dea17d9860892d93e1de00a22d24b89f karanf <karan.fadnavis@enroller.co.nz> 1744236075 +1200	commit: changes the chart styling
+5ff4a725dea17d9860892d93e1de00a22d24b89f d7ea29d59ff0170e79dc47b90815c0caa88cd1c6 karanf <karan.fadnavis@enroller.co.nz> 1744238298 +1200	commit: metrics changes
+d7ea29d59ff0170e79dc47b90815c0caa88cd1c6 aa1c17f162fb834b5a136294e4122f87f77d3dd6 karanf <karan.fadnavis@enroller.co.nz> 1744251229 +1200	commit: added chip variant badges
+aa1c17f162fb834b5a136294e4122f87f77d3dd6 35b68b498edae585dc0cb248a000b9acc248a2b4 karanf <karan.fadnavis@enroller.co.nz> 1744704137 +1200	commit: some charts and stuff
+35b68b498edae585dc0cb248a000b9acc248a2b4 bb28c8a26a87e73f06bfaeda6bc88313a6bb2d8b karanf <karan.fadnavis@enroller.co.nz> 1744780720 +1200	commit: changes after adding RLS to Supabase
+bb28c8a26a87e73f06bfaeda6bc88313a6bb2d8b 2222d6cfd76f367c28c2cfdd82e9859e262e8a55 karanf <karan.fadnavis@enroller.co.nz> 1748267610 +0200	commit: added some more changes
+2222d6cfd76f367c28c2cfdd82e9859e262e8a55 10d8244dc5106d1e182d9764185ccf07b0a7bb16 karanf <karan.fadnavis@enroller.co.nz> 1748269189 +0200	commit: tried to fix deploy
+10d8244dc5106d1e182d9764185ccf07b0a7bb16 a1933cd53b5a6ae3c0447743b7d1dbc04bee75f9 karanf <karan.fadnavis@enroller.co.nz> 1748269718 +0200	commit: another attempt at fixing build issues on vercel
+a1933cd53b5a6ae3c0447743b7d1dbc04bee75f9 484d761c503ce92205a289f566eafc5c0f2c7158 karanf <karan.fadnavis@enroller.co.nz> 1748270408 +0200	commit: trying once again
+484d761c503ce92205a289f566eafc5c0f2c7158 0e93df0112f83614b7ca54d850879aefe69fa380 karanf <karan.fadnavis@enroller.co.nz> 1748270956 +0200	commit: reverting to previous working atate
+0e93df0112f83614b7ca54d850879aefe69fa380 5e7449c6d706d0324a304f0892347bb0d66c1ef5 karanf <karan.fadnavis@enroller.co.nz> 1748271570 +0200	commit: who knows
+5e7449c6d706d0324a304f0892347bb0d66c1ef5 24415bfa079d11adfe1cf86f7c550c5fbd1cc185 karanf <karan.fadnavis@enroller.co.nz> 1748328337 +0200	commit: lessons added
+24415bfa079d11adfe1cf86f7c550c5fbd1cc185 c58bba4154cccd7ad61bde9dc433b93a169c9346 karanf <karan.fadnavis@enroller.co.nz> 1748341642 +0200	commit: added left navigation indicators
+c58bba4154cccd7ad61bde9dc433b93a169c9346 70e36931634c41d2ee8189f9e6e7892f8783773c karanf <karan.fadnavis@enroller.co.nz> 1748346874 +0200	commit: added left navigation indicators and tested
+70e36931634c41d2ee8189f9e6e7892f8783773c 5702f3333cf6d5050cafec4e24c66b5ed082c9d9 karanf <karan.fadnavis@enroller.co.nz> 1748440911 +0200	commit: Added mock data and basic change queue information
+5702f3333cf6d5050cafec4e24c66b5ed082c9d9 3dc40e9b149e69ee431bb48aab2a6f70f376c424 karanf <karan.fadnavis@enroller.co.nz> 1748514122 +0200	commit: Some styling and added indicator to table tabs
+3dc40e9b149e69ee431bb48aab2a6f70f376c424 98d49d285251eebe1e4eab8198aa8d664709e316 karanf <karan.fadnavis@enroller.co.nz> 1748520789 +0200	commit: added stagger and ability to pass property to show the indicator from page
+98d49d285251eebe1e4eab8198aa8d664709e316 ff91001303949cf263349879fe9e0396dcd30ac7 karanf <karan.fadnavis@enroller.co.nz> 1748522328 +0200	commit: added learnings
+ff91001303949cf263349879fe9e0396dcd30ac7 a1a2d9df2873dab730cc375b10e40743248c234e karanf <karan.fadnavis@enroller.co.nz> 1748533693 +0200	commit: some icon changes
+a1a2d9df2873dab730cc375b10e40743248c234e a0872468c75cd38d2f22d815ee0bd7dab98a1e34 karanf <karan.fadnavis@enroller.co.nz> 1748536004 +0200	commit: pinned columns and text truncation
+a0872468c75cd38d2f22d815ee0bd7dab98a1e34 5ac1ed9224ffe878a904297cc7368cc6fcc42ae5 karanf <karan.fadnavis@enroller.co.nz> 1748536786 +0200	commit: changes icons and colours
+5ac1ed9224ffe878a904297cc7368cc6fcc42ae5 5ac1ed9224ffe878a904297cc7368cc6fcc42ae5 karanf <karan.fadnavis@enroller.co.nz> 1750759634 +1200	checkout: moving from sevis-pages to instant-db
+5ac1ed9224ffe878a904297cc7368cc6fcc42ae5 3b3c43da5b0f0de671ac5faedabaab806b63bad5 karanf <karan.fadnavis@enroller.co.nz> 1750808211 +1200	commit: changed to InstantDB and fixed Lucide errors
+3b3c43da5b0f0de671ac5faedabaab806b63bad5 78c3e4fc62964dc6733deeff919929081d66fa92 karanf <karan.fadnavis@enroller.co.nz> 1750810949 +1200	commit: reverted lucide
+78c3e4fc62964dc6733deeff919929081d66fa92 5ac1ed9224ffe878a904297cc7368cc6fcc42ae5 karanf <karan.fadnavis@enroller.co.nz> 1750814797 +1200	checkout: moving from instant-db to sevis-pages
+5ac1ed9224ffe878a904297cc7368cc6fcc42ae5 5ac1ed9224ffe878a904297cc7368cc6fcc42ae5 karanf <karan.fadnavis@enroller.co.nz> 1750814814 +1200	checkout: moving from sevis-pages to cursordemo
+5ac1ed9224ffe878a904297cc7368cc6fcc42ae5 5ac1ed9224ffe878a904297cc7368cc6fcc42ae5 karanf <karan.fadnavis@enroller.co.nz> 1750825457 +1200	reset: moving to HEAD
+5ac1ed9224ffe878a904297cc7368cc6fcc42ae5 78c3e4fc62964dc6733deeff919929081d66fa92 karanf <karan.fadnavis@enroller.co.nz> 1750825463 +1200	checkout: moving from cursordemo to instant-db
+78c3e4fc62964dc6733deeff919929081d66fa92 a0115517371b35b9cb963a1c915467694ba5e43a karanf <karan.fadnavis@enroller.co.nz> 1750825968 +1200	commit: lucide reverted
+a0115517371b35b9cb963a1c915467694ba5e43a f85e055887a0665cd6d578f4d51706754f99d788 karanf <karan.fadnavis@enroller.co.nz> 1750907180 +1200	commit: almost all sussed. more placements
+f85e055887a0665cd6d578f4d51706754f99d788 dad45688d2cf681713355c3325df26e5572858d5 karanf <karan.fadnavis@enroller.co.nz> 1750908733 +1200	commit: fixed placements errors
+dad45688d2cf681713355c3325df26e5572858d5 f58310b3d36a803459a54f47ca94379bc987a096 karanf <karan.fadnavis@enroller.co.nz> 1750910124 +1200	commit: depth blah blah
+f58310b3d36a803459a54f47ca94379bc987a096 4c1b0b0b6748c49b988adf39c6bff5aa05193f47 karanf <karan.fadnavis@enroller.co.nz> 1750911108 +1200	commit: excessive stack depth solved hopefully
+4c1b0b0b6748c49b988adf39c6bff5aa05193f47 13ee6ab995b3a1c85caac7f0111f322d246d46eb karanf <karan.fadnavis@enroller.co.nz> 1750912009 +1200	commit: bar chart jsx error fixed
+13ee6ab995b3a1c85caac7f0111f322d246d46eb 4c56ae601f2f4658c2c53a8afa15be965ac6bd23 karanf <karan.fadnavis@enroller.co.nz> 1750912728 +1200	commit: bar chart stuff
+4c56ae601f2f4658c2c53a8afa15be965ac6bd23 5ac1ed9224ffe878a904297cc7368cc6fcc42ae5 karanf <karan.fadnavis@enroller.co.nz> 1750913042 +1200	checkout: moving from instant-db to sevis-pages
+5ac1ed9224ffe878a904297cc7368cc6fcc42ae5 b0e6b36c871255944ba8308b8c6de431a2e46780 karanf <karan.fadnavis@enroller.co.nz> 1750913048 +1200	pull origin main: Fast-forward
+b0e6b36c871255944ba8308b8c6de431a2e46780 494b7947812983f046df58beb736937b1f8dc161 karanf <karan.fadnavis@enroller.co.nz> 1750917833 +1200	commit: fixed some type errors
+494b7947812983f046df58beb736937b1f8dc161 68d77e8f4cc55545f983fc4a831f4d8801275ef3 karanf <karan.fadnavis@enroller.co.nz> 1751239229 +1200	commit: loading state enabled again
+68d77e8f4cc55545f983fc4a831f4d8801275ef3 0d6a33aad0e60ba3048d1f811beaf5356051792b karanf <karan.fadnavis@enroller.co.nz> 1751243203 +1200	commit: better data added
+0d6a33aad0e60ba3048d1f811beaf5356051792b c76c887f17c351f373158cd4923c37b8d9813c16 karanf <karan.fadnavis@enroller.co.nz> 1751243859 +1200	commit: more better data
+c76c887f17c351f373158cd4923c37b8d9813c16 97b497e502724b7b3f9c879cdd16c0c162759df8 karanf <karan.fadnavis@enroller.co.nz> 1751245583 +1200	commit: added sevis expanded view
+97b497e502724b7b3f9c879cdd16c0c162759df8 3313856a52bf7c8791627b01dc028776ffd77657 karanf <karan.fadnavis@enroller.co.nz> 1751262577 +1200	commit: Added 1 application data
+3313856a52bf7c8791627b01dc028776ffd77657 3f113c39190987f2aa0a85e46e2a9c716d3a5d65 karanf <karan.fadnavis@enroller.co.nz> 1751329997 +1200	commit: lots of data cleaned up
+3f113c39190987f2aa0a85e46e2a9c716d3a5d65 8802ea04178d04b9517e165fb83333d00b3ca37a karanf <karan.fadnavis@enroller.co.nz> 1751350039 +1200	commit: modal positioning done
+8802ea04178d04b9517e165fb83333d00b3ca37a 81d8c97ec040114e370a12b1c912a930628b31cc karanf <karan.fadnavis@enroller.co.nz> 1751350859 +1200	commit: added modal component
+81d8c97ec040114e370a12b1c912a930628b31cc d0a55503a31342a232279befb76566fb269ac923 karanf <karan.fadnavis@enroller.co.nz> 1751353589 +1200	commit: added file upload and a bunch of stuff
+d0a55503a31342a232279befb76566fb269ac923 730f93c3a4c13181c23c48c4ceabb7e20d9e2bdd karanf <karan.fadnavis@enroller.co.nz> 1751354424 +1200	commit: some styling
+730f93c3a4c13181c23c48c4ceabb7e20d9e2bdd 564e0f2f333f4a1141dd1b7ce480443e20720fa5 karanf <karan.fadnavis@enroller.co.nz> 1751410707 +1200	commit: some Sevis changes
+564e0f2f333f4a1141dd1b7ce480443e20720fa5 f9db08c235ce8fd791453f15a43d8005b99ef7a2 karanf <karan.fadnavis@enroller.co.nz> 1751414731 +1200	commit: tabbed tables added
+f9db08c235ce8fd791453f15a43d8005b99ef7a2 6d3a0f013d900ae763bebb5509a73591924b7462 karanf <karan.fadnavis@enroller.co.nz> 1751583101 +1200	commit: student application now in new window
+6d3a0f013d900ae763bebb5509a73591924b7462 76a40f20dd156563bce9f37d65d47d6bc59ffaff karanf <karan.fadnavis@enroller.co.nz> 1751583645 +1200	commit: Google dev tools and Next params to promises
+76a40f20dd156563bce9f37d65d47d6bc59ffaff 1bb322fd50f9104fa64e79cf08c411551dc76306 karanf <karan.fadnavis@enroller.co.nz> 1751585238 +1200	commit: table styling looks sexy as
+1bb322fd50f9104fa64e79cf08c411551dc76306 3a9cf3385f7c91f2c16eccde374ae791cf824aec karanf <karan.fadnavis@enroller.co.nz> 1751586381 +1200	commit: performance improvement 1
+3a9cf3385f7c91f2c16eccde374ae791cf824aec a3ef052cd428abbc8f0bcbce819f9edd6532319b karanf <karan.fadnavis@enroller.co.nz> 1751586565 +1200	commit: performance improvement 2 - advanced pinned table
+a3ef052cd428abbc8f0bcbce819f9edd6532319b 6750a57db8482527ac4b6516a6f399badc0ef444 karanf <karan.fadnavis@enroller.co.nz> 1751586997 +1200	commit: performance improvement 3 - students view
+6750a57db8482527ac4b6516a6f399badc0ef444 01ab1da996c09a4234cbd6180847d95dbee9b974 karanf <karan.fadnavis@enroller.co.nz> 1751587364 +1200	commit: performance improvements 4 - packages and imports
+01ab1da996c09a4234cbd6180847d95dbee9b974 bb96799f6e5a3866b8ff7420b58612aa2bc36e93 karanf <karan.fadnavis@enroller.co.nz> 1751594632 +1200	commit: performance improvements 5 - virtualised table
+bb96799f6e5a3866b8ff7420b58612aa2bc36e93 6afb90dffd27f97a5008317978fce3f40e993ad9 karanf <karan.fadnavis@enroller.co.nz> 1751595341 +1200	commit: Refactor data fetching to use InstantDB across multiple views, replacing useSupabaseData. This change enhances data handling efficiency and prepares the codebase for future performance improvements.
+6afb90dffd27f97a5008317978fce3f40e993ad9 6afb90dffd27f97a5008317978fce3f40e993ad9 karanf <karan.fadnavis@enroller.co.nz> 1751665545 +1200	reset: moving to HEAD
+6afb90dffd27f97a5008317978fce3f40e993ad9 bb96799f6e5a3866b8ff7420b58612aa2bc36e93 karanf <karan.fadnavis@enroller.co.nz> 1751665550 +1200	checkout: moving from sevis-pages to bb96799f6e5a3866b8ff7420b58612aa2bc36e93
+bb96799f6e5a3866b8ff7420b58612aa2bc36e93 4c1c155bef225371d70ecce2431a6cab0cd4a902 karanf <karan.fadnavis@enroller.co.nz> 1751680884 +1200	commit: Refactor TabbedTables component for improved layout and performance. Added activeTabIndex for better index management, simplified visual connection to active tab, and ensured consistent minimum height for table container.
+4c1c155bef225371d70ecce2431a6cab0cd4a902 704f5f514b272be4807e2c3677cb47749e38c06d karanf <karan.fadnavis@enroller.co.nz> 1751687645 +1200	commit: added dicebead Avatars
+704f5f514b272be4807e2c3677cb47749e38c06d 57d39f4694144a8b16607ca7d8150d6cd6177e08 karanf <karan.fadnavis@enroller.co.nz> 1751742174 +1200	commit: added openpeeps avatars
+57d39f4694144a8b16607ca7d8150d6cd6177e08 ec94fda29387df2b7c497554c25e29e43c629843 karanf <karan.fadnavis@enroller.co.nz> 1751747355 +1200	commit: some avater changes
+ec94fda29387df2b7c497554c25e29e43c629843 6268cb8700d34f02a112a877f6eec13f917eb89f karanf <karan.fadnavis@enroller.co.nz> 1751747645 +1200	commit: profile image border styles
+6268cb8700d34f02a112a877f6eec13f917eb89f 3ea60ce6dbbc77dfe29c1b2a4d77e9033c8978f5 karanf <karan.fadnavis@enroller.co.nz> 1751748071 +1200	commit: som upgrades
+3ea60ce6dbbc77dfe29c1b2a4d77e9033c8978f5 6c5a0a416dfdc93eac4d052cca2b850e58131081 karanf <karan.fadnavis@enroller.co.nz> 1751832390 +1200	commit: updated all gh app packages
+6c5a0a416dfdc93eac4d052cca2b850e58131081 6afb90dffd27f97a5008317978fce3f40e993ad9 karanf <karan.fadnavis@enroller.co.nz> 1751834754 +1200	checkout: moving from 6c5a0a416dfdc93eac4d052cca2b850e58131081 to sevis-pages
+6afb90dffd27f97a5008317978fce3f40e993ad9 6c5a0a416dfdc93eac4d052cca2b850e58131081 karanf <karan.fadnavis@enroller.co.nz> 1751834825 +1200	reset: moving to 6c5a0a4
+6c5a0a416dfdc93eac4d052cca2b850e58131081 10c41b5f24fd439afca0745d94260965c174b5dd karanf <karan.fadnavis@enroller.co.nz> 1751866658 +1200	commit: ffx shadow fix and shadow style change
+10c41b5f24fd439afca0745d94260965c174b5dd fe5684d4fb24e9673558726cbaa85933bf6555c8 karanf <karan.fadnavis@enroller.co.nz> 1751867297 +1200	commit: tab title style
+fe5684d4fb24e9673558726cbaa85933bf6555c8 199ddcb663d8b1c403ab89ec76a0b7a9a7eea41f karanf <karan.fadnavis@enroller.co.nz> 1751867844 +1200	commit: added hydration fix for dynamic text
+199ddcb663d8b1c403ab89ec76a0b7a9a7eea41f 4d7a6f00a5a4179ab30bf436576e600045779e9f karanf <karan.fadnavis@enroller.co.nz> 1751948243 +1200	commit: SEVIS table fixes
+4d7a6f00a5a4179ab30bf436576e600045779e9f b0e741e2c1dadd0ccdfd9315519d1496c2831477 karanf <karan.fadnavis@enroller.co.nz> 1751964917 +1200	commit: added student application view
+b0e741e2c1dadd0ccdfd9315519d1496c2831477 feb40baa3e0afdbc3a0006b41f9823fecda3c0ec karanf <karan.fadnavis@enroller.co.nz> 1751968409 +1200	commit: header stuff
+feb40baa3e0afdbc3a0006b41f9823fecda3c0ec 5cc64d03072b6776927bc96e4fdcb3a887fb75e9 karanf <karan.fadnavis@enroller.co.nz> 1752005478 +1200	commit: changed useSpabaseData to useInstantData
+5cc64d03072b6776927bc96e4fdcb3a887fb75e9 80523ca2d5c40ca6a033867de25bc714f451f8b7 karanf <karan.fadnavis@enroller.co.nz> 1752020308 +1200	commit: juno is now almost fully functional
+80523ca2d5c40ca6a033867de25bc714f451f8b7 33f29e1a6be467ed4429cfe156613fa7f471160f karanf <karan.fadnavis@enroller.co.nz> 1752021241 +1200	commit: changed juno fonts and logo sizes
+33f29e1a6be467ed4429cfe156613fa7f471160f 55852f46b1dee2619b17f0d0ab83983f72a19898 karanf <karan.fadnavis@enroller.co.nz> 1752025114 +1200	commit: removed all console.logs
+55852f46b1dee2619b17f0d0ab83983f72a19898 31e1280b82a5ddfab7f6be1dc2861960c7a9156a karanf <karan.fadnavis@enroller.co.nz> 1752038925 +1200	commit: multi user migration plan added
+31e1280b82a5ddfab7f6be1dc2861960c7a9156a 07db26709a3a08005da2d6253ecccba39c2b994a karanf <karan.fadnavis@enroller.co.nz> 1752045524 +1200	commit: application sidebar created
+07db26709a3a08005da2d6253ecccba39c2b994a 037e11a9e4aba85d41100e4b1b87d229039b8203 karanf <karan.fadnavis@enroller.co.nz> 1752048535 +1200	commit: nav skeletons & hydration
+037e11a9e4aba85d41100e4b1b87d229039b8203 b00c810109ec4cb40a21e131c4f72c7652b03e92 karanf <karan.fadnavis@enroller.co.nz> 1752100606 +1200	commit: Partner Assessment form fields added
+b00c810109ec4cb40a21e131c4f72c7652b03e92 2aceb915cdcba67a4f4000f8873e771481248fde karanf <karan.fadnavis@enroller.co.nz> 1752101029 +1200	commit: sevis error added
+2aceb915cdcba67a4f4000f8873e771481248fde 093acb22cd900d97e171520fc6a967d37ade281b karanf <karan.fadnavis@enroller.co.nz> 1752105904 +1200	commit: partner assessment data added and being loaded correctly
+093acb22cd900d97e171520fc6a967d37ade281b 0b3ad2efe910b324de3aefbaef7f33cfa837e3e7 karanf <karan.fadnavis@enroller.co.nz> 1752109526 +1200	commit: some text changes
+0b3ad2efe910b324de3aefbaef7f33cfa837e3e7 78dafaa92934130131d6733cdeebac78b40c1881 karanf <karan.fadnavis@enroller.co.nz> 1752109979 +1200	commit: some positioning tweaks
+78dafaa92934130131d6733cdeebac78b40c1881 2535f6f8c432be78abdd80c2427e2340f986563d karanf <karan.fadnavis@enroller.co.nz> 1752110244 +1200	commit: more text sizes
+2535f6f8c432be78abdd80c2427e2340f986563d 9c753115c2ad805f8b73d0077a9b95635f6c7829 karanf <karan.fadnavis@enroller.co.nz> 1752113440 +1200	commit: couple of more style changes
+9c753115c2ad805f8b73d0077a9b95635f6c7829 60f8fb479d35e06bb78f79274c72c70f5f1c5c3a karanf <karan.fadnavis@enroller.co.nz> 1752123352 +1200	commit: fixed calendar
+60f8fb479d35e06bb78f79274c72c70f5f1c5c3a 66ce13d42e16e16c3376309018fa0a78436e376f karanf <karan.fadnavis@enroller.co.nz> 1752125427 +1200	commit: some theme changes
+66ce13d42e16e16c3376309018fa0a78436e376f 8173fb41a1c07454d996d6d58ba82bd12e2b82ed karanf <karan.fadnavis@enroller.co.nz> 1752126409 +1200	commit: some more style changes
+8173fb41a1c07454d996d6d58ba82bd12e2b82ed 28dcc3b4b30761e7f29dfa1ef45ffe67f96763bb karanf <karan.fadnavis@enroller.co.nz> 1752130131 +1200	commit: some homepage changes
+28dcc3b4b30761e7f29dfa1ef45ffe67f96763bb df41d8fdc5567b4fa4dd38286f9f5ef22b921883 karanf <karan.fadnavis@enroller.co.nz> 1752131242 +1200	commit: some more styling fixes
+df41d8fdc5567b4fa4dd38286f9f5ef22b921883 aaf261e1100cedaf8400b2b65d23fe61729fb332 karanf <karan.fadnavis@enroller.co.nz> 1752205562 +1200	commit: application sub sections and functionality added
+aaf261e1100cedaf8400b2b65d23fe61729fb332 a2546fc5abe48d424a9aebfeaa0511ea0350a678 karanf <karan.fadnavis@enroller.co.nz> 1752206701 +1200	commit: some dynamic srcipting stuff
+a2546fc5abe48d424a9aebfeaa0511ea0350a678 944a2290a5a025492f9ce2c32d186cbe70c492d9 karanf <karan.fadnavis@enroller.co.nz> 1752532427 +1200	commit: Added Laravel migration plan
+944a2290a5a025492f9ce2c32d186cbe70c492d9 acdcd683aa322e3046cf2a55626cb8c97c14ca55 karanf <karan.fadnavis@enroller.co.nz> 1752534349 +1200	commit: created individual bars for the grapg tooltip
+acdcd683aa322e3046cf2a55626cb8c97c14ca55 7b9f9e43a82998f7e958ac33b0563e93ef1e3fba karanf <karan.fadnavis@enroller.co.nz> 1752536234 +1200	commit: added program colours to the graph
+7b9f9e43a82998f7e958ac33b0563e93ef1e3fba ef4e7eacd1237269d8f14bcff3a7237c7eb1e131 karanf <karan.fadnavis@enroller.co.nz> 1752553646 +1200	commit: fixed some data i screwed up
+ef4e7eacd1237269d8f14bcff3a7237c7eb1e131 1c16babd65c6a9076c84206cc3fc0c876c46b63d karanf <karan.fadnavis@enroller.co.nz> 1752556822 +1200	commit: added radial chart
+1c16babd65c6a9076c84206cc3fc0c876c46b63d b58e3633582f4ec9388b35716cc7c53ba2b20c6a karanf <karan.fadnavis@enroller.co.nz> 1752562975 +1200	commit: batch cards changed
+b58e3633582f4ec9388b35716cc7c53ba2b20c6a cbc6e2718d282d050e5f1718620d91d8b5520eb6 karanf <karan.fadnavis@enroller.co.nz> 1752608458 +1200	commit: changed chart and batch layout. added gradient bars
+cbc6e2718d282d050e5f1718620d91d8b5520eb6 8bf93c61c483806b7969395c7d4f5d2b95530cbe karanf <karan.fadnavis@enroller.co.nz> 1752624181 +1200	commit: segments now working correctly
+8bf93c61c483806b7969395c7d4f5d2b95530cbe 21c9f3f3c149bca6462cfe5f4b45614e9d570e10 karanf <karan.fadnavis@enroller.co.nz> 1752624321 +1200	commit: donut looking good
+21c9f3f3c149bca6462cfe5f4b45614e9d570e10 0efe8f3416e0ec42d8e60e0df3953fd7c647555c karanf <karan.fadnavis@enroller.co.nz> 1752633487 +1200	commit: Bulk actions improved
+0efe8f3416e0ec42d8e60e0df3953fd7c647555c cd241ee56fb1c9929ae375533e979858a63cc447 karanf <karan.fadnavis@enroller.co.nz> 1752731527 +1200	commit: Bunch f changes to SEVIS table and data
+cd241ee56fb1c9929ae375533e979858a63cc447 003a7ffd4184be86a04593ee48701bbc2f70def1 karanf <karan.fadnavis@enroller.co.nz> 1752731975 +1200	commit: removed a errorneous script ans changed some text
+003a7ffd4184be86a04593ee48701bbc2f70def1 84ab189249fbff0c3c8604ed97f6cd62910e4371 karanf <karan.fadnavis@enroller.co.nz> 1752735406 +1200	commit: adding change queue
+84ab189249fbff0c3c8604ed97f6cd62910e4371 62395aa9fa04c2978a16953946ef27ffc8a0b932 karanf <karan.fadnavis@enroller.co.nz> 1755142301 +1200	commit: dont know what i've done here. hope it works. it's been a month
+62395aa9fa04c2978a16953946ef27ffc8a0b932 930c141b6097601643937d439e3a8f21f882db58 Karan Fadnavis <karan.fadnavis@enroller.co.nz> 1762203545 +1300	commit: Fix hydration errors in SEVIS pages
+930c141b6097601643937d439e3a8f21f882db58 1ff5034b7b5ba62ce232df7d3341bf52c19c4c6b Karan Fadnavis <karan.fadnavis@enroller.co.nz> 1762203682 +1300	checkout: moving from sevis-pages to main
+1ff5034b7b5ba62ce232df7d3341bf52c19c4c6b 930c141b6097601643937d439e3a8f21f882db58 Karan Fadnavis <karan.fadnavis@enroller.co.nz> 1762203708 +1300	checkout: moving from main to sevis-pages
+930c141b6097601643937d439e3a8f21f882db58 1ba9df3c79735621a52fe563c9d753fe69017cb5 Karan Fadnavis <karan.fadnavis@enroller.co.nz> 1762203816 +1300	commit: some login stuff

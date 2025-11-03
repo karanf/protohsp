@@ -1,0 +1,1310 @@
+# EGAB Lessons Learned
+
+This document captures key insights, patterns, and project intelligence to improve our development process.
+
+## Component Development
+
+### CRITICAL: Use Existing Components First
+- **ALWAYS USE EXISTING COMPONENTS**: Before creating custom divs or elements, check if there's already a component available
+- **Common mistake**: Creating custom divs that look like alert boxes when we have an `Alert` component
+- **Available UI Components**: Check `packages/ui/components/ui/` for existing components like:
+  - `Alert` and `AlertDescription` for information boxes (instead of custom blue divs)
+  - `Button` for interactive elements
+  - `Card`, `CardHeader`, `CardTitle`, `CardContent` for structured content
+  - `Input`, `Textarea`, `Select`, `Checkbox`, `RadioGroup` for form elements
+  - `Badge` for status indicators
+  - `Dialog` for modals
+  - And many more...
+
+### When in Doubt, Always Ask
+- **ASK FIRST**: If you're unsure about which component to use or how to implement something, ALWAYS ask before proceeding
+- **Don't assume**: Don't create custom solutions without first checking if there's an existing pattern or component
+- **Better to ask**: It's always better to ask for clarification than to create the wrong solution
+
+### Design Patterns
+- **Component API Consistency**: Component props follow a consistent pattern with common props like `className`, `children`, and `variant` where applicable
+- **Variant System**: Use `cva` from `class-variance-authority` for creating component variants rather than multiple components
+- **Composition over Configuration**: Prefer composable components that can be combined rather than large configurable components
+- **Accessibility First**: Always implement accessibility features from the start, not as an afterthought
+
+### Component Structure
+```tsx
+// Pattern for creating components
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
+
+const componentVariants = cva("base-classes", {
+  variants: {
+    variant: {
+      default: "default-classes",
+      secondary: "secondary-classes",
+      // other variants
+    },
+    size: {
+      sm: "small-classes",
+      md: "medium-classes",
+      lg: "large-classes",
+    },
+  },
+  defaultVariants: {
+    variant: "default",
+    size: "md",
+  },
+});
+
+interface ComponentProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof componentVariants> {
+  // additional props
+}
+
+export function Component({
+  className,
+  variant,
+  size,
+  children,
+  ...props
+}: ComponentProps) {
+  return (
+    <div
+      className={cn(componentVariants({ variant, size }), className)}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+}
+```
+
+### CRITICAL: Expanded Content Positioning
+**HORIZONTAL SCROLLING FOR EXPANDED CONTENT MUST NEVER HAPPEN**
+
+- **Root Cause**: When using `sticky left-0 right-0` positioning for expanded content, the positioning context must be the padded container, not a separate ancestor
+- **Wrong Pattern**: 
+  ```tsx
+  <div className="relative">        // ❌ Positioning context
+    <div className="p-6">          // ❌ Padding container
+      <AdvancedPinnedTable />
+    </div>
+  </div>
+  ```
+- **Correct Pattern**:
+  ```tsx
+  <div className="p-6 relative">    // ✅ Combined padding + positioning context
+    <AdvancedPinnedTable />
+  </div>
+  ```
+- **Why This Matters**: Expanded content uses `sticky left-0 right-0` positioning, which positions relative to the nearest positioned ancestor. If the positioned ancestor is outside the padded container, the expanded content extends beyond the available width, causing horizontal overflow.
+- **Always Check**: When implementing containers around tables with expanded content, ensure the `relative` positioning is on the same element as the padding, not a parent element.
+- **Testing**: Always test expanded rows to ensure they don't cause horizontal scroll, especially in tabbed interfaces or nested containers.
+
+#### CRITICAL: TabbedTables Specific Pattern
+**TABBED TABLES MUST NEVER HAVE RELATIVE POSITIONING ON THE WRAPPER**
+
+- **Specific Issue**: TabbedTables component wraps AdvancedPinnedTable with an extra div that must NOT have `relative` positioning
+- **Wrong Pattern in TabbedTables**: 
+  ```tsx
+  <div className="p-6 relative">    // ❌ Extra positioned wrapper interferes with table positioning
+    <AdvancedPinnedTable />
+  </div>
+  ```
+- **Correct Pattern for TabbedTables**:
+  ```tsx
+  <div className="p-6">            // ✅ Simple padding wrapper, no positioning
+    <AdvancedPinnedTable />
+  </div>
+  ```
+- **Why TabbedTables is Different**: Unlike standalone usage, TabbedTables adds an extra container layer. The AdvancedPinnedTable handles its own internal positioning context, so the outer wrapper should only provide padding and spacing.
+- **Root Cause**: The extra `relative` positioning creates an incorrect positioning context for the expanded content's `sticky left-0 right-0` positioning, causing horizontal scroll when filters/popovers are present.
+- **ALWAYS REMEMBER**: When editing TabbedTables, the wrapper div should only have padding classes, never positioning classes like `relative`, `absolute`, or `fixed`.
+- **Testing**: Always test TabbedTables with expanded content AND active filters to ensure no horizontal scrolling occurs.
+
+## Dependency Management
+
+### Package Manager
+- **ALWAYS USE PNPM**: This project uses `pnpm` as the package manager, NOT `npm` or `yarn`
+- **CRITICAL: NEVER USE npm OR npx**: Always use `pnpm` and `pnpm dlx` instead
+- **Commands**: Use `pnpm install`, `pnpm run dev`, `pnpm build`, etc.
+- **Scripts**: All package.json scripts should be run with `pnpm run <script-name>`
+- **Workspaces**: pnpm workspace features are leveraged throughout the monorepo
+- **Instead of npx**: Use `pnpm dlx` for running packages directly
+
+### Version Control
+- **Never Downgrade Dependencies**: Always maintain the minimum versions specified in the technical documentation
+- **Controlled Upgrades**: Test thoroughly when upgrading major or minor versions
+- **Version Pinning**: Use exact versions or specify ranges with a minimum bound (e.g., `^15.2.1`) for critical dependencies
+- **Workspace Dependencies**: Use `workspace:*` for internal packages to ensure consistent versions
+
+### Import Conventions
+- **Use `@repo/` for workspace packages**: When importing from workspace packages, always use the `@repo/` prefix (e.g., `import { Button } from "@repo/ui/components/ui/button"`) instead of `@/` or relative paths
+- **Use `@/` for app-local imports**: For imports within the same application, use the `@/` prefix to leverage path mapping
+- **Avoid deep relative imports**: Don't use multiple levels of relative paths (e.g., `../../../components`)
+
+### Key Dependencies and Minimum Versions
+- Next.js: 15.2.1
+- React: 19.0.0
+- TypeScript: 5.8.2
+- Tailwind CSS: 4.0.14
+- Turbo: 2.4.4
+- pnpm: 9.0.0
+- Lucide React: 0.483.0
+
+These versions provide important features and fixes that the project relies on.
+
+## Application-Specific Patterns
+
+### Greenheart (Receiving Organization)
+- **Multi-step Workflows**: Break complex processes (like Host Family applications) into discrete steps with clear state management
+- **Role-based Interfaces**: Design components that adapt based on user role (Local Coordinator, Regional Director, Admin)
+- **Approval Systems**: Implement consistent approval patterns with status tracking and history
+- **Matching Interfaces**: Create intuitive interfaces for matching students with host families
+
+### Educatius (Sending Organization)
+- **Application Forms**: Design flexible, multi-section forms for student applications
+- **Progress Tracking**: Consistent patterns for monitoring student progress through their programs
+- **Feedback Loops**: Create clear interfaces for sending and receiving feedback on applications
+- **Lead Management**: Implement consistent lead tracking and conversion flows
+
+## Next.js Best Practices
+
+### Server vs. Client Components
+- **Server Components**: Use for static content, data fetching, and SEO-critical sections
+- **Client Components**: Use for interactive elements, form handling, and client-side state
+- **Boundary Placement**: Keep "use client" boundaries as far down the component tree as possible
+
+### Data Fetching
+- **Static Data**: Use Server Components with minimal client-side JavaScript
+- **Dynamic Data**: Server Components for initial load, then client-side fetching for updates
+- **Real-time Data**: Use React Server Components with streaming or client components with SWR/React Query
+
+## InstantDB Integration
+
+### Environment Setup and Script Patterns
+**CRITICAL**: Always follow the exact pattern from working scripts for InstantDB operations.
+
+#### Environment Variable Loading
+```tsx
+import { init, id, tx } from '@instantdb/admin';
+import dotenv from 'dotenv';
+
+// Load environment variables - EXACT pattern from existing scripts
+dotenv.config({ path: '.env.local' });
+dotenv.config({ path: '../../.env.local' });
+dotenv.config({ path: '../../../../.env.local' });
+
+// Validate environment variables
+const INSTANT_APP_ID = process.env.NEXT_PUBLIC_INSTANT_APP_ID;
+const INSTANT_ADMIN_TOKEN = process.env.INSTANT_ADMIN_TOKEN;
+
+if (!INSTANT_APP_ID || !INSTANT_ADMIN_TOKEN) {
+  console.error('❌ Missing required environment variables:');
+  console.error(`  • NEXT_PUBLIC_INSTANT_APP_ID: ${INSTANT_APP_ID ? '✓' : '❌'}`);
+  console.error(`  • INSTANT_ADMIN_TOKEN: ${INSTANT_ADMIN_TOKEN ? '✓' : '❌'}`);
+  console.error('\nPlease check your .env.local file');
+  process.exit(1);
+}
+```
+
+#### Database Initialization
+```tsx
+// Initialize InstantDB
+const db = init({
+  appId: INSTANT_APP_ID,
+  adminToken: INSTANT_ADMIN_TOKEN,
+});
+```
+
+#### Transaction Pattern
+```tsx
+// EXACT pattern for transactions
+if (!db.tx?.entityName) {
+  throw new Error('db.tx.entityName is not available - check schema');
+}
+
+transactions.push(
+  (db.tx as any).entityName[recordId].update(data)
+);
+
+// Process in batches
+if (transactions.length >= 10) {
+  await db.transact(transactions);
+  transactions.length = 0; // Clear the array
+  
+  // Add delay between batches to avoid rate limits
+  await new Promise(resolve => setTimeout(resolve, 500));
+}
+```
+
+#### Common Mistakes to Avoid
+1. **DO NOT**: Use complex path resolution for dotenv - just use the simple pattern above
+2. **DO NOT**: Use `!` assertion for environment variables - always validate first
+3. **DO NOT**: Use `db.tx.entityName[id]!.update()` - use `(db.tx as any).entityName[id].update()`
+4. **DO NOT**: Process all records at once - use batches of 10 with delays
+5. **DO NOT**: Skip schema validation - always check if `db.tx?.entityName` exists
+
+#### Successful Pattern Example
+See `migrate-sevis-batches-to-instantdb.ts` for the complete working pattern that should be followed for ALL InstantDB scripts.
+
+## Turborepo Workflow
+
+### Project Structure
+- Organize code by feature or domain rather than technical concerns
+- Keep packages focused and single-purpose
+- Use consistent directory structure across applications
+
+### Build Optimization
+- Leverage Turborepo caching for faster builds
+- Minimize cross-workspace dependencies
+- Use specific imports rather than importing entire packages
+
+## TypeScript Patterns
+
+### Type Definitions
+- Define reusable types in separate files for better maintainability
+- Use type inference where possible, but be explicit when needed for clarity
+- Prefer interfaces for object definitions and public APIs
+
+### Type Safety
+- Use Zod or similar validation for runtime data validation
+- Create utility types for common patterns
+- Avoid `any` and prefer `unknown` with type narrowing
+
+### Complex Type Issues and Solutions
+
+#### "Excessive Stack Depth" Errors
+**Problem**: TypeScript compilation fails with "Excessive stack depth comparing types" when using complex generic types like `ColumnDef<Type>[]` from @tanstack/react-table.
+
+**Root Cause**: TypeScript's type inference becomes too deep when complex generic types are combined with intricate component structures, especially in table definitions with multiple nested functions.
+
+**Solution Pattern**:
+1. **Simplify Column Type Definitions**: Replace `ColumnDef<Type>[]` with `any[]`
+   ```tsx
+   // Instead of:
+   const columns: ColumnDef<Student>[] = [...]
+   
+   // Use:
+   const columns: any[] = [...]
+   ```
+
+2. **Explicit useMemo Return Types**: Add explicit return type annotations
+   ```tsx
+   // Instead of:
+   const tableColumns = useMemo(() => [...]
+   
+   // Use:
+   const tableColumns = useMemo((): any[] => [...]
+   ```
+
+3. **Add Explicit Function Parameter Types**: When simplifying column types, callback parameters lose type inference
+   ```tsx
+   // Fix all these patterns:
+   header: ({ table }: any) => (...)
+   cell: ({ row }: any) => (...)
+   renderExpandedContent={({ row }: any) => (...)}
+   sortingFn: (rowA: any, rowB: any) => (...)
+   .filter((item: any) => ...)
+   .map((item: any) => ...)
+   .sort((a: any, b: any) => ...)
+   ```
+
+**Automation Strategy**: Use sed commands for bulk fixes across multiple files:
+```bash
+# Fix all cell function parameters
+find path -name "*.tsx" -exec sed -i '' 's/cell: ({ row }) =>/cell: ({ row }: any) =>/g' {} \;
+
+# Fix all header function parameters  
+find path -name "*.tsx" -exec sed -i '' 's/header: ({ table }) =>/header: ({ table }: any) =>/g' {} \;
+
+# Fix renderExpandedContent functions
+find path -name "*.tsx" -exec sed -i '' 's/renderExpandedContent={({ row }) =>/renderExpandedContent={({ row }: any) =>/g' {} \;
+```
+
+**Files Commonly Affected**: Table-heavy components with complex column definitions, especially those using @tanstack/react-table.
+
+#### InstantDB Transaction API Type Issues
+**Problem**: TypeScript reports "Object is possibly 'undefined'" errors when accessing transaction APIs like `adminDb.tx.profiles` or `adminDb.tx.placements`, even after null checks.
+
+**Root Cause**: TypeScript's control flow analysis doesn't understand that the null check guarantees the object exists, particularly with complex API structures from InstantDB.
+
+**Solution Pattern**:
+1. **Use Type Assertions**: Apply `(adminDb.tx as any)` pattern for consistent handling
+   ```tsx
+   // Instead of:
+   if (!adminDb.tx.profiles) {
+     throw new Error('InstantDB profiles transaction API not available');
+   }
+   await adminDb.transact([adminDb.tx.profiles[id].update({...})])
+   
+   // Use:
+   if (!adminDb.tx.profiles) {
+     throw new Error('InstantDB profiles transaction API not available');
+   }
+   await adminDb.transact([(adminDb.tx as any).profiles[id].update({...})])
+   ```
+
+2. **Consistent Pattern**: Apply the same type assertion pattern across all InstantDB transaction operations (users, profiles, placements, etc.)
+
+3. **Maintain Runtime Safety**: Keep the null checks for runtime error handling while using type assertions for TypeScript compilation
+
+**Files Commonly Affected**: Database migration scripts, data seeding scripts, and any code using InstantDB's transaction API.
+
+## Recharts and Chart Libraries
+
+### Recharts Version Compatibility Issues
+**Problem**: "BarChart cannot be used as a JSX component" deployment errors when using Recharts with React 19 and Next.js 15+.
+
+**Root Cause**: 
+- Recharts 2.x has TypeScript JSX compatibility issues with React 19's stricter type checking
+- Deployment environments may have different TypeScript behavior than local development
+- Chart component type definitions become incompatible between major versions
+
+**Solution Pattern**:
+
+1. **Upgrade to Latest Recharts**: Update to Recharts 3.0.0+ for React 19 compatibility
+   ```bash
+   pnpm add recharts@latest
+   ```
+
+2. **Update Chart Component Types**: Fix chart container and tooltip prop types
+   ```tsx
+   // Update ChartTooltipContent and ChartLegendContent functions
+   function ChartTooltipContent({
+     active,
+     payload,
+     className,
+     // ... other props
+   }: {
+     active?: boolean
+     payload?: Array<{
+       dataKey?: string | number
+       name?: string | number
+       value?: any
+       payload?: any
+       color?: string
+       fill?: string
+     }>
+     // ... explicit type definitions
+   }) {
+   ```
+
+3. **Create Custom TypeScript Declarations**: Add deployment environment compatibility
+   ```tsx
+   // apps/[app]/types/recharts.d.ts
+   declare module 'recharts' {
+     import { ComponentType } from 'react'
+     
+     export interface CartesianChartProps {
+       data?: any[]
+       accessibilityLayer?: boolean
+       barCategoryGap?: number
+       barSize?: number
+       margin?: {
+         top?: number
+         right?: number
+         left?: number
+         bottom?: number
+       }
+       children?: React.ReactNode
+     }
+     
+     export interface TooltipProps {
+       active?: boolean
+       payload?: any[]
+       label?: string
+     }
+     
+     export const BarChart: ComponentType<CartesianChartProps>
+     export const Bar: ComponentType<any>
+     export const CartesianGrid: ComponentType<any>
+     export const XAxis: ComponentType<any>
+     export const YAxis: ComponentType<any>
+     export const Tooltip: ComponentType<any>
+     export const Legend: ComponentType<any>
+     export const ResponsiveContainer: ComponentType<any>
+   }
+   ```
+
+4. **Add ES Module Support**: Include in package.json to fix deployment warnings
+   ```json
+   {
+     "type": "module"
+   }
+   ```
+
+5. **Fix Parameter Type Annotations**: Add explicit types for chart component callbacks
+   ```tsx
+   // Fix all these patterns:
+   tickFormatter={(value: any) => `${value}`}
+   tick={(props: any) => { ... }}
+   ```
+
+6. **Update TypeScript Configuration**: Include types directory
+   ```json
+   // tsconfig.json
+   {
+     "include": [
+       // ... existing includes
+       "types/**/*.d.ts"
+     ]
+   }
+   ```
+
+**Key Insights**:
+- Local development may work while deployment fails due to different TypeScript environments
+- Chart libraries often lag behind React version compatibility
+- Custom TypeScript declarations can bridge compatibility gaps during transitions
+- Always test builds in CI/deployment environment, not just locally
+
+**Prevention Strategy**:
+- Pin chart library versions and test upgrades thoroughly
+- Create custom type declarations for critical third-party libraries
+- Monitor for "cannot be used as a JSX component" errors in deployment logs
+- Use explicit type annotations for complex chart component props
+
+**Files Commonly Affected**: Chart components, dashboard views, data visualization pages using Recharts, Chart.js, or similar libraries.
+
+**Deployment Impact**: These errors only appear during production builds, not in development, making them critical to catch before deployment.
+
+**When to Apply**: 
+- When encountering "Excessive stack depth" errors during builds
+- Proactively in complex table components with many columns and nested functions
+- When TypeScript strict mode is enabled and complex generics are used
+
+**Trade-offs**: Reduces type safety in exchange for compilation success. The functionality remains identical, but IDE autocomplete and type checking for table-related callbacks will be less precise.
+
+## Styling Approach
+
+### Tailwind Usage
+- Use design tokens via CSS variables rather than hard-coded values
+- Group related utilities for better readability
+- Create utility functions for complex conditional classes
+
+```tsx
+// Example of grouped Tailwind classes
+<div className={cn(
+  // Layout
+  "flex flex-col items-center justify-between",
+  // Spacing
+  "p-4 gap-2",
+  // Typography
+  "text-base font-medium",
+  // Conditionals
+  isActive && "bg-primary text-primary-foreground",
+  className
+)}>
+```
+
+## Workflow Patterns
+
+### Application Workflows
+- Use state machines for complex workflows (approval processes, applications)
+- Implement consistent status indicators across applications
+- Create reusable step indicators for multi-stage processes
+- Design form validation that provides clear feedback at each step
+
+### User Role Management
+- Implement consistent role-based component rendering
+- Create permission utilities for checking access rights
+- Design flexible interfaces that adapt to user capabilities
+
+## Code Quality
+
+### Testing Strategy
+- Unit test hooks and utility functions
+- Component tests for complex interactions
+- Integration tests for critical user flows
+- Visual regression tests for UI components
+
+### Performance Optimization
+- Profile components before and after optimization
+- Focus on initial load time, interactivity, and layout stability
+- Measure and optimize for Core Web Vitals
+
+## Developer Experience
+
+### Documentation
+- Document component APIs with example usage
+- Create Storybook stories for visual documentation
+- Add inline comments for complex logic or algorithms
+
+### Tooling
+- Use pnpm for consistent and fast package management
+- Leverage Visual Studio Code extensions for productivity
+- Standardize on ESLint and Prettier configurations
+
+## Table Component Styling
+
+### Checkbox Column Padding
+When working with table components (especially with TableCell from UI libraries), be aware that many include CSS selectors like `[&:has([role=checkbox])]:pr-0` which can remove padding from cells containing checkboxes. 
+
+To fix this issue:
+1. Add `!important` CSS padding overrides (`!px-3 !py-2`) to both cell and header components
+2. Apply styles in multiple places to ensure specificity:
+   - Base tableStyles definition
+   - getColumnStyle function
+   - Inline className concatenation with conditional styles
+3. Wrap checkbox components in containers with explicit sizing (min-width)
+4. Set fixed sizes for checkbox columns with equal min/max to prevent resizing
+
+Example fix:
+```tsx
+// 1. Add to tableStyles.cell
+"[&:has([role=checkbox])]:!px-3 [&:has([role=checkbox])]:!py-2"
+
+// 2. In getColumnStyle for checkbox columns
+return {
+  className: "text-center !pr-3 !pl-3 !py-2",
+  width: 56,
+  minWidth: 56
+};
+
+// 3. In wrapCellContent for checkbox columns
+<div className="flex items-center justify-center w-full h-full min-w-[40px]">
+  {content}
+</div>
+
+// 4. In className concatenation for TableCell/TableHead
+className={cn(
+  tableStyles.cell,
+  column.id && getColumnStyle(column.id).className,
+  (column.id === 'select' || column.id?.toLowerCase().includes('checkbox')) && 
+  "!pr-3 !pl-3 !py-2"
+)}
+```
+
+This approach ensures that styling selectors from base components don't unexpectedly alter the padding of checkbox columns. 
+
+## Data Status Mapping Patterns
+
+### Status Handling for Exchange Programs
+
+- **Status Source of Truth**: Clearly identify where the status originates (database, API, mock data generator) and how it's transformed through the application
+- **Status Consistency**: Ensure status values are consistently named and handled throughout the application pipeline:
+  - Data generation/seeding scripts
+  - Database schemas
+  - API responses
+  - UI display logic
+
+- **Multiple Status Sources**: When status data can come from multiple related entities (e.g., student profile and relationships), implement a clear precedence hierarchy:
+  ```tsx
+  // Example of checking multiple sources for status
+  const applicationStatus = studentProfile?.data && 
+                      typeof studentProfile.data === 'object' && 
+                      'application' in studentProfile.data && 
+                      studentProfile.data.application?.status;
+  
+  const visaStatus = orgRelationship?.data && 
+                 typeof orgRelationship.data === 'object' && 
+                 'visa_status' in orgRelationship.data 
+    ? orgRelationship.data.visa_status 
+    : undefined;
+    
+  // Determine final status using precedence rules
+  if (applicationStatus === 'sevis_approved' || visaStatus === 'issued') {
+    statusText = 'Active';
+  } else if (/* next condition */) {
+    // ...
+  }
+  ```
+
+- **Status Display Mapping**: Create clear mapping functions from internal status values to user-friendly display values:
+  ```tsx
+  const getStatusLabel = (statusText: string) => {
+    switch(statusText) {
+      case 'pending_review': return 'Pending Review';
+      case 'ready_for_sevis': return 'Ready for SEVIS';
+      // other mappings...
+      default: return statusText;
+    }
+  };
+  ```
+
+- **Status Filtering**: Implement consistent filtering mechanisms that work with both the internal status values and display values
+
+- **Status Visualization**: Use consistent color coding for statuses across the application:
+  - Pending/Waiting: Amber
+  - Approved/Active: Green
+  - Processing: Blue
+  - Rejected/Error: Red
+  
+- **Status Diagnostics**: During development, include debug sections that display status counts and distributions to verify data integrity
+
+- **Status Transitions**: Document the expected flow of statuses and ensure the UI supports all valid transitions
+
+This pattern ensures that status data remains consistent from the data source to the UI presentation, even when the underlying system is complex. 
+
+## Vercel Deployment & Monorepo Management
+
+### Workspace Dependencies in Deployment
+- **Avoid workspace dependencies for deployment**: When deploying individual apps from a monorepo, workspace dependencies like `@repo/database` can cause "Module not found" errors
+- **Use direct dependencies instead**: Replace workspace packages with direct implementations when possible
+- **Fallback patterns work**: Apps with fallback logic (local client creation) are more resilient than those requiring workspace packages
+
+### Vercel Configuration Anti-Patterns
+- **Don't overcomplicate with vercel.json**: Simple `pnpm build` often works better than custom build commands
+- **Avoid custom build scripts**: `vercel-build` scripts often cause more problems than they solve
+- **Let Vercel handle defaults**: Vercel's automatic detection usually works better than manual configuration
+
+### Deployment Strategy
+- **Separate Vercel projects per app**: Each app (greenheart, educatius) should have its own Vercel project
+- **Deploy from app directories**: Point Vercel projects to specific app directories (e.g., `apps/greenheart/`) rather than monorepo root
+- **Environment variables over file creation**: Use Vercel's environment variable injection rather than creating `.env.local` files during build
+
+### Supabase Integration
+- **Direct client creation is simpler**: Create Supabase clients directly in each app using environment variables
+- **Service client fallback**: Always provide fallback logic when service role keys might not be available
+- **Environment variable patterns**:
+  ```typescript
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? '';
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? '';
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY ?? '';
+  ```
+
+### Build Troubleshooting
+- **Module resolution errors**: Usually indicate workspace dependency issues - remove the workspace dependency
+- **"Command not found" errors**: Avoid custom scripts, use standard `pnpm build`
+- **Lock file sync**: Always run `pnpm install --frozen-lockfile` to verify dependencies are in sync
+
+### Key Lesson: Simplicity Wins
+The most reliable deployment approach is:
+1. Standard `package.json` with `"build": "turbo run build"`
+2. No custom `vercel.json` files
+3. Direct Supabase client creation in each app
+4. Separate Vercel projects per app
+5. Environment variables configured in Vercel dashboard
+
+### Notification Indicator System
+- **Animated Dot Indicators**: Implemented sonar-style notification dots for sidebar navigation links
+- **Dynamic Positioning**: Uses absolute positioning overlay system that doesn't interfere with existing navigation structure
+- **Scalable Architecture**: Built to support multiple indicators with automatic stagger timing
+
+#### Implementation Pattern:
+```tsx
+// In LeftSidebar.tsx - Add indicators to any navigation links
+const indicatorLabels = ['Change Queue', 'Students', 'Placements']; // Add/remove as needed
+
+// System automatically handles:
+// - Dynamic positioning (24px from left, vertically centered)
+// - Stagger timing (300ms between visible indicators)
+// - Brand color integration (primary-600 core, primary-300 rings)
+// - Performance optimization (only renders for existing nav items)
+```
+
+#### Key Features:
+- **Sonar Animation**: 2-ring expanding effect with 2s duration
+- **Brand Colors**: Uses `var(--theme-color-primary-600)` for core dot, `var(--theme-color-primary-300)` for rings
+- **Non-intrusive**: `pointer-events-none` overlay doesn't affect navigation functionality
+- **Synchronized Timing**: All indicators use same animation keyframes for consistency
+- **Stagger Prevention**: 300ms delays prevent indicators from syncing up
+
+#### Future Usage:
+To add indicators to different links, simply update the `indicatorLabels` array:
+```tsx
+// Example configurations:
+const indicatorLabels = ['Change Queue']; // Single indicator
+const indicatorLabels = ['Students', 'Change Queue']; // Two indicators
+const indicatorLabels = ['Home', 'Students', 'Placements', 'Change Queue']; // Multiple indicators
+```
+
+The system is fully dynamic and will automatically handle positioning, timing, and performance for any combination of navigation links.
+
+## Database and Schema Patterns
+
+### UUID Handling
+- **TypeScript Types**: UUIDs are typed as `string` in TypeScript (as generated by Supabase CLI)
+- **PostgreSQL Storage**: Use `UUID` type with `uuid_generate_v4()` default in database schema
+- **Mock Data Generation**: Use `faker.string.uuid()` for consistent UUID generation in test data
+- **Foreign Key Strategy**: For testing with mock data, comment out foreign key constraints; enable them in production
+- **Development vs Production**: 
+  - Development: Flexible constraints to allow mock data testing
+  - Production: Full referential integrity with proper foreign key constraints
+
+```sql
+-- Development schema pattern
+record_id UUID NOT NULL, -- REFERENCES public.profiles(id) ON DELETE CASCADE,
+
+-- Production schema pattern (uncomment for production)
+-- ALTER TABLE public.table_name 
+-- ADD CONSTRAINT fk_table_record_id 
+-- FOREIGN KEY (record_id) REFERENCES public.profiles(id) ON DELETE CASCADE;
+```
+
+### Schema Evolution
+- **Incremental Changes**: Add new tables and features without breaking existing functionality
+- **Backward Compatibility**: Ensure new schema changes don't affect existing data or queries
+- **Testing Strategy**: Use mock data with relaxed constraints for development, strict constraints for production
+- **Documentation**: Always document the relationship between development and production schema configurations
+
+### Change Queue Integration
+
+- **Data Fetching Pattern**: Custom hook `useChangeQueueData()` for fetching change queue data from Supabase
+- **Loading Strategy**: No explicit loading states - renders immediately with fallback data if Supabase unavailable (matches students page pattern)
+- **Fallback Data**: Provides realistic mock data when Supabase connection fails or is unavailable
+- **Error Handling**: Graceful degradation to fallback data with visual indicator when using mock data
+- **Nested Data**: Uses Supabase's nested select to fetch change requests with related change items and comments in one query
+- **Data Transformation**: Transform database schema (snake_case) to TypeScript interfaces (camelCase)
+- **Real-time Updates**: Simple page refresh for now (could be enhanced with real-time subscriptions)
+
+```typescript
+// Supabase nested query pattern
+const { data, error } = await supabase
+  .from('change_requests')
+  .select(`
+    *,
+    change_items (
+      *,
+      change_comments (*)
+    )
+  `)
+  .order('created_at', { ascending: false })
+```
+
+- **Consistent UX**: Matches loading behavior of other pages (students, host families, etc.)
+- **Debug Indicators**: Shows "(Using fallback data)" when Supabase is unavailable
+- **User Name Resolution**: Currently shows "Unknown User" - would need joins with users table for actual names
+- **Authentication**: Uses placeholder user IDs - needs integration with actual auth system
+- **Optimistic Updates**: Currently uses page refresh - could be enhanced with optimistic UI updates
+
+## Advanced Component Patterns
+
+### Multi-Variant Component Design
+When extending existing components with new use cases, use the variant pattern to maintain backward compatibility:
+
+```tsx
+// Add variant prop to interface
+interface ComponentProps {
+  variant?: 'existing' | 'new'; // Default to existing behavior
+}
+
+// Conditional styling/behavior based on variant
+const positionStyles = variant === 'new' 
+  ? { /* new positioning */ }
+  : { /* original positioning */ };
+```
+
+**Key Insights:**
+- Always default to existing behavior to avoid breaking changes
+- Use discriminated unions for variant-specific props
+- Document the differences between variants clearly
+
+### Staggered Animation Implementation
+For smooth staggered animations that respect visual order:
+
+```tsx
+// Use visual index, not data index
+table.getRowModel().rows.map((row, visualIndex) => {
+  const delay = visualIndex * STAGGER_DELAY; // 150ms works well
+  return (
+    <Component delay={delay} />
+  );
+});
+```
+
+**Critical Learnings:**
+- **Visual Order vs Data Order**: Always use visual position for stagger, not data array index
+- **Timing Sweet Spot**: 150ms between rows, 300ms between tabs provides good rhythm
+- **Respect Sort Order**: Stagger should flow top-to-bottom regardless of how data is sorted
+- **Animation Coherence**: Keep stagger direction consistent across similar UI patterns
+
+### Parent-Controlled Component Logic
+Design components where business logic stays in the parent, not the component:
+
+```tsx
+// ❌ Bad: Component contains business logic
+<TableComponent data={data} />
+
+// ✅ Good: Parent controls logic, component handles presentation
+<TableComponent 
+  data={data}
+  getRowNotification={(row, index) => {
+    // Parent decides when to show notifications
+    return recentlyUpdatedIds.includes(row.id);
+  }}
+/>
+```
+
+**Benefits:**
+- Component remains reusable across different contexts
+- Business logic stays centralized and testable
+- Parent can respond to real-time data changes
+- Component API is cleaner and more flexible
+
+### Contextual Feature Application
+For features that need to apply to specific areas of complex components:
+
+```tsx
+// Pattern: Auto-detect target areas with sensible defaults
+const shouldApplyFeature = (columnId) => {
+  const normalizedId = columnId.toLowerCase();
+  return normalizedId.includes('name') || 
+         normalizedId.includes('user') || 
+         normalizedId.includes('title');
+};
+```
+
+**Key Patterns:**
+- Use normalize case for pattern matching
+- Include common variations (name, user, title)
+- Make detection inclusive rather than exclusive
+- Document which patterns trigger the feature
+
+### Positioning Strategy for Different Contexts
+Different UI contexts require different positioning approaches:
+
+```tsx
+// Tab indicators: Absolute positioning for consistent placement
+const tabPosition = { 
+  position: 'absolute', 
+  top: '50%', 
+  left: '24px', 
+  transform: 'translateY(-50%)' 
+};
+
+// Row indicators: Relative positioning for content flow
+const rowPosition = { 
+  marginLeft: '8px' // Exact spacing as specified
+};
+```
+
+**Guidelines:**
+- **Absolute positioning**: For overlay elements that need consistent placement
+- **Relative positioning**: For elements that should flow with content
+- **Fixed distances**: Use exact pixel values for precise requirements (8px spacing)
+- **Flex layouts**: Use gap and margin for predictable spacing
+
+### Animation Performance Considerations
+```tsx
+// CSS-based animations perform better than JavaScript
+const cssAnimation = `
+  @keyframes sonar-ping {
+    0% { transform: scale(1); opacity: 1; }
+    75%, 100% { transform: scale(4); opacity: 0; }
+  }
+`;
+
+// Stagger via CSS delays, not JavaScript intervals
+style={{ animationDelay: `${delay}s` }}
+```
+
+**Performance Tips:**
+- Use CSS animations over JavaScript for better performance
+- Apply delays via CSS `animationDelay` property
+- Keep animation duration reasonable (2s for attention-getting effects)
+- Use `cubic-bezier` for natural motion curves
+
+## Table Component Patterns
+
+### Row-Level Features
+When adding features to table rows, consider these patterns:
+
+1. **Feature Detection**: Auto-detect appropriate columns for features
+2. **Visual Index Tracking**: Use `map((row, index) => ...)` for visual order
+3. **Wrapper Functions**: Create wrapping functions that enhance existing content
+4. **Variant Support**: Add variants to shared components for different contexts
+
+### Table State Management
+- Use visual row indices for animations and stagger effects
+- Separate data state from presentation state
+- Let parents control when features are active vs always-on component logic
+- Design APIs that work regardless of table sorting or filtering
+
+### AdvancedPinnedTable Styling & Layout
+
+#### Pinned Column Management
+- **Fixed Width Columns**: Use explicit width constraints for special columns (select, expander, actions) to prevent layout shifts
+  ```tsx
+  // For checkbox/select columns
+  {
+    size: 56,
+    minSize: 56,
+    maxSize: 56 // Prevent resizing beyond optimal width
+  }
+  ```
+- **Responsive Width Calculation**: Always account for container width changes when calculating column sizes. Use ResizeObserver for accurate width tracking
+- **Header Content Measurement**: Measure actual text width in headers to prevent truncation of column headers with sorting icons
+  ```tsx
+  // Reserve space for sort icon + buffer
+  const totalWidth = textWidth + sortIconWidth + buffer;
+  ```
+
+#### Text Truncation with Notification Indicators
+- **Reserved Space Strategy**: When adding notification indicators to name columns, use proper flex layout to reserve space:
+  ```tsx
+  <div className="flex items-center w-full min-w-0">
+    <div className="flex-1 min-w-0 pr-2">
+      <div className="truncate w-full">{content}</div>
+    </div>
+    <div className="flex-shrink-0 w-4 flex justify-center">
+      <NotificationIndicator />
+    </div>
+  </div>
+  ```
+- **Flex Layout Hierarchy**: Use `min-w-0` on containers and `flex-1` on text containers to ensure proper truncation behavior
+- **Component-Level Changes**: Modify shared components (like AdvancedPinnedTable) to benefit all tables app-wide
+
+#### Filter UX Improvements
+- **Value-to-Label Mapping**: Always show user-friendly labels in filters, never raw database values
+  ```tsx
+  // Multi-tier label resolution:
+  // 1. Check statusFilters configuration
+  // 2. Check filterOptions configuration  
+  // 3. Auto-convert snake_case to Title Case
+  ```
+- **Status Filter Priority**: Status filters should take precedence in label resolution since they're user-facing
+- **Automatic Fallback**: Convert `partially_approved` → `Partially Approved` automatically for unknown values
+
+#### Container Width & Sidebar Awareness
+- **Immediate Width Updates**: Use `transition: none` and forced reflows for expanded content width changes
+- **Sidebar State Tracking**: Monitor `isRightSidebarOpen` prop and respond to layout changes immediately
+- **Container Reference**: Always measure actual container width, not assume fixed dimensions
+
+#### Performance Considerations
+- **Selective Re-renders**: Only update column sizes when container width changes significantly (>5px)
+- **Measurement Timing**: Use timeouts to ensure DOM styling is complete before measuring text content
+- **Caching Strategy**: Cache header width measurements to avoid repeated calculations
+
+## Data Structure & Access Patterns
+
+### InstantDB Data Structure
+- **Profile Data Location**: Student comprehensive data is stored in `profile.data` field
+- **Access Pattern**: Always check `profile.data || profile.profile?.data || profile` for complete data
+- **Comprehensive Data Available**: InstantDB contains realistic, complete student data (99.9% populated)
+- **Never Assume Missing Data**: Before implementing fallbacks, always verify actual data structure and population
+
+### Critical Learning: Data vs. Fallbacks
+- **Before adding fallbacks**: Check if the data actually exists in the database
+- **InstantDB contains**: 827 students with realistic bios (`student_bio`) and activities (`favorite_activities`)
+- **Root issue**: UI components were accessing wrong data structure, not missing data
+- **Solution**: Fix data access pattern rather than masking with fallbacks
+
+### UI Component Data Extraction
+- **Student Data**: `const details = profile.data || profile.profile?.data || profile`
+- **Activities**: Available in `details.favorite_activities` array
+- **Bio Content**: Available in `details.student_bio`
+- **Academic Info**: Available in `details.academic` object
+
+## InstantDB Script Development
+
+### CRITICAL: Common Patterns and Pitfalls
+**Stop making the same mistakes repeatedly!** Follow these established patterns for all InstantDB scripts.
+
+### Environment Configuration Pattern
+**ALWAYS use this exact pattern** for environment variable loading:
+
+```typescript
+import { init } from '@instantdb/admin';
+import dotenv from 'dotenv';
+
+// Load environment variables - EXACT pattern to avoid path issues
+dotenv.config({ path: '.env.local' });
+dotenv.config({ path: '../../.env.local' });
+dotenv.config({ path: '../../../../.env.local' });
+
+const INSTANT_APP_ID = process.env.NEXT_PUBLIC_INSTANT_APP_ID!;
+const INSTANT_ADMIN_TOKEN = process.env.INSTANT_ADMIN_TOKEN!;
+
+const db = init({
+  appId: INSTANT_APP_ID,
+  adminToken: INSTANT_ADMIN_TOKEN,
+});
+```
+
+**Why this pattern works:**
+- Multiple dotenv.config() calls handle different script execution locations
+- Non-null assertions (!) are safe because scripts should fail fast if env vars missing
+- This pattern has been tested and works consistently
+
+### TypeScript Linter Error Prevention
+
+#### 1. Function Parameter Types
+**ALWAYS specify parameter types** to avoid inference issues:
+
+```typescript
+// ❌ BAD - causes linter errors
+function processData(data) { ... }
+
+// ✅ GOOD - explicit types
+function processData(data: any) { ... }
+function generateDate(createdAt: string | undefined, updatedAt: string | undefined): string { ... }
+```
+
+#### 2. Array Access with Non-null Assertions
+**Use non-null assertions** when you know array access is safe:
+
+```typescript
+// ❌ BAD - TypeScript complains about potential undefined
+return new Date(randomTime).toISOString().split('T')[0];
+
+// ✅ GOOD - explicit non-null assertion
+return new Date(randomTime).toISOString().split('T')[0]!;
+```
+
+#### 3. Transaction Syntax Pattern
+**ALWAYS use this exact transaction pattern:**
+
+```typescript
+// ✅ Correct transaction syntax
+const transactions = [];
+
+for (const item of items) {
+  if (db.tx?.profiles) {
+    transactions.push(
+      db.tx.profiles[item.profileId]!.update({
+        data: updatedData,
+        updatedAt: new Date()
+      })
+    );
+  }
+}
+
+// Execute in batches
+const batchSize = 25;
+for (let i = 0; i < transactions.length; i += batchSize) {
+  const batch = transactions.slice(i, i + batchSize);
+  await db.transact(batch);
+}
+```
+
+#### 4. Safe Data Access Pattern
+**Use this pattern** for safe nested object access:
+
+```typescript
+// ✅ Safe access pattern
+const value = (object?.data && 
+               typeof object.data === 'object' && 
+               'field_name' in object.data &&
+               object.data.field_name)
+  ? String(object.data.field_name)
+  : 'default_value';
+```
+
+### Common Query Patterns
+
+#### Basic Student Data Query
+```typescript
+const result = await db.query({
+  users: {
+    $: {
+      where: {
+        role: 'student'
+      }
+    }
+  },
+  profiles: {}
+});
+```
+
+#### With Relationships
+```typescript
+const result = await db.query({
+  users: {
+    $: {
+      where: {
+        role: 'student'
+      }
+    }
+  },
+  profiles: {},
+  relationships: {},
+  users_adminProfiles: {} // for admin data
+});
+```
+
+### Script Structure Template
+**Use this template** for all new InstantDB scripts:
+
+```typescript
+import { init } from '@instantdb/admin';
+import dotenv from 'dotenv';
+
+// Load environment variables
+dotenv.config({ path: '.env.local' });
+dotenv.config({ path: '../../.env.local' });
+dotenv.config({ path: '../../../../.env.local' });
+
+const INSTANT_APP_ID = process.env.NEXT_PUBLIC_INSTANT_APP_ID!;
+const INSTANT_ADMIN_TOKEN = process.env.INSTANT_ADMIN_TOKEN!;
+
+const db = init({
+  appId: INSTANT_APP_ID,
+  adminToken: INSTANT_ADMIN_TOKEN,
+});
+
+async function main() {
+  console.log('Starting script...\n');
+  
+  try {
+    // Query data
+    const result = await db.query({
+      // your query here
+    });
+
+    console.log(`Found ${result.users?.length || 0} users`);
+    console.log(`Found ${result.profiles?.length || 0} profiles\n`);
+
+    // Process data
+    const itemsToUpdate: any[] = [];
+    
+    // Your processing logic here
+    
+    console.log(`Processing ${itemsToUpdate.length} items...`);
+
+    if (itemsToUpdate.length === 0) {
+      console.log('✅ No items to process!');
+      return;
+    }
+
+    // Create transactions
+    const transactions = [];
+    
+    for (const item of itemsToUpdate) {
+      // Your transaction logic here
+    }
+
+    // Execute in batches
+    const batchSize = 25;
+    let processed = 0;
+
+    console.log(`\nExecuting ${transactions.length} updates...`);
+
+    for (let i = 0; i < transactions.length; i += batchSize) {
+      const batch = transactions.slice(i, i + batchSize);
+      await db.transact(batch);
+      processed += batch.length;
+      console.log(`Processed ${processed}/${transactions.length} updates...`);
+    }
+
+    console.log('\n✅ Script completed successfully!');
+
+  } catch (error) {
+    console.error('Error in script:', error);
+  }
+}
+
+main();
+```
+
+### Execution Pattern
+**Always run scripts** from the project root:
+
+```bash
+# ✅ CORRECT - from project root
+pnpm exec tsx packages/database/src/scripts/your-script.ts
+
+# ❌ WRONG - from script directory
+cd packages/database/src/scripts && tsx your-script.ts
+```
+
+### Data Validation Patterns
+
+#### Check for Existing Data
+```typescript
+// Always check what exists before making changes
+const existingItems = result.items.filter(item => 
+  item.data && item.data.field_name
+);
+
+console.log(`Found ${existingItems.length} items with existing data`);
+```
+
+#### Verify Changes
+```typescript
+// Always verify changes after applying them
+console.log('\nVerifying changes...');
+const verifyResult = await db.query({ /* same query */ });
+
+let stillProblematic = 0;
+// Check if issues still exist
+console.log(`Verification: ${stillProblematic} issues remaining`);
+```
+
+### Common Status/Field Patterns
+**Use these established patterns** for status fields:
+
+#### Application Status Values
+- `pending_review` → "Pending Review"
+- `under_review` → "Under Review" 
+- `approved` → "Approved"
+- `rejected` → "Rejected"
+
+#### SEVIS Status Values
+- `ready_for_sevis` → "Ready for SEVIS"
+- `in_sevis_queue` → "In SEVIS Queue"
+- `submitted_to_sevis` → "Submitted to SEVIS"
+- `sevis_approved` → "SEVIS Approved"
+- `sevis_rejected` → "SEVIS Rejected"
+
+#### Date Field Patterns
+- Store dates as ISO strings: `YYYY-MM-DD`
+- Use `approved_on` and `approved_by` fields for approval tracking
+- Always validate date strings before using
+
+### Admin User Creation Pattern
+```typescript
+const adminUsers = [
+  { firstName: 'Sarah', lastName: 'Mitchell', email: 'sarah.mitchell@egab.org' },
+  // ... more users
+];
+
+for (const admin of adminUsers) {
+  const userId = db.id();
+  const profileId = db.id();
+  
+  transactions.push(
+    db.tx.users[userId]!.update({
+      id: userId,
+      email: admin.email,
+      firstName: admin.firstName,
+      lastName: admin.lastName,
+      role: 'admin',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    })
+  );
+  
+  transactions.push(
+    db.tx.profiles[profileId]!.update({
+      id: profileId,
+      userId: userId,
+      type: 'admin',
+      data: {
+        permissions: ['application_review']
+      },
+      createdAt: new Date(),
+      updatedAt: new Date()
+    })
+  );
+}
+```
+
+### Error Prevention Checklist
+Before creating any InstantDB script, check:
+
+1. ✅ Using the exact environment config pattern
+2. ✅ All function parameters have explicit types
+3. ✅ Non-null assertions on safe array/object access
+4. ✅ Transaction pattern follows the template
+5. ✅ Script uses the standard structure template
+6. ✅ Will run from project root with `pnpm exec tsx`
+7. ✅ Includes verification logic after changes
+8. ✅ Uses established status/date patterns
+
+**Stop repeating the same mistakes!** Use these patterns consistently.
+
+### Frontend-Database Status Mapping Issues 
+**Critical Pattern**: When database data doesn't appear in frontend tables:
+
+1. **Database Query**: Test actual database content first with a simple script
+2. **Status Mapping**: Check if frontend is using correct mapped status values
+   - Database: `sevisStatus: 'sevis_failed'`
+   - Frontend mapping: `'sevis_failed'` → `SEVIS_STATUSES.FAILED` → `'Processing Failed'`
+   - Frontend logic: Must check for `'Processing Failed'` not `'Failed'`
+3. **Field Access**: Verify frontend is reading from correct data structure
+4. **Conditional Logic**: Ensure all status checks use the actual mapped display text
+
+**Remember**: Database stores technical values, frontend displays user-friendly text - always use the mapped display text in frontend conditional logic!
+
+3. **Field Access**: Verify frontend is reading from correct data structure
+4. **Conditional Logic**: Ensure all status checks use the actual mapped display text
+
+**Remember**: Database stores technical values, frontend displays user-friendly text - always use the mapped display text in frontend conditional logic!

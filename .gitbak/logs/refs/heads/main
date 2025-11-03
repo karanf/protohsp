@@ -1,0 +1,47 @@
+0000000000000000000000000000000000000000 c22eb6427cff87b0a15e3d6f47d70355ed966f8d karanf <karanf@gmail.com> 1742409783 +1300	commit (initial): feat(create-turbo): create basic
+c22eb6427cff87b0a15e3d6f47d70355ed966f8d 29e29ba8ff1b738bdccea9b17d289b8d0613c451 karanf <karanf@gmail.com> 1742409783 +1300	commit: feat(create-turbo): apply official-starter transform
+29e29ba8ff1b738bdccea9b17d289b8d0613c451 557af05b584040d7cfaa642e033697949edd491e karanf <karanf@gmail.com> 1742409783 +1300	commit: feat(create-turbo): apply pnpm-eslint transform
+557af05b584040d7cfaa642e033697949edd491e bf6a9d2d71acb0374676f05552eb93682a782ed6 karanf <karanf@gmail.com> 1742409797 +1300	commit: feat(create-turbo): install dependencies
+bf6a9d2d71acb0374676f05552eb93682a782ed6 3102ebc919560268084d48f7163122a5f6fb905c karanf <karan.fadnavis@enroller.co.nz> 1742416579 +1300	commit: basic project created
+3102ebc919560268084d48f7163122a5f6fb905c 3f422fd4081feee107694527b951784bb33bd469 karanf <karan.fadnavis@enroller.co.nz> 1742434826 +1300	commit: added tw4, but exports not working yet
+3f422fd4081feee107694527b951784bb33bd469 ad5bbd47c7e1bbd8d662fc094c67d11781e84cf6 karanf <karan.fadnavis@enroller.co.nz> 1742437538 +1300	commit: repo imports not erroring out now tw still not working
+ad5bbd47c7e1bbd8d662fc094c67d11781e84cf6 26af60566e20c95d713b922d8b19e290927b7aad karanf <karan.fadnavis@enroller.co.nz> 1742440589 +1300	commit: tw import syntax
+26af60566e20c95d713b922d8b19e290927b7aad 2c7b143127a0ca3c6c8319df103e490a068c4e32 karanf <karan.fadnavis@enroller.co.nz> 1742455687 +1300	commit: tailwind finally working
+2c7b143127a0ca3c6c8319df103e490a068c4e32 884b9253996b0134a230ae1732b28c6241010c1c karanf <karan.fadnavis@enroller.co.nz> 1742455739 +1300	commit: just checking monorepo and colours
+884b9253996b0134a230ae1732b28c6241010c1c 9e964a4f96c1e0c4f94d1ca58d5b9de0a7020187 karanf <karan.fadnavis@enroller.co.nz> 1742455821 +1300	commit: just checking monorepo and colours
+9e964a4f96c1e0c4f94d1ca58d5b9de0a7020187 655fc902e0885b62036d5a217e4cec8c8de3416a karanf <karan.fadnavis@enroller.co.nz> 1742456004 +1300	commit: pnpm lockfile
+655fc902e0885b62036d5a217e4cec8c8de3416a e347b3effffd3af220ece891537ac926249582f1 karanf <karan.fadnavis@enroller.co.nz> 1742456216 +1300	commit: pnpm lockfile again
+e347b3effffd3af220ece891537ac926249582f1 7d76a1034acf63cce51bc55d055559516a0e3e39 karanf <karan.fadnavis@enroller.co.nz> 1742456587 +1300	commit: build scripts for monorepo
+7d76a1034acf63cce51bc55d055559516a0e3e39 59479b0d1dfdc9ef9559756fbd793479e5946126 karanf <karan.fadnavis@enroller.co.nz> 1742839725 +1300	commit: added shadcn components
+59479b0d1dfdc9ef9559756fbd793479e5946126 8b8d0b5cef33273594ab1b82956843d59268e65b karanf <karan.fadnavis@enroller.co.nz> 1742885120 +1300	commit: finally added all shadcn canary components, updated the config files for tailwind v4, fixed the global reset issue
+8b8d0b5cef33273594ab1b82956843d59268e65b e7c17e60502899c2d48172c3f195ab0674d36770 karanf <karan.fadnavis@enroller.co.nz> 1742933080 +1300	commit: theming has begun
+e7c17e60502899c2d48172c3f195ab0674d36770 0bb7c4534725f9198566c4892521320c3583a2a4 karanf <karan.fadnavis@enroller.co.nz> 1742955102 +1300	commit: more theming stuff
+0bb7c4534725f9198566c4892521320c3583a2a4 30d9452a203bab058ffe3f22260a95ac9d0cce89 karanf <karan.fadnavis@enroller.co.nz> 1742957209 +1300	commit: added button and input styled as per theme
+30d9452a203bab058ffe3f22260a95ac9d0cce89 4fe428bf5c14f2f3b4e3056b099690e417293e77 karanf <karan.fadnavis@enroller.co.nz> 1743024193 +1300	commit: sidebar is good enough now
+4fe428bf5c14f2f3b4e3056b099690e417293e77 05f5db36f36064a06fede1a7dd41dc7814c6f569 karanf <karan.fadnavis@enroller.co.nz> 1743109659 +1300	commit: working on sidebar content
+05f5db36f36064a06fede1a7dd41dc7814c6f569 4fbba77e616161ce029c41d59c4f777fe127c2ad karanf <karan.fadnavis@enroller.co.nz> 1743110247 +1300	commit: new packages installed
+4fbba77e616161ce029c41d59c4f777fe127c2ad 79b742ba5694381097ae6bceea5dff073cb7678b karanf <karan.fadnavis@enroller.co.nz> 1743112502 +1300	commit: fixed pnpm stuff
+79b742ba5694381097ae6bceea5dff073cb7678b 5b5883c3c4903884723f4da8989e7227df3f042f karanf <karan.fadnavis@enroller.co.nz> 1743114389 +1300	commit: left sidebar
+5b5883c3c4903884723f4da8989e7227df3f042f 3121cc0b8a1480f34094364149a65c976553eee1 karanf <karan.fadnavis@enroller.co.nz> 1743361392 +1300	commit: Added the new active context stuff to help woth cursor development
+3121cc0b8a1480f34094364149a65c976553eee1 2e20d7279833a619d9f5bbdfab837b0bc91e47eb karanf <karan.fadnavis@enroller.co.nz> 1743362085 +1300	commit: few more rules added
+2e20d7279833a619d9f5bbdfab837b0bc91e47eb dda8a6f8376fd3b4acaebe2fe3b22717aedac5c8 karanf <karan.fadnavis@enroller.co.nz> 1743376673 +1300	commit: added seed data
+dda8a6f8376fd3b4acaebe2fe3b22717aedac5c8 284b05f84618e600ac5e432a73374a561acf53e8 karanf <karan.fadnavis@enroller.co.nz> 1743450208 +1300	commit: some sidebar styling
+284b05f84618e600ac5e432a73374a561acf53e8 1067faa83a9472aa79bf7462a02097d7b67b7f74 karanf <karan.fadnavis@enroller.co.nz> 1743461060 +1300	commit: pinned columns working
+1067faa83a9472aa79bf7462a02097d7b67b7f74 5cfb175f1e96ddc650f764922ba1d0a2d806b65e karanf <karan.fadnavis@enroller.co.nz> 1743616625 +1300	commit: pinning and blurs working
+5cfb175f1e96ddc650f764922ba1d0a2d806b65e e7470db9ef493cccd3a5482a55d9527162e01000 karanf <karan.fadnavis@enroller.co.nz> 1743617564 +1300	commit: few spacing changes
+e7470db9ef493cccd3a5482a55d9527162e01000 aca62ea743dcaaa628e411347f76143cbbbf8bae karanf <karan.fadnavis@enroller.co.nz> 1743617888 +1300	commit: pagination working
+aca62ea743dcaaa628e411347f76143cbbbf8bae ad76e7d92fe11fd4f0b2d89dc558a7bd93df97f7 karanf <karan.fadnavis@enroller.co.nz> 1743624579 +1300	commit: columns aligned with content
+ad76e7d92fe11fd4f0b2d89dc558a7bd93df97f7 0583d388fbd175b96cfae7f4531f2a70cd4cd39d karanf <karan.fadnavis@enroller.co.nz> 1743631854 +1300	commit: positioning and more styling changes
+0583d388fbd175b96cfae7f4531f2a70cd4cd39d e1e747b9522cc6e21e98e8a1ef53c3023cd00b13 karanf <karan.fadnavis@enroller.co.nz> 1743634867 +1300	commit: table expand rows fixed
+e1e747b9522cc6e21e98e8a1ef53c3023cd00b13 a550c5ed8dbdcc57998b78e4a8d9f11771c89b4f karanf <karan.fadnavis@enroller.co.nz> 1743634991 +1300	commit: added shadow to expanded content
+a550c5ed8dbdcc57998b78e4a8d9f11771c89b4f dcd3b0fbe6eb6816829a60a7a80c9122527c9b6b karanf <karan.fadnavis@enroller.co.nz> 1743637120 +1300	commit: some styles defined
+dcd3b0fbe6eb6816829a60a7a80c9122527c9b6b a79f061d8941b4363c1c5359add92c9e6f16f77e karanf <karan.fadnavis@enroller.co.nz> 1743639058 +1300	commit: added advanced table component
+a79f061d8941b4363c1c5359add92c9e6f16f77e 58714c0fe596ea68073574e49320308f33cc21bb karanf <karan.fadnavis@enroller.co.nz> 1743639435 +1300	commit: trying this again
+58714c0fe596ea68073574e49320308f33cc21bb de79f73ec11661563d13fa9025bd1799ef6a69e5 karanf <karan.fadnavis@enroller.co.nz> 1743645952 +1300	commit: building the page 1
+de79f73ec11661563d13fa9025bd1799ef6a69e5 add463eaffd4c8b35f5cd974e296843b4c6fcf81 karanf <karan.fadnavis@enroller.co.nz> 1743660033 +1300	pull: Fast-forward
+add463eaffd4c8b35f5cd974e296843b4c6fcf81 7e4633fac15d757cca27eb25d820d9b41b1f2f6b karanf <karan.fadnavis@enroller.co.nz> 1743804525 +1300	pull: Fast-forward
+7e4633fac15d757cca27eb25d820d9b41b1f2f6b 8ca592c557b0bdac545a6d39dba7412769500302 karanf <karan.fadnavis@enroller.co.nz> 1743901213 +1200	pull: Fast-forward
+8ca592c557b0bdac545a6d39dba7412769500302 865f8ed943f458d1ee79128ec3429e14e7389097 karanf <karan.fadnavis@enroller.co.nz> 1743918461 +1200	pull: Fast-forward
+865f8ed943f458d1ee79128ec3429e14e7389097 072e4b778c012b116cf7a971d4eb9893f3482383 karanf <karan.fadnavis@enroller.co.nz> 1743925761 +1200	pull: Fast-forward
+072e4b778c012b116cf7a971d4eb9893f3482383 1bbc70732b8d627e9cc40b386606fa4c4679598f karanf <karan.fadnavis@enroller.co.nz> 1744055838 +1200	pull origin main: Fast-forward
+1bbc70732b8d627e9cc40b386606fa4c4679598f 1ff5034b7b5ba62ce232df7d3341bf52c19c4c6b karanf <karan.fadnavis@enroller.co.nz> 1744055848 +1200	merge more-mock-data: Merge made by the 'ort' strategy.

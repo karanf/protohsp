@@ -1,0 +1,31 @@
+{
+  "extends": "@repo/typescript-config/nextjs.json",
+  "compilerOptions": {
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@/lib/*": ["lib/*"],
+      "@/components/*": ["app/components/*"],
+      "@/views/*": ["app/(public)/sevis-user/views/*"],
+      "@/sevis-views/*": ["app/(public)/sevis-user/views/*"],
+      "@/types/*": ["lib/types/*"],
+      "@/utils/*": ["lib/utils/*"],
+      "@/public/*": ["public/*"]
+    }
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "next-env.d.ts",
+    "next.config.js",
+    ".next/types/**/*.ts",
+    "types/**/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

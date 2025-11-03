@@ -1,0 +1,14 @@
+# This is a script to the preview branch with main when any changes are made
+
+image: atlassian/default-image:3
+
+pipelines:
+  branches:
+    main:
+      - step:
+          name: Sync feature/preview branch with main
+          script:
+            - git fetch origin
+            - git checkout feature/preview || git checkout -b feature/preview
+            - git reset --hard origin/main
+            - git push --force origin feature/preview 

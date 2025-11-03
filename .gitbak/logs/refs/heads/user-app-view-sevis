@@ -1,0 +1,16 @@
+0000000000000000000000000000000000000000 add463eaffd4c8b35f5cd974e296843b4c6fcf81 karanf <karan.fadnavis@enroller.co.nz> 1743660484 +1300	branch: Created from HEAD
+add463eaffd4c8b35f5cd974e296843b4c6fcf81 8f87ee2e59182ae0c85f8409e3e78aa0df8db185 karanf <karan.fadnavis@enroller.co.nz> 1743710106 +1300	commit: SPA like behaviour and dynamic header titles added
+8f87ee2e59182ae0c85f8409e3e78aa0df8db185 74bd8bb4054731dfc1ef0f2f5a5ccca935bd7a52 karanf <karan.fadnavis@enroller.co.nz> 1743711057 +1300	commit: routes are better now
+74bd8bb4054731dfc1ef0f2f5a5ccca935bd7a52 e0decec93dbe58742eb6db47e1fd4a9d85b7a722 karanf <karan.fadnavis@enroller.co.nz> 1743720593 +1300	commit: more consistent styling
+e0decec93dbe58742eb6db47e1fd4a9d85b7a722 738b2dd5876fd2c6c501e93a14ee3c4ab1fb5ac9 karanf <karan.fadnavis@enroller.co.nz> 1743721107 +1300	commit: added redirects
+738b2dd5876fd2c6c501e93a14ee3c4ab1fb5ac9 a1ad90bc5e074c9a7fa871fd8a881af7f77c31e2 karanf <karan.fadnavis@enroller.co.nz> 1743743521 +1300	commit: skeletons added
+a1ad90bc5e074c9a7fa871fd8a881af7f77c31e2 b07dd856b8a0cd7fe688456d2f05b99c781eef04 karanf <karan.fadnavis@enroller.co.nz> 1743761121 +1300	commit: ts errors fixed
+b07dd856b8a0cd7fe688456d2f05b99c781eef04 0d52868cd8247450b5227f31026c0892185bbb43 karanf <karan.fadnavis@enroller.co.nz> 1743796366 +1300	commit: project finally using supabase data
+0d52868cd8247450b5227f31026c0892185bbb43 9cc2967b50a6ef889c028ead54a58a98a0d90d68 karanf <karan.fadnavis@enroller.co.nz> 1743797119 +1300	commit: lockfile fixes
+9cc2967b50a6ef889c028ead54a58a98a0d90d68 48a7c7eb148556b6d0debef2d5b73b4ced9c1032 karanf <karan.fadnavis@enroller.co.nz> 1743797364 +1300	commit: hook factory fixes
+48a7c7eb148556b6d0debef2d5b73b4ced9c1032 d9ccf3d4cd3fae668aa02231640d29a0f93a0fda karanf <karan.fadnavis@enroller.co.nz> 1743798584 +1300	commit: vercel 404 fixes
+d9ccf3d4cd3fae668aa02231640d29a0f93a0fda 107400091b17fcca832f62e4b562b9f46d021b00 karanf <karan.fadnavis@enroller.co.nz> 1743800129 +1300	commit: few style and redirect changes
+107400091b17fcca832f62e4b562b9f46d021b00 dd5cb3962ad5dce580328fabd71252b67e1dd7f3 karanf <karan.fadnavis@enroller.co.nz> 1743800590 +1300	commit: changed to sevis-user instead of sevis
+dd5cb3962ad5dce580328fabd71252b67e1dd7f3 5e4db94fa9d8fa8a714933fc037ad3e0f0985c0a karanf <karan.fadnavis@enroller.co.nz> 1743801489 +1300	commit: fixed host family data loading
+5e4db94fa9d8fa8a714933fc037ad3e0f0985c0a 5cde47cec10a1d50c5ebadbdee5ecf3b4cef1353 karanf <karan.fadnavis@enroller.co.nz> 1743801673 +1300	commit: renamed overview to sevis
+5cde47cec10a1d50c5ebadbdee5ecf3b4cef1353 3be45b1cf135c735df5db3cf1445ed0b23ffa470 karanf <karan.fadnavis@enroller.co.nz> 1743803032 +1300	commit: fixed some next output errors
