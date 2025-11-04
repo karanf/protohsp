@@ -2,8 +2,8 @@
   "$id": "greenheart",
   "name": "Greenheart SEVIS Portal",
   "runtime": "node-18.0",
-  "source": "./apps/greenheart",
-  "buildCommand": "bash appwrite-build.sh",
+  "source": ".",
+  "buildCommand": "bash apps/greenheart/appwrite-build.sh",
   "installCommand": "corepack enable && corepack prepare pnpm@latest --activate",
   "startCommand": "node_modules/.bin/next start -p $PORT",
   "environment": {

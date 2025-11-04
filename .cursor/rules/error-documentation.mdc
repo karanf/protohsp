@@ -257,67 +257,67 @@ Appwrite's internal bundler expects standard Next.js project structure with conf
 - Setting source to app (`./apps/greenheart`) → Breaks workspace package dependencies
 
 **Failed Approaches**:
-1. ❌ Setting source to monorepo root - bundler looks for config at wrong location
-2. ❌ Setting source to app directory only - workspace packages become inaccessible
-3. ❌ Symlink/copy files to root - doesn't work when source is already set to app
+1. ❌ Setting source to monorepo root only - bundler looks for config at wrong location
+2. ❌ Setting source to app directory (`./apps/greenheart`) - **CRITICAL: Appwrite only copies that directory, parent workspace is NOT accessible!**
+3. ❌ Build script navigating to `../..` from app directory - parent directories don't exist in Appwrite's build environment
 
-**Working Solution - Hybrid Approach**:
+**CRITICAL DISCOVERY**: 
+When you set `source: "./apps/greenheart"`, Appwrite ONLY copies that subdirectory to `/usr/local/build/`. The parent directories, workspace root, packages/, and pnpm-lock.yaml are **NOT accessible**. You cannot `cd ../..` to reach them.
 
-**Step 1**: Configure `appwrite.json` with source pointing to app directory
+**Working Solution - Build at Root, Move Files for Bundler**:
+
+Keep source at monorepo root, build successfully with workspace packages, then move files to where bundler expects:
+
 ```json
 {
-  "source": "./apps/greenheart",
-  "buildCommand": "bash appwrite-build.sh",
+  "source": ".",
+  "buildCommand": "bash apps/greenheart/appwrite-build.sh",
   "startCommand": "node_modules/.bin/next start -p $PORT"
 }
 ```
 
-**Step 2**: Build script navigates to workspace root for dependencies
+**Build Script**:
 ```bash
 #!/bin/bash
 set -e
 
-# Appwrite starts us in /usr/local/build (which is now apps/greenheart)
-APP_DIR=$(pwd)
+# Appwrite starts us at monorepo root
+WORKSPACE_ROOT=$(pwd)
+APP_DIR="$WORKSPACE_ROOT/apps/greenheart"
 
-# Navigate to workspace root (two levels up)
-WORKSPACE_ROOT=$(cd ../.. && pwd)
+# Install dependencies
+pnpm install --no-frozen-lockfile
 
-# Verify workspace configuration exists
-if [ ! -f "$WORKSPACE_ROOT/pnpm-workspace.yaml" ]; then
-    echo "ERROR: Could not find pnpm-workspace.yaml"
-    exit 1
-fi
-
-# Install pnpm
-corepack enable
-corepack prepare pnpm@latest --activate
-
-# Install dependencies from workspace root
-cd "$WORKSPACE_ROOT"
-pnpm install --frozen-lockfile
-
-# Build from app directory
+# Build the app (with workspace packages)
 cd "$APP_DIR"
 pnpm build
+
+# CRITICAL: Move files to root for Appwrite's bundler
+cd "$WORKSPACE_ROOT"
+cp "$APP_DIR/next.config.js" "$WORKSPACE_ROOT/next.config.js"
+mv "$APP_DIR/.next" "$WORKSPACE_ROOT/.next"
+cp "$APP_DIR/package.json" "$WORKSPACE_ROOT/package.json"
+cp -r "$APP_DIR/public" "$WORKSPACE_ROOT/public"
 ```
 
 **Why This Works**:
-- ✅ Appwrite sees standard Next.js structure (`next.config.js` at source root)
-- ✅ Build script accesses workspace packages by navigating up
-- ✅ Built `.next/` directory is where Appwrite's bundler expects it
-- ✅ No file copying needed - everything is in the right place
+- ✅ Entire monorepo is available during build (source: ".")
+- ✅ Workspace packages build correctly
+- ✅ After build, we move output to where bundler expects
+- ✅ Appwrite's bundler finds config and .next at `/usr/local/build/`
+- ✅ Runtime has self-contained .next build (workspace packages are transpiled in)
 
 **Key Insights**:
-- Appwrite copies the `source` directory to `/usr/local/build/`
-- When source is `./apps/greenheart`, the parent directories ARE accessible via `../..`
-- The entire repo structure is available, we just control what Appwrite sees as "root"
-- This is different from Vercel which handles monorepos natively
+- Appwrite ONLY copies the `source` directory, nothing outside it
+- You cannot access parent directories if source is a subdirectory
+- Build must happen with full workspace access, then relocate output
+- Next.js `transpilePackages` bundles workspace packages into .next (self-contained at runtime)
 
 **Prevention**: 
-- For monorepo Next.js apps on Appwrite, always set source to the app directory
-- Build scripts should navigate to workspace root for dependency installation
-- Test that build script can access `../../pnpm-workspace.yaml`
+- For monorepo Next.js apps on Appwrite, always set source to monorepo root (".")
+- Build successfully with full workspace access
+- After build, relocate Next.js files (config, .next, package.json, public) to root
+- Verify bundler can find files at `/usr/local/build/next.config.js` and `/usr/local/build/.next`
 
 **Warning**:
 ```
