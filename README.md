@@ -1,23 +1,8 @@
-# EGAB (Education Global Administrative Backend)
+# Prototype for  Proof of Concept using AI for development
 
 ## Overview
-The Education Global Administrative Backend (EGAB) is a comprehensive system for managing international student exchange programs.
-
-## Credentials
-
-### Default Login Credentials
-For all test accounts in the development environment, the default password is:
-```
-PasswordThreeTwo1
-```
-
-## User Types
-- Admin: System administrators with full access
-- Regional Director: Manages coordinators across a state
-- Coordinator: Local program coordinators who manage host families and students
-- Host Family: Families hosting international students
-- Student: International exchange students
-- Sending Organization: Partner organizations that send students
+The prototype is a for a comprehensive system for managing international student exchange programs.
+The view presented is of a Receiving Organisation's user who has permissions to send applications to SEVIS (The US authority for granting visas)
 
 ## Development
-This project uses Supabase for the database and authentication. 
+This project uses InstantDB for the database and authentication. 
