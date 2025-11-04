@@ -9,6 +9,15 @@ The original deployment error occurred because Appwrite's build system couldn't 
 1. The project uses a **pnpm monorepo structure** with the Next.js app at `apps/greenheart/`
 2. Appwrite's default build process expected a standalone Next.js app at the root
 3. Workspace dependencies (`@repo/ui`, `@repo/database`, etc.) needed proper resolution
+4. Setting source to monorepo root caused Appwrite's bundler to look for config at wrong location
+5. Setting source to app directory broke workspace package access
+
+## Solution: Hybrid Approach
+
+We set the **source directory** to `./apps/greenheart` (where Next.js expects to find its config) while the **build script** navigates up to the workspace root to install all dependencies. This gives us:
+- ✅ Next.js structure that Appwrite's bundler expects
+- ✅ Access to workspace packages during build
+- ✅ Proper deployment archive creation
 
 ## Configuration Files Created
 
@@ -69,13 +78,16 @@ INSTANT_ADMIN_TOKEN=your_instant_admin_token
 
 ## How It Works
 
-1. **Source Copy**: Appwrite copies the entire repository to `/usr/local/build/`
+1. **Source Copy**: Appwrite copies `apps/greenheart/` directory to `/usr/local/build/`
+   - This includes `next.config.js`, `package.json`, app source code, and `appwrite-build.sh`
 2. **Install**: Runs `corepack enable` to set up pnpm
 3. **Build**: Executes `appwrite-build.sh` which:
-   - Detects monorepo structure
-   - Installs all workspace dependencies
-   - Builds the Next.js app with workspace package access
-4. **Start**: Runs `next start` from the app directory on the specified port
+   - Starts from the app directory (`/usr/local/build`)
+   - Navigates up to find the workspace root (`../../`)
+   - Installs all workspace dependencies from the root
+   - Builds the Next.js app from the app directory
+4. **Bundle**: Appwrite's bundler finds `next.config.js` and `.next/` in the expected locations
+5. **Start**: Runs `next start` from the app directory on the specified port
 
 ## Monorepo Structure Handled
 
@@ -91,8 +103,9 @@ The configuration properly handles:
 - The install command should handle this, but verify `corepack` is available in the runtime
 
 ### Build fails with "workspace package not found"
-- Check that `pnpm-workspace.yaml` is included in the source
-- Verify `pnpm install` runs from the workspace root
+- Check that the build script successfully navigates to workspace root
+- Verify the error checking for `pnpm-workspace.yaml` doesn't fail
+- Check build logs to confirm "✓ Found workspace configuration" message appears
 
 ### Application starts but pages don't load
 - Check that all environment variables are set correctly

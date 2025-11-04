@@ -1,32 +1,25 @@
 #!/bin/bash
 set -e
 
-echo "Starting Appwrite build for monorepo..."
+echo "Starting Appwrite build from app directory with workspace access..."
 
-# Ensure we're in the right directory
-cd /usr/local/build || cd $(pwd)
+# Appwrite will start us in /usr/local/build (which is now apps/greenheart)
+APP_DIR=$(pwd)
+echo "App directory: $APP_DIR"
 
-echo "Current directory: $(pwd)"
-echo "Listing root files:"
-ls -la
+# Navigate to workspace root (two levels up)
+WORKSPACE_ROOT=$(cd ../.. && pwd)
+echo "Workspace root: $WORKSPACE_ROOT"
 
-# Check if we're in the monorepo root or app directory
-if [ -f "pnpm-workspace.yaml" ]; then
-    echo "Detected monorepo root"
-    WORKSPACE_ROOT=$(pwd)
-    APP_DIR="$WORKSPACE_ROOT/apps/greenheart"
-elif [ -f "../../pnpm-workspace.yaml" ]; then
-    echo "Detected app directory, moving to monorepo root"
-    WORKSPACE_ROOT=$(cd ../.. && pwd)
-    APP_DIR="$WORKSPACE_ROOT/apps/greenheart"
-else
-    echo "Using current directory as app root"
-    WORKSPACE_ROOT=$(pwd)
-    APP_DIR=$(pwd)
+# Verify we found the workspace
+if [ ! -f "$WORKSPACE_ROOT/pnpm-workspace.yaml" ]; then
+    echo "ERROR: Could not find pnpm-workspace.yaml at $WORKSPACE_ROOT"
+    echo "Listing parent directories:"
+    ls -la "$WORKSPACE_ROOT"
+    exit 1
 fi
 
-echo "Workspace root: $WORKSPACE_ROOT"
-echo "App directory: $APP_DIR"
+echo "✓ Found workspace configuration"
 
 # Install pnpm if not available
 if ! command -v pnpm &> /dev/null; then
@@ -35,15 +28,20 @@ if ! command -v pnpm &> /dev/null; then
     corepack prepare pnpm@latest --activate
 fi
 
-# Install dependencies from workspace root
+echo "pnpm version: $(pnpm --version)"
+
+# Install dependencies from workspace root to ensure workspace links work
 cd "$WORKSPACE_ROOT"
-echo "Installing dependencies from workspace root..."
+echo "Installing workspace dependencies..."
 pnpm install --frozen-lockfile
 
-# Build the application
+echo "✓ Dependencies installed"
+
+# Build the application from app directory
 cd "$APP_DIR"
 echo "Building Next.js application..."
 pnpm build
 
-echo "Build completed successfully!"
+echo "✓ Build completed successfully!"
+echo "Build output location: $APP_DIR/.next"
 
