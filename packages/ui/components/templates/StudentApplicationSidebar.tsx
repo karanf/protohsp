@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger 
 } from '@repo/ui/components/ui/dropdown-menu'
 import { ChevronDown, Home, CheckCircle } from 'lucide-react'
-import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 interface StudentApplicationSidebarProps {
   /** Logo component to be displayed in the sidebar */
@@ -166,6 +166,7 @@ export function StudentApplicationSidebar({
   applicationSections = defaultApplicationSections,
   isLoading = false,
 }: StudentApplicationSidebarProps) {
+  const router = useRouter()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [activeSubsectionId, setActiveSubsectionId] = useState<string>('interview-details')
 
@@ -253,14 +254,14 @@ export function StudentApplicationSidebar({
                 sideOffset={8}
               >
                 {dropdownItems.map((item) => (
-                  <DropdownMenuItem key={item.href} asChild>
-                    <Link 
-                      href={item.href}
-                      className="w-full cursor-pointer"
-                      onClick={() => setIsDropdownOpen(false)}
-                    >
-                      {item.label}
-                    </Link>
+                  <DropdownMenuItem 
+                    key={item.href}
+                    onClick={() => {
+                      setIsDropdownOpen(false)
+                      router.push(item.href)
+                    }}
+                  >
+                    {item.label}
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>

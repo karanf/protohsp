@@ -1143,11 +1143,9 @@ function FilterDropdown({
                   <DropdownMenuItem
                     key={option.id}
                     className="flex items-center gap-2 p-2"
-                    onClick={(e) => {
-                      // Prevent the dropdown from closing automatically
+                    onClick={() => {
+                      // If field has options, show option selector
                       if (option.options && option.options.length > 0) {
-                        e.preventDefault();
-                        // If field has options, show option selector
                         setSelectedField(option.id);
                       } else {
                         // If no options, add filter directly and close the dropdown
