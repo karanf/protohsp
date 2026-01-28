@@ -203,6 +203,24 @@ export const schema = i.schema({
       createdAt: i.date(),
       updatedAt: i.date(),
     }),
+
+    // SEVIS Batches - Batch processing for SEVIS submissions
+    sevisBatches: i.entity({
+      batchNumber: i.string().unique(),
+      type: i.string(), // 'New Student', 'Program Date', 'Validation - Housing', 'Payment', 'Update - Site of Activity', 'Update - Housing'
+      status: i.string(), // 'Draft', 'Processing', 'Exported', 'Failed'
+      createdBy: i.string(),
+      createdById: i.string(),
+      numberOfParticipants: i.number(),
+      program: i.string(), // 'Intern Program', 'High School Program', 'Work & Travel Program', 'Trainee Program'
+      submittedAt: i.date().optional(),
+      processedAt: i.date().optional(),
+      exportedAt: i.date().optional(),
+      notes: i.string().optional(),
+      metadata: i.json().optional(),
+      createdAt: i.date(),
+      updatedAt: i.date(),
+    }),
   },
   
   links: {
