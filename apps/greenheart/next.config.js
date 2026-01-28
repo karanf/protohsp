@@ -16,47 +16,9 @@ const nextConfig = {
       // Enable barrel optimization for major libraries
       optimizePackageImports: ['lucide-react', 'recharts', 'date-fns', '@radix-ui/react-dropdown-menu'],
     },
-    // Bundle optimization for production
-    webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-      // Optimize bundles in production
-      if (!dev && !isServer) {
-        config.optimization.splitChunks = {
-          chunks: 'all',
-          cacheGroups: {
-            // Separate vendor chunk for heavy libraries
-            recharts: {
-              name: 'recharts',
-              test: /[\\/]node_modules[\\/](recharts|recharts-scale)[\\/]/,
-              chunks: 'all',
-              priority: 20,
-            },
-            // Separate chunk for table library
-            table: {
-              name: 'table',
-              test: /[\\/]node_modules[\\/]@tanstack[\\/]react-table[\\/]/,
-              chunks: 'all',
-              priority: 15,
-            },
-            // Separate chunk for date library
-            date: {
-              name: 'date',
-              test: /[\\/]node_modules[\\/]date-fns[\\/]/,
-              chunks: 'all',
-              priority: 10,
-            },
-            // Group all other vendor libraries
-            vendor: {
-              name: 'vendor',
-              test: /[\\/]node_modules[\\/]/,
-              chunks: 'all',
-              priority: 5,
-            },
-          },
-        }
-      }
-      
-      return config
-    },
+    // Turbopack config (Next.js 16+ default)
+    // Turbopack handles code splitting and optimizations automatically
+    turbopack: {},
   }
 
 export default nextConfig;
