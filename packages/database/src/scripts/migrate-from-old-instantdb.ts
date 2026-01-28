@@ -20,8 +20,8 @@ dotenv.config({ path: envPath });
 
 // ===== OLD INSTANTDB CREDENTIALS =====
 // Replace these with your old InstantDB credentials
-const OLD_APP_ID = 'abacc028-efba-475a-ba09-ae2702be9806';
-const OLD_ADMIN_TOKEN = '34375f04-f4ce-4d68-bf92-6c02ef61a06f';
+const OLD_APP_ID = process.env.OLD_INSTANT_APP_ID || 'YOUR_OLD_APP_ID_HERE';
+const OLD_ADMIN_TOKEN = process.env.OLD_INSTANT_ADMIN_TOKEN || 'YOUR_OLD_ADMIN_TOKEN_HERE';
 
 // ===== NEW INSTANTDB CREDENTIALS =====
 const NEW_APP_ID = process.env.NEXT_PUBLIC_INSTANT_APP_ID;
